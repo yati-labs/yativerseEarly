@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
-  Mail, CheckCircle, XCircle, AlertCircle, RefreshCw, Pencil, Sparkles, X, Plus,
+  Mail, CheckCircle, XCircle, AlertCircle, RefreshCw, Pencil, Sparkles, X, Plus, Reply, Eye, Loader2,
 } from "lucide-react";
 import Sidebar from "../../components/dashboard/Sidebar";
 import { REAUTHED_EVENT } from "../../components/SessionExpiredDialog";
@@ -9,6 +10,7 @@ import { getEntitlements } from "../../lib/api";
 import {
   listApprovals, getApproval, editApproval, rewriteApproval, approveApproval,
   rejectApproval, createDraft, generateForContact, listContacts, unlockContactEmail, addContact,
+  checkReplies, listSentEmails, getConversation,
 } from "../../lib/foundersApi";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -54,6 +56,11 @@ export default function DraftsPage() {
   const [entitlements, setEntitlements] = useState(null);
   const [toast, setToast]               = useState(null);
   const [composeOpen, setComposeOpen]   = useState(false);
+  const [tab, setTab]                   = useState("pending"); // "pending" | "sent"
+  const [sent, setSent]                 = useState(null);      // null = not loaded
+  const [checking, setChecking]         = useState(false);
+  const [checkedAt, setCheckedAt]       = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [selectedId, setSelectedId] = useState(null);
   const [detail, setDetail]         = useState(null); // { loading } | { error } | { data }
@@ -108,6 +115,38 @@ export default function DraftsPage() {
     setToast({ message, type });
     setTimeout(() => setToast(null), 5000);
   }
+
+  const loadSent = useCallback(async () => {
+    if (demo) { setSent([]); return; }
+    try {
+      setSent((await listSentEmails()).sent ?? []);
+    } catch {
+      setSent((prev) => prev ?? []);
+    }
+  }, [demo]);
+
+  /** Looks in Gmail for replies. `auto` (opening the page) is quiet and at most every 5 minutes. */
+  const runCheck = useCallback(async (auto) => {
+    if (demo) return;
+    if (!auto) setChecking(true);
+    try {
+      const res = await checkReplies(auto);
+      if (res.checked_at) setCheckedAt(res.checked_at);
+      if (res.checked) await loadSent();
+      const n = res.new?.length ?? 0;
+      if (n) showToast(`${n} new repl${n === 1 ? "y" : "ies"} · ${res.new.map((r) => r.contact_name || r.from_email).join(", ")}`, "success");
+      else if (!auto) showToast("No new replies", "success");
+    } catch (err) {
+      if (!auto) showToast(err.message || "Couldn't check for replies", "error");
+    } finally {
+      if (!auto) setChecking(false);
+    }
+  }, [demo, loadSent]);
+
+  useEffect(() => {
+    loadSent();
+    runCheck(true);
+  }, [loadSent, runCheck]);
 
   /** Blocks actions that need the real API while showing sample data. */
   function requireLive(what) {
@@ -263,6 +302,17 @@ export default function DraftsPage() {
     showToast("Draft saved", "success");
   }
 
+  // Opened from a link such as /dashboard/drafts?draft=42 (e.g. a reply drafted in Inbox).
+  useEffect(() => {
+    const wanted = Number(searchParams.get("draft"));
+    if (!wanted || loading) return;
+    setTab("pending");
+    selectDraft(wanted);
+    setSearchParams({}, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, loading]);
+
+  const unreadReplies = (sent ?? []).reduce((n, e) => n + (e.unread_replies || 0), 0);
   const selected = approvals.find((a) => a.id === selectedId);
   const d = detail?.data;
   const subjectOptions = d ? [...new Set([...(d.subject_line_options ?? []), d.subject].filter(Boolean))] : [];
@@ -285,7 +335,18 @@ export default function DraftsPage() {
               {demo && " · sample data"}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {!demo && (
+              <button
+                onClick={() => runCheck(false)}
+                disabled={checking}
+                title={checkedAt ? `Last checked ${new Date(checkedAt).toLocaleString()}` : "Look in Gmail for replies to emails you sent"}
+                className="flex items-center gap-2 rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-400/20 disabled:opacity-50"
+              >
+                {checking ? <Loader2 size={13} className="animate-spin" /> : <Reply size={13} />}
+                {checking ? "Checking…" : "Check for replies"}
+              </button>
+            )}
             <button
               onClick={() => { if (requireLive("compose emails")) setComposeOpen(true); }}
               className="flex items-center gap-2 rounded-xl border border-sky-400/25 bg-sky-400/10 px-3 py-2 text-xs font-semibold text-sky-300 transition hover:bg-sky-400/20"
@@ -305,6 +366,26 @@ export default function DraftsPage() {
           </div>
         </div>
 
+        <div className="mb-5 flex gap-1 rounded-xl border border-white/5 bg-white/[0.02] p-1 text-xs font-semibold sm:inline-flex">
+          {[["pending", `Pending · ${approvals.length}`], ["sent", "Sent"]].map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2 transition sm:flex-none ${
+                tab === key ? "bg-white/10 text-white" : "text-white/45 hover:text-white/75"
+              }`}
+            >
+              {label}
+              {key === "sent" && unreadReplies > 0 && (
+                <span className="rounded-full bg-brand-rose px-1.5 text-[10.5px] leading-[1.15rem] text-white">{unreadReplies}</span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {tab === "sent" ? (
+          <SentView sent={sent} demo={demo} onOpened={loadSent} />
+        ) : (<>
         {error && (
           <div className="mb-5 flex items-start gap-2 rounded-xl border border-brand-gold/20 bg-brand-gold/5 px-4 py-3 text-sm text-brand-gold2">
             <AlertCircle size={15} className="mt-0.5 shrink-0" />
@@ -377,6 +458,11 @@ export default function DraftsPage() {
                       {selected?.agent && ` · ${selected.agent} agent`}
                       {` · v${d.version ?? 1}`}
                     </p>
+                    {d.is_thread_reply && (
+                      <p className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-emerald-400/10 px-2.5 py-1 text-[11px] text-emerald-300">
+                        <Reply size={12} /> Sent as a reply in the same Gmail thread
+                      </p>
+                    )}
                   </div>
 
                   {!d.contact_email && !offline && (
@@ -553,6 +639,7 @@ export default function DraftsPage() {
             </div>
           </div>
         )}
+        </>)}
       </main>
 
       {composeOpen && (
@@ -569,6 +656,117 @@ export default function DraftsPage() {
           {toast.message}
         </div>
       )}
+    </div>
+  );
+}
+
+function sentBadge(e) {
+  if (e.replies > 0) return { label: e.unread_replies ? "● New reply" : "Replied", cls: "bg-emerald-400/15 text-emerald-300" };
+  if (e.auto_reply) return { label: "Out of office", cls: "bg-white/5 text-white/40" };
+  if (e.opens > 0) return { label: `Opened ${e.opens}×`, cls: "bg-sky-400/10 text-sky-300" };
+  return { label: "Not opened", cls: "bg-white/5 text-white/40" };
+}
+
+/** Emails sent in the last 30 days and what happened after; opening one shows the conversation. */
+function SentView({ sent, demo, onOpened }) {
+  const [selected, setSelected] = useState(null);  // draft_id
+  const [conv, setConv] = useState(null);          // { loading } | { error } | { data }
+
+  async function open(e) {
+    setSelected(e.draft_id);
+    if (!e.contact_id) { setConv({ error: "This email has no contact." }); return; }
+    setConv({ loading: true });
+    try {
+      setConv({ data: await getConversation(e.contact_id) });
+      if (e.unread_replies) onOpened();
+    } catch (err) {
+      setConv({ error: err.message || "Couldn't load the conversation" });
+    }
+  }
+
+  if (sent === null) {
+    return <div className="h-40 animate-pulse rounded-2xl bg-white/[0.03]" />;
+  }
+  if (sent.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] px-6 py-16 text-center">
+        <Mail size={28} className="text-white/20" />
+        <p className="text-sm text-white/30">
+          {demo ? "Sign in to see emails you've sent." : "Nothing sent in the last 30 days."}
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="grid gap-4 lg:grid-cols-[22rem_minmax(0,1fr)]">
+      <div className="flex flex-col gap-2">
+        {sent.map((e) => {
+          const badge = sentBadge(e);
+          return (
+            <button
+              key={e.draft_id}
+              onClick={() => open(e)}
+              className={`rounded-2xl border p-4 text-left transition ${
+                e.draft_id === selected ? "border-white/20 bg-white/[0.07]" : "border-white/5 bg-white/[0.03] hover:bg-white/[0.05]"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <p className="min-w-0 flex-1 truncate text-sm font-semibold text-white">{e.contact_name || e.contact_email || "Unknown contact"}</p>
+                <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-semibold ${badge.cls}`}>{badge.label}</span>
+              </div>
+              <p className="mt-0.5 truncate text-xs text-white/50">{e.subject || "No subject"}</p>
+              <p className="mt-2 text-[10.5px] text-white/30">
+                Sent {e.sent_at ? new Date(e.sent_at).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : ""}
+                {!e.via_gmail && " · via SMTP, replies not tracked"}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="min-w-0 rounded-2xl border border-white/5 bg-white/[0.03] p-5">
+        {!conv ? (
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-center">
+            <Reply size={26} className="text-white/20" />
+            <p className="text-sm text-white/30">Select an email to see the conversation</p>
+          </div>
+        ) : conv.loading ? (
+          <div className="h-64 animate-pulse rounded-xl bg-white/[0.03]" />
+        ) : conv.error ? (
+          <div className="flex items-start gap-2 text-sm text-brand-rose">
+            <AlertCircle size={15} className="mt-0.5 shrink-0" /> {conv.error}
+          </div>
+        ) : (
+          <>
+            <p className="font-semibold text-white">Conversation with {conv.data.contact.name || conv.data.contact.email}</p>
+            <p className="mt-0.5 text-xs text-white/40">{conv.data.contact.email}</p>
+            <div className="mt-4 flex flex-col gap-3">
+              {conv.data.messages.map((m) => (
+                <div
+                  key={`${m.direction}-${m.id}`}
+                  className={`rounded-xl border p-3.5 text-sm ${
+                    m.direction === "outbound"
+                      ? "mr-8 border-white/10 bg-white/[0.04]"
+                      : m.is_auto_reply
+                        ? "ml-8 border-white/5 bg-white/[0.02] text-white/45"
+                        : "ml-8 border-emerald-400/30 bg-emerald-400/[0.07]"
+                  }`}
+                >
+                  <p className="mb-1 flex flex-wrap items-center gap-x-2 text-[11px] text-white/40">
+                    <span>{m.direction === "outbound" ? "You" : (m.from_email || "Them")}</span>
+                    {m.timestamp && <span>· {new Date(m.timestamp).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</span>}
+                    {m.direction === "outbound" && m.opens > 0 && <span className="flex items-center gap-1">· <Eye size={11} /> opened {m.opens}×</span>}
+                    {m.is_auto_reply && <span>· automatic reply</span>}
+                  </p>
+                  {m.subject && <p className="mb-1 text-xs font-semibold text-white/60">{m.subject}</p>}
+                  <p className="whitespace-pre-wrap leading-relaxed text-white/75">{m.text}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-[11px] text-white/30">Replies show their first 500 characters. Open Gmail for the full email.</p>
+          </>
+        )}
+      </div>
     </div>
   );
 }

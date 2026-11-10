@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Mail, CalendarDays, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
-import { listConnections, connectApp, disconnectApp } from '../../lib/foundersApi'
+import { listConnections, connectApp, disconnectApp, getInboxAssistant, setInboxAssistant } from '../../lib/foundersApi'
 
 const APPS = {
   gmail: {
     name: 'Gmail',
     icon: Mail,
-    use: 'Approved drafts are sent from this Gmail account, so they appear in your Sent folder.',
+    use: 'Approved drafts are sent from this Gmail account, and replies from your leads are tracked.',
   },
   calendar: {
     name: 'Google Calendar',
     icon: CalendarDays,
-    use: 'Lets your agents see your schedule (coming soon).',
+    use: 'Lets your assistant suggest free times when drafting replies, and see your meetings.',
   },
 }
 
@@ -96,7 +96,8 @@ export default function ConnectionsSection({ demo, showToast }) {
           const { name, icon: Icon, use } = APPS[r.app]
           const needsReconnect = !r.connected && r.status   // connected once, no longer working
           return (
-            <div key={r.app} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
+            <div key={r.app}>
+            <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/70">
                 <Icon size={17} />
               </div>
@@ -136,9 +137,65 @@ export default function ConnectionsSection({ demo, showToast }) {
                 )
               )}
             </div>
+            {r.app === 'gmail' && r.connected && !demo && <InboxAssistantSwitch showToast={showToast} />}
+            </div>
           )
         })}
       </div>
+    </div>
+  )
+}
+
+/** "Let the assistant read my whole inbox": off by default, separate from connecting Gmail. */
+function InboxAssistantSwitch({ showToast }) {
+  const [enabled, setEnabled] = useState(null)   // null = loading
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    getInboxAssistant().then((r) => setEnabled(!!r.enabled)).catch(() => setEnabled(false))
+  }, [])
+
+  async function toggle() {
+    const next = !enabled
+    setSaving(true)
+    try {
+      await setInboxAssistant(next)
+      setEnabled(next)
+      showToast(next ? 'Inbox assistant turned on' : 'Inbox assistant turned off', 'success')
+    } catch (err) {
+      showToast(err.message || "Couldn't change the inbox assistant", 'error')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="mt-2 rounded-xl border border-brand-purple/30 bg-brand-purple/5 p-4 sm:ml-[52px]">
+      <div className="flex items-start gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] font-semibold text-white">Let the assistant read my whole inbox</p>
+          <p className="mt-0.5 text-xs leading-5 text-white/45">
+            Turns on the Inbox page, daily summaries and "draft a reply" for any email. When off, the
+            assistant only sees emails with your Founder OS contacts.
+          </p>
+        </div>
+        <button
+          role="switch"
+          aria-checked={!!enabled}
+          aria-label="Inbox assistant"
+          onClick={toggle}
+          disabled={enabled === null || saving}
+          className={`relative h-6 w-11 shrink-0 rounded-full transition disabled:opacity-50 ${enabled ? 'bg-brand-purple' : 'bg-white/15'}`}
+        >
+          <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${enabled ? 'left-[23px]' : 'left-[3px]'}`} />
+        </button>
+      </div>
+      <ul className="mt-3 space-y-1 text-[11.5px] text-white/45">
+        <li><span className="text-emerald-300">✓</span> Reads subject and preview to summarise; opens a full email only to draft a reply</li>
+        <li><span className="text-emerald-300">✓</span> Writes drafts that wait for your approval</li>
+        <li><span className="text-brand-rose">✕</span> Never sends, forwards or deletes on its own</li>
+        <li><span className="text-brand-rose">✕</span> Emails aren't stored; only replies from people you emailed are kept (first 500 characters)</li>
+      </ul>
     </div>
   )
 }
