@@ -114,6 +114,14 @@ export async function listContacts(params = {}) {
   return apiFetch(`/api/v1/contacts${qs ? `?${qs}` : ''}`)
 }
 
+/** Adds a contact by email (or returns the caller's existing one). Returns { id, name, email, created }. */
+export async function addContact(email, name) {
+  return apiFetch('/api/v1/contacts', {
+    method: 'POST',
+    body: JSON.stringify({ email, ...(name ? { name } : {}) }),
+  })
+}
+
 export async function getContact(contactId) {
   return apiFetch(`/api/v1/contacts/${contactId}`)
 }
