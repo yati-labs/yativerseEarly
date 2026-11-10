@@ -90,6 +90,20 @@ export async function listContacts(params = {}) {
   return apiFetch(`/api/v1/contacts${qs ? `?${qs}` : ''}`)
 }
 
+/** The caller's Gmail and Google Calendar connections: { connections: [{ app, available, connected, status, account }] }. */
+export async function listConnections() {
+  return apiFetch('/api/v1/connections')
+}
+
+/** Starts connecting `app` ('gmail' | 'calendar'). Returns { redirect_url } for Google's sign-in. */
+export async function connectApp(app) {
+  return apiFetch(`/api/v1/connections/${app}/connect`, { method: 'POST' })
+}
+
+export async function disconnectApp(app) {
+  return apiFetch(`/api/v1/connections/${app}`, { method: 'DELETE' })
+}
+
 /** Adds a contact by email (or returns the caller's existing one). Returns { id, name, email, created }. */
 export async function addContact(email, name) {
   return apiFetch('/api/v1/contacts', {

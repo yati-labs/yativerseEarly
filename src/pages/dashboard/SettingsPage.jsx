@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
-  Save, Loader2, CheckCircle, AlertCircle, X, Globe, Send, LogOut,
+  Save, Loader2, CheckCircle, AlertCircle, X, Globe, Send, LogOut, ChevronDown,
 } from 'lucide-react'
 import Sidebar from '../../components/dashboard/Sidebar'
+import ConnectionsSection from '../../components/dashboard/ConnectionsSection'
 import { useAuth } from '../../lib/auth'
 import { getEntitlements } from '../../lib/api'
 import {
@@ -113,19 +114,24 @@ export default function SettingsPage() {
   const [smtpSaving, setSmtpSaving] = useState(false)
   const [smtpSaved, setSmtpSaved] = useState(false)
   const [smtpTesting, setSmtpTesting] = useState(false)
+  // SMTP is the fallback for non-Gmail providers: folded away unless already set up.
+  const [smtpOpen, setSmtpOpen] = useState(false)
 
   useEffect(() => {
     if (demo) { setEntitlements({ planName: 'Founder', status: 'trial' }); return }
     getEntitlements().then(setEntitlements).catch(() => setEntitlements(null))
     getProductSettings().then(setProduct).catch(() => {})
     getIcpSettings().then(setIcp).catch(() => {})
-    getSmtpSettings().then((data) => setSmtp((s) => ({ ...s, ...data }))).catch(() => {})
+    getSmtpSettings().then((data) => {
+      setSmtp((s) => ({ ...s, ...data }))
+      if (data?.smtp_host && data?.smtp_from_email && data?.smtp_password) setSmtpOpen(true)
+    }).catch(() => {})
   }, [demo])
 
-  function showToast(message, type) {
+  const showToast = useCallback((message, type) => {
     setToast({ message, type })
     setTimeout(() => setToast(null), 4000)
-  }
+  }, [])
 
   function flashSaved(setter) {
     setter(true)
@@ -381,13 +387,31 @@ export default function SettingsPage() {
           <Divider />
 
           {/* ================================================================
-              EMAIL SENDING (SMTP)
+              CONNECTED ACCOUNTS (Gmail, Google Calendar)
+          ================================================================ */}
+          <ConnectionsSection demo={demo} showToast={showToast} />
+
+          <Divider />
+
+          {/* ================================================================
+              EMAIL SENDING (SMTP) — for providers other than Gmail
           ================================================================ */}
           <div className="p-6">
-            <h2 className="font-display text-base font-semibold text-white">Email Sending (SMTP)</h2>
-            <p className="mt-0.5 text-xs text-white/40">
-              Configure outbound email so approved drafts are sent automatically. Emails include open and click tracking — tracking only works if your server is publicly reachable.
-            </p>
+            <button
+              onClick={() => setSmtpOpen((o) => !o)}
+              aria-expanded={smtpOpen}
+              className="flex w-full items-center gap-2 text-left"
+            >
+              <div className="flex-1">
+                <h2 className="font-display text-base font-semibold text-white">Other Email Provider (SMTP)</h2>
+                <p className="mt-0.5 text-xs text-white/40">
+                  Not on Gmail? Send approved drafts through your provider's SMTP server instead (Outlook, Zoho, your own domain). A connected Gmail is used first.
+                </p>
+              </div>
+              <ChevronDown size={16} className={`shrink-0 text-white/40 transition ${smtpOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {smtpOpen && (<>
 
             {/* Gmail tip */}
             <div className="mt-5 rounded-xl border border-blue-500/20 bg-blue-500/5 px-4 py-4">
@@ -488,6 +512,7 @@ export default function SettingsPage() {
                 {smtpTesting ? 'Sending…' : 'Send Test Email'}
               </button>
             </div>
+            </>)}
           </div>
 
           <Divider />
