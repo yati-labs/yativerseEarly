@@ -8,8 +8,10 @@ import { useAuth } from "../../lib/auth";
 import { getEntitlements } from "../../lib/api";
 import {
   listApprovals, getApproval, editApproval, rewriteApproval, approveApproval,
-  rejectApproval, createDraft, generateForContact, listContacts, unlockContactEmail,
+  rejectApproval, createDraft, generateForContact, listContacts, unlockContactEmail, addContact,
 } from "../../lib/foundersApi";
+
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 const SAMPLE_APPROVALS = [
   {
@@ -582,6 +584,24 @@ function ComposeModal({ onClose, onSaved }) {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving]         = useState(false);
   const [status, setStatus]         = useState(null); // { message, type }
+  const [adding, setAdding]         = useState(false);
+
+  // A typed address that isn't one of the matches can be added as a new contact.
+  const typedEmail = query.trim().toLowerCase();
+  const canAddTyped = EMAIL_RE.test(typedEmail)
+    && !(results ?? []).some((c) => (c.email || "").toLowerCase() === typedEmail);
+
+  async function addTyped() {
+    setAdding(true);
+    setStatus(null);
+    try {
+      pickContact(await addContact(typedEmail));
+    } catch (err) {
+      setStatus({ message: err.message || "Couldn't add that address", type: "error" });
+    } finally {
+      setAdding(false);
+    }
+  }
 
   useEffect(() => {
     function onKey(e) { if (e.key === "Escape") onClose(); }
@@ -686,14 +706,30 @@ function ComposeModal({ onClose, onSaved }) {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search contacts by name…"
+                  onKeyDown={(e) => { if (e.key === "Enter" && canAddTyped && !adding) { e.preventDefault(); addTyped(); } }}
+                  placeholder="Search contacts, or type an email address…"
                   autoFocus
                   className={FIELD}
                 />
                 {results && (
                   <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-56 overflow-y-auto rounded-xl border border-white/10 bg-brand-bg shadow-xl">
+                    {canAddTyped && (
+                      <button
+                        onClick={addTyped}
+                        disabled={adding}
+                        className="flex w-full items-center gap-3 border-b border-white/5 px-3.5 py-2.5 text-left last:border-b-0 hover:bg-white/[0.05] disabled:opacity-50"
+                      >
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
+                          <Plus size={14} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold">{adding ? "Adding…" : `Send to ${typedEmail}`}</p>
+                          <p className="truncate text-xs text-white/40">New contact</p>
+                        </div>
+                      </button>
+                    )}
                     {results.length === 0 ? (
-                      <p className="px-3.5 py-3 text-xs text-white/40">No contacts with an email address found</p>
+                      !canAddTyped && <p className="px-3.5 py-3 text-xs text-white/40">No contacts found. Type a full email address to write to someone new.</p>
                     ) : (
                       results.map((c) => (
                         <button
