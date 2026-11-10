@@ -20,6 +20,7 @@ import PlanPage from './pages/PlanPage'
 import AgentsPage from './pages/dashboard/AgentsPage'
 import ContactsPage from './pages/dashboard/ContactsPage'
 import DraftsPage from './pages/dashboard/DraftsPage'
+import InboxPage from './pages/dashboard/InboxPage'
 import DealsPage from './pages/dashboard/DealsPage'
 import MeetingsPage from './pages/dashboard/MeetingsPage'
 import SettingsPage from './pages/dashboard/SettingsPage'
@@ -91,6 +92,16 @@ export default function App() {
               <RequireAuth>
                 <RequireFounderOS>
                   <ContactsPage />
+                </RequireFounderOS>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/dashboard/inbox"
+            element={
+              <RequireAuth>
+                <RequireFounderOS>
+                  <InboxPage />
                 </RequireFounderOS>
               </RequireAuth>
             }

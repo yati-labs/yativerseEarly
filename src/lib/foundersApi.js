@@ -104,6 +104,61 @@ export async function disconnectApp(app) {
   return apiFetch(`/api/v1/connections/${app}`, { method: 'DELETE' })
 }
 
+// ---------------------------------------------------------------------------
+// Replies (to emails sent from Gmail) and the inbox assistant
+// ---------------------------------------------------------------------------
+
+/** Fired after replies are checked or read, so the sidebar badge can refresh. */
+export const REPLIES_CHANGED_EVENT = 'yati:replies-changed'
+
+function repliesChanged() {
+  window.dispatchEvent(new Event(REPLIES_CHANGED_EVENT))
+}
+
+/** Looks in Gmail for new replies. `auto` (opening a page) checks at most every 5 minutes. */
+export async function checkReplies(auto = false) {
+  const res = await apiFetch('/api/v1/replies/check', { method: 'POST', body: JSON.stringify({ auto }) })
+  if (res.checked) repliesChanged()
+  return res
+}
+
+export async function countUnreadReplies() {
+  return apiFetch('/api/v1/replies/count')
+}
+
+/** Emails sent in the last 30 days, with replies and opens. */
+export async function listSentEmails() {
+  return apiFetch('/api/v1/replies/sent')
+}
+
+/** Everything sent to a contact and their replies; marks the replies read. */
+export async function getConversation(contactId) {
+  const res = await apiFetch(`/api/v1/replies/conversation/${contactId}`)
+  repliesChanged()
+  return res
+}
+
+export async function getInboxAssistant() {
+  return apiFetch('/api/v1/inbox/assistant')
+}
+
+export async function setInboxAssistant(enabled) {
+  return apiFetch('/api/v1/inbox/assistant', { method: 'PUT', body: JSON.stringify({ enabled }) })
+}
+
+/** The last 24 hours of the inbox, sorted and summarised. 403 when the assistant is off. */
+export async function getInboxToday(refresh = false) {
+  return apiFetch(`/api/v1/inbox/today${refresh ? '?refresh=true' : ''}`)
+}
+
+/** The AI drafts a reply to a Gmail thread; it waits in Drafts. Returns { draft_id, to, subject, body }. */
+export async function draftInboxReply(threadId, instruction = '') {
+  return apiFetch(`/api/v1/inbox/threads/${encodeURIComponent(threadId)}/draft-reply`, {
+    method: 'POST',
+    body: JSON.stringify({ instruction }),
+  })
+}
+
 /** Adds a contact by email (or returns the caller's existing one). Returns { id, name, email, created }. */
 export async function addContact(email, name) {
   return apiFetch('/api/v1/contacts', {
