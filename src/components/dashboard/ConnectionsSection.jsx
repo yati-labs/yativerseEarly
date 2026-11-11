@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Mail, CalendarDays, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { Mail, CalendarDays, Loader2, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react'
 import { listConnections, connectApp, disconnectApp, getInboxAssistant, setInboxAssistant } from '../../lib/foundersApi'
 
 const APPS = {
@@ -13,12 +13,17 @@ const APPS = {
     icon: CalendarDays,
     use: 'Lets your assistant suggest free times when drafting replies, and see your meetings.',
   },
+  hubspot: {
+    name: 'HubSpot',
+    icon: TrendingUp,
+    use: 'Your contacts and deals are copied from your own HubSpot, read-only. Nothing is changed in HubSpot.',
+  },
 }
 
 /**
- * Settings → Connected accounts: the user's own Gmail and Google Calendar, signed in
- * through Google (via Composio). Connecting leaves the page for Google's consent screen
- * and comes back here with ?connected=<app>.
+ * Settings → Connected accounts: the user's own Gmail, Google Calendar and HubSpot, signed in
+ * directly with Google or HubSpot (via Composio). Connecting leaves the page for the consent
+ * screen and comes back here with ?connected=<app>.
  */
 export default function ConnectionsSection({ demo, showToast }) {
   const [rows, setRows] = useState(null)       // null = loading
@@ -81,7 +86,7 @@ export default function ConnectionsSection({ demo, showToast }) {
     <div className="p-6">
       <h2 className="font-display text-base font-semibold text-white">Connected Accounts</h2>
       <p className="mt-0.5 text-xs text-white/40">
-        Connect your own Google account. You sign in with Google directly; we never see your password.
+        Connect your own accounts. You sign in with Google or HubSpot directly; we never see your password.
       </p>
 
       <div className="mt-5 flex flex-col gap-3">

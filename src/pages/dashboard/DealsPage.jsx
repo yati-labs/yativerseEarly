@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
-import { TrendingUp, Calendar, Zap, AlertCircle, CheckCircle } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { TrendingUp, Calendar, Zap, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
 import Sidebar from "../../components/dashboard/Sidebar";
 import { useAuth } from "../../lib/auth";
 import { getEntitlements } from "../../lib/api";
-import { listDeals } from "../../lib/foundersApi";
-import { getFreshToken } from "../../lib/api";
-
-const FOUNDERS_API_BASE =
-  import.meta.env.VITE_FOUNDERS_API_BASE || "https://founder-agents-api.onrender.com";
+import { listDeals, syncHubspot, coachDeal } from "../../lib/foundersApi";
 
 const SAMPLE_DEALS = [
   { id: "1", name: "Priority Logistics — Enterprise", stage: "Proposal Sent",  health: "green",  close_date: "2026-11-15", amount: 24000 },
@@ -45,6 +42,29 @@ export default function DealsPage() {
   const [coaching, setCoaching]     = useState({});
   const [toast, setToast]           = useState(null);
   const [entitlements, setEntitlements] = useState(null);
+  const [syncing, setSyncing]       = useState(false);
+  const [hubspot, setHubspot]       = useState(null); // null | { connected: false } | { syncedAt }
+
+  const loadDeals = useCallback(async () => {
+    const data = await listDeals();
+    setDeals(Array.isArray(data) ? data : data.deals ?? []);
+  }, []);
+
+  /** Copies the latest from the user's HubSpot. `auto` (opening the page) is quiet and at most every 10 min. */
+  const sync = useCallback(async (auto) => {
+    if (!auto) setSyncing(true);
+    try {
+      const res = await syncHubspot(auto);
+      setHubspot({ connected: true, syncedAt: res.synced_at });
+      if (res.synced) await loadDeals();
+      if (!auto) showToast(`HubSpot synced · ${res.deals} deal${res.deals === 1 ? "" : "s"}`, "success");
+    } catch (err) {
+      if (/connect hubspot/i.test(err.message || "")) setHubspot({ connected: false });
+      else if (!auto) showToast(err.message || "Couldn't sync HubSpot", "error");
+    } finally {
+      if (!auto) setSyncing(false);
+    }
+  }, [loadDeals]);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,17 +74,17 @@ export default function DealsPage() {
         return;
       }
       try {
-        const data = await listDeals();
-        if (!cancelled) setDeals(Array.isArray(data) ? data : data.deals ?? []);
+        await loadDeals();
       } catch (err) {
-        if (!cancelled) { setError(err.message); setDeals(SAMPLE_DEALS); }
+        if (!cancelled) setError(err.message);
       } finally {
         if (!cancelled) setLoading(false);
       }
+      if (!cancelled) sync(true);
     }
     load();
     return () => { cancelled = true; };
-  }, [demo]);
+  }, [demo, loadDeals, sync]);
 
   useEffect(() => {
     if (demo) { setEntitlements({ planName: "Founder", status: "trial" }); return; }
@@ -75,14 +95,10 @@ export default function DealsPage() {
     if (demo) { showToast("Sign in to run Deal Coach", "error"); return; }
     setCoaching((c) => ({ ...c, [dealId]: true }));
     try {
-      const token = await getFreshToken();
-      const res = await fetch(`${FOUNDERS_API_BASE}/api/v1/orchestrator/event`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ event: "deal_coach", deal_id: dealId }),
-      });
-      if (!res.ok) throw new Error("Deal Coach request failed");
-      showToast("Deal Coach running — results in ~60s", "success");
+      const res = await coachDeal(dealId);
+      if (res.skipped) throw new Error(res.reason || "Deal Coach skipped this deal");
+      await loadDeals();
+      showToast(`Deal Coach done · follow-up draft saved in Drafts`, "success");
     } catch (err) {
       showToast(err.message || "Failed to start Deal Coach", "error");
     } finally {
@@ -101,18 +117,31 @@ export default function DealsPage() {
 
       <main className="flex-1 px-5 py-8 sm:px-8 lg:px-10">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="font-display text-2xl font-extrabold text-white sm:text-3xl">Deals</h1>
-          <p className="mt-1 text-sm text-white/40">
-            {loading ? "Loading…" : `${deals.length} deal${deals.length !== 1 ? "s" : ""}`}
-            {demo && " · sample data"}
-          </p>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="font-display text-2xl font-extrabold text-white sm:text-3xl">Deals</h1>
+            <p className="mt-1 text-sm text-white/40">
+              {loading ? "Loading…" : `${deals.length} deal${deals.length !== 1 ? "s" : ""}`}
+              {demo && " · sample data"}
+              {hubspot?.syncedAt && ` · from your HubSpot, synced ${new Date(hubspot.syncedAt).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`}
+            </p>
+          </div>
+          {!demo && hubspot?.connected !== false && (
+            <button
+              onClick={() => sync(false)}
+              disabled={syncing}
+              className="flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs text-white/50 transition hover:text-white disabled:opacity-50"
+            >
+              <RefreshCw size={13} className={syncing ? "animate-spin" : ""} />
+              {syncing ? "Syncing…" : "Sync HubSpot"}
+            </button>
+          )}
         </div>
 
         {error && (
           <div className="mb-5 flex items-start gap-2 rounded-xl border border-brand-gold/20 bg-brand-gold/5 px-4 py-3 text-sm text-brand-gold2">
             <AlertCircle size={15} className="mt-0.5 shrink-0" />
-            Couldn't reach founder-agents-api — showing sample deals.
+            Couldn't load your deals: {error}
           </div>
         )}
 
@@ -125,21 +154,37 @@ export default function DealsPage() {
         ) : deals.length === 0 ? (
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] px-6 py-16 text-center">
             <TrendingUp size={28} className="text-white/20" />
-            <p className="text-sm text-white/30">No deals yet — connect HubSpot to pull your pipeline.</p>
+            {hubspot?.connected === false ? (
+              <>
+                <p className="text-sm text-white/40">Connect your HubSpot to see your pipeline here.</p>
+                <Link
+                  to="/dashboard/settings"
+                  className="rounded-xl bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/15"
+                >
+                  Connect HubSpot in Settings
+                </Link>
+              </>
+            ) : (
+              <p className="text-sm text-white/30">No open deals in your HubSpot yet.</p>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {deals.map((d) => {
-              const health = HEALTH_STYLES[d.health] || HEALTH_STYLES.yellow;
+              const health = HEALTH_STYLES[(d.health || "").toLowerCase()];
               return (
                 <div key={d.id} className="rounded-2xl border border-white/5 bg-white/[0.03] p-5">
                   {/* Title row */}
                   <div className="flex items-start justify-between gap-3">
                     <p className={`font-semibold ${STAGE_STYLES[d.stage] || "text-white"}`}>{d.name}</p>
-                    <span className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium ${health.badge}`}>
-                      <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full align-middle ${health.dot}`} />
-                      {health.label}
-                    </span>
+                    {health ? (
+                      <span className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium ${health.badge}`}>
+                        <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full align-middle ${health.dot}`} />
+                        {health.label}
+                      </span>
+                    ) : (
+                      <span className="shrink-0 rounded-full border border-white/10 px-2.5 py-0.5 text-xs text-white/35">Not coached yet</span>
+                    )}
                   </div>
 
                   {/* Meta row */}

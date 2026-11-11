@@ -242,6 +242,16 @@ export async function listDeals() {
   return apiFetch('/api/v1/deals')
 }
 
+/** Copies the caller's HubSpot contacts and deals. `auto` (opening a page) syncs at most every 10 minutes. */
+export async function syncHubspot(auto = false) {
+  return apiFetch('/api/v1/hubspot/sync', { method: 'POST', body: JSON.stringify({ auto }) })
+}
+
+/** Runs Deal Coach on one deal: health, next step, and a follow-up draft. Returns { health, draft_id, ... }. */
+export async function coachDeal(dealId) {
+  return apiFetch(`/api/v1/deals/${encodeURIComponent(dealId)}/draft-follow-up`, { method: 'POST' })
+}
+
 // ---------------------------------------------------------------------------
 // Sessions (Chat)
 // ---------------------------------------------------------------------------
