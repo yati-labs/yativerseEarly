@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Mail, CalendarDays, Loader2, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react'
-import { listConnections, connectApp, disconnectApp, getInboxAssistant, setInboxAssistant } from '../../lib/foundersApi'
+import { Mail, CalendarDays, Loader2, CheckCircle, AlertCircle, TrendingUp, Hash } from 'lucide-react'
+import {
+  listConnections, connectApp, disconnectApp, getInboxAssistant, setInboxAssistant,
+  listSlackChannels, getSlackDestination, setSlackDestination, sendSlackTest, sendSlackDigest,
+} from '../../lib/foundersApi'
 
 const APPS = {
   gmail: {
@@ -17,6 +20,11 @@ const APPS = {
     name: 'HubSpot',
     icon: TrendingUp,
     use: 'Your contacts and deals are copied from your own HubSpot, read-only. Nothing is changed in HubSpot.',
+  },
+  slack: {
+    name: 'Slack',
+    icon: Hash,
+    use: 'Your morning digest of drafts and replies, and alerts for deals at risk, in your own Slack. yAtI only posts; it never reads your messages.',
   },
 }
 
@@ -143,6 +151,7 @@ export default function ConnectionsSection({ demo, showToast }) {
               )}
             </div>
             {r.app === 'gmail' && r.connected && !demo && <InboxAssistantSwitch showToast={showToast} />}
+            {r.app === 'slack' && r.connected && !demo && <SlackDestination showToast={showToast} />}
             </div>
           )
         })}
@@ -201,6 +210,91 @@ function InboxAssistantSwitch({ showToast }) {
         <li><span className="text-brand-rose">✕</span> Never sends, forwards or deletes on its own</li>
         <li><span className="text-brand-rose">✕</span> Emails aren't stored; only replies from people you emailed are kept (first 500 characters)</li>
       </ul>
+    </div>
+  )
+}
+
+/** Where yAtI posts in the user's own Slack: a DM to them, or one of their channels. */
+function SlackDestination({ showToast }) {
+  const [dest, setDest] = useState(null)        // { destination, name }
+  const [channels, setChannels] = useState(null)
+  const [busy, setBusy] = useState('')
+
+  useEffect(() => {
+    getSlackDestination().then(setDest).catch(() => setDest({ destination: 'dm', name: 'Direct message to you' }))
+    listSlackChannels().then((r) => setChannels(r.channels || [])).catch(() => setChannels([]))
+  }, [])
+
+  async function choose(value) {
+    setBusy('dest')
+    try {
+      const r = await setSlackDestination(value)
+      setDest(r)
+      showToast(value === 'dm' ? 'yAtI will message you directly' : `yAtI will post in ${r.name}`, 'success')
+    } catch (err) {
+      showToast(err.message || "Couldn't change where yAtI posts", 'error')
+    } finally {
+      setBusy('')
+    }
+  }
+
+  async function run(kind) {
+    setBusy(kind)
+    try {
+      if (kind === 'test') {
+        await sendSlackTest()
+        showToast('Test message sent. Check Slack', 'success')
+      } else {
+        const r = await sendSlackDigest()
+        showToast(r.status === 'posted' ? 'Digest sent. Check Slack' : 'Nothing to send: no drafts or new replies', 'success')
+      }
+    } catch (err) {
+      showToast(err.message || "Couldn't post to Slack", 'error')
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const value = dest?.destination ?? 'dm'
+  return (
+    <div className="mt-2 rounded-xl border border-brand-purple/30 bg-brand-purple/5 p-4 sm:ml-[52px]">
+      <p className="text-[13px] font-semibold text-white">Where should yAtI post?</p>
+      <select
+        value={value}
+        onChange={(e) => choose(e.target.value)}
+        disabled={dest === null || busy === 'dest'}
+        className="mt-2 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white outline-none focus:border-white/25 disabled:opacity-50"
+      >
+        <option value="dm">A direct message to me (private)</option>
+        {(channels || []).map((c) => (
+          <option key={c.id} value={c.id}>#{c.name}{c.private ? ' (private)' : ''}</option>
+        ))}
+      </select>
+      {value !== 'dm' && (
+        <p className="mt-2 text-[11.5px] text-brand-gold2/90">Everyone in this channel will see your drafts and deal alerts.</p>
+      )}
+      <ul className="mt-3 space-y-1 text-[11.5px] text-white/45">
+        <li><span className="text-emerald-300">✓</span> Morning digest of drafts to approve and new replies</li>
+        <li><span className="text-emerald-300">✓</span> Alerts when one of your deals is at risk</li>
+        <li><span className="text-brand-rose">✕</span> Never sends emails from Slack: buttons open yAtI to approve</li>
+        <li><span className="text-brand-rose">✕</span> Never reads your Slack messages</li>
+      </ul>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          onClick={() => run('test')}
+          disabled={!!busy}
+          className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white/60 transition hover:text-white disabled:opacity-40"
+        >
+          {busy === 'test' ? 'Sending…' : 'Send a test message'}
+        </button>
+        <button
+          onClick={() => run('digest')}
+          disabled={!!busy}
+          className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white/60 transition hover:text-white disabled:opacity-40"
+        >
+          {busy === 'digest' ? 'Sending…' : 'Send my digest now'}
+        </button>
+      </div>
     </div>
   )
 }

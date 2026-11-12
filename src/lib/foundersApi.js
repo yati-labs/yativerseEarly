@@ -242,6 +242,32 @@ export async function listDeals() {
   return apiFetch('/api/v1/deals')
 }
 
+// ---------------------------------------------------------------------------
+// The user's own Slack (yAtI posts there: digest and deal alerts)
+// ---------------------------------------------------------------------------
+
+export async function listSlackChannels() {
+  return apiFetch('/api/v1/slack/channels')
+}
+
+/** Where yAtI posts: { destination: 'dm' | <channel id>, name } */
+export async function getSlackDestination() {
+  return apiFetch('/api/v1/slack/destination')
+}
+
+export async function setSlackDestination(destination) {
+  return apiFetch('/api/v1/slack/destination', { method: 'PUT', body: JSON.stringify({ destination }) })
+}
+
+export async function sendSlackTest() {
+  return apiFetch('/api/v1/slack/test', { method: 'POST' })
+}
+
+/** Sends today's digest now. Returns { status: 'posted' | 'skipped', drafts, replies }. */
+export async function sendSlackDigest() {
+  return apiFetch('/api/v1/slack/post-outreach-digest', { method: 'POST' })
+}
+
 /** Copies the caller's HubSpot contacts and deals. `auto` (opening a page) syncs at most every 10 minutes. */
 export async function syncHubspot(auto = false) {
   return apiFetch('/api/v1/hubspot/sync', { method: 'POST', body: JSON.stringify({ auto }) })
