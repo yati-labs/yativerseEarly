@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import SEO from "../components/SEO";
 import WaitlistForm from "../components/WaitlistForm";
+import HeroVideo from "../components/HeroVideo";
 import { captureAttribution, initMetaPixel, track } from "../lib/tracking";
 
 // Campaign 1: introduce the brand. One goal: join the waitlist (brand + first product, the Thread Pendant).
@@ -52,7 +53,6 @@ export default function BrandCampaign() {
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
           <Link to="/" aria-label="yAtIverse home" className="flex items-center gap-2">
             <img src="/logo.png" alt="" width="28" height="28" className="h-7 w-7 rounded-md" />
-            <span className="font-display text-base font-bold">yAtIverse</span>
           </Link>
           <button onClick={toForm} className="btn-primary !px-5 !py-2">Join the waitlist</button>
         </div>
@@ -61,7 +61,7 @@ export default function BrandCampaign() {
       <main>
         <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-12 md:grid-cols-[1.15fr_0.85fr] md:pt-20">
           <div>
-            <h1 className="font-display text-4xl font-extrabold leading-[1.08] md:text-6xl">AI that lives in your day, not in another tab.</h1>
+            <h1 className="font-body text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl">AI that lives in your day, not in another tab.</h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">
               yAtIverse brings wearables and AI agents together for founders. First up is the Thread Pendant, which captures your conversations and drafts the follow-up. You stay in charge.
             </p>
@@ -69,8 +69,7 @@ export default function BrandCampaign() {
             <p className="mt-4 text-sm text-white/50">Free to join. Pendant orders open in a few weeks, and waitlist members hear first.</p>
           </div>
           <div className="flex justify-center">
-            <img src="/pendant1.jpeg" alt="Thread Pendant on a rose-gold chain" width="768" height="1376" fetchpriority="high"
-              className="max-h-[520px] w-auto rounded-3xl object-cover" />
+            <HeroVideo poster="/pendant1.jpeg" />
           </div>
         </section>
 

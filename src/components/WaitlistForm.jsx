@@ -4,7 +4,7 @@ import { getAttribution, track } from "../lib/tracking";
 // Shared waitlist form for the campaign pages. `source` tags each submission by campaign.
 const FORMSPREE = "https://formspree.io/f/mqeoyedd"; // same endpoint as /waitlist
 
-export default function WaitlistForm({ where, source }) {
+export default function WaitlistForm({ where, source, askPhone = false }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
@@ -51,6 +51,7 @@ export default function WaitlistForm({ where, source }) {
           {status === "loading" ? "Joining…" : "Join the waitlist"}
         </button>
       </div>
+      {askPhone && (
       <div className="mt-3 flex items-center gap-2 text-sm text-white/55">
         <label htmlFor={`phone-${where}`}>My phone is</label>
         <select id={`phone-${where}`} value={phone} onChange={(e) => setPhone(e.target.value)}
@@ -60,6 +61,7 @@ export default function WaitlistForm({ where, source }) {
           <option>Android</option>
         </select>
       </div>
+      )}
       {status === "error" && (
         <p role="alert" className="mt-3 text-sm text-brand-rose">We could not save that. Check your email address and try again.</p>
       )}

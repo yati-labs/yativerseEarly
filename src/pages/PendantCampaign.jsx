@@ -67,7 +67,7 @@ export default function PendantCampaign() {
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">
               Wear the pendant. yAtI records, summarizes and drafts the follow-up email while you get on with building. You review and send.
             </p>
-            <div id="hero-form" className="mt-8"><WaitlistForm where="hero" source="pendant-campaign" /></div>
+            <div id="hero-form" className="mt-8"><WaitlistForm where="hero" source="pendant-campaign" askPhone /></div>
             <p className="mt-4 text-sm text-white/50">Orders open in a few weeks. Waitlist members hear first. Launching on iPhone and Mac.</p>
           </div>
           <div className="flex justify-center">
@@ -127,7 +127,7 @@ export default function PendantCampaign() {
           <div className="mx-auto flex max-w-2xl flex-col items-center px-5">
             <h2 className="font-display text-3xl font-bold md:text-5xl">Be first to wear it.</h2>
             <p className="mb-8 mt-4 text-lg text-white/65">Join the waitlist and we will email you when orders open.</p>
-            <WaitlistForm where="final" source="pendant-campaign" />
+            <WaitlistForm where="final" source="pendant-campaign" askPhone />
           </div>
         </section>
       </main>
