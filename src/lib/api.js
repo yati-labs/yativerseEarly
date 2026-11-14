@@ -339,3 +339,17 @@ export async function createSubscriptionCheckout(planId) {
   if (!res.ok) throw new Error(data.error || 'Could not start checkout.')
   return data
 }
+
+// Public waitlist signup (stored in the Waitlist table in yati-api).
+export async function joinWaitlist(payload) {
+  const res = await fetch(`${API_BASE}/api/waitlist`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error || 'Could not join the waitlist')
+  }
+  return res.json()
+}
