@@ -5,6 +5,8 @@ import { ArrowRight, Check, ChevronDown } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
+import { joinWaitlist } from "../lib/api";
+import { getAttribution } from "../lib/tracking";
 import { fadeUp, fadeLeft, fadeRight } from "../lib/motion";
 
 const PERKS = [
@@ -192,24 +194,13 @@ export default function Waitlist() {
                       No credit card. No commitments.
                     </p>
                     <form
-                      action="https://formspree.io/f/mqeoyedd"
-                      method="POST"
                       onSubmit={(e) => {
                         e.preventDefault();
                         setStatus("loading");
-
-                        fetch("https://formspree.io/f/mqeoyedd", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify(form),
-                        })
-                          .then((res) => {
-                            if (res.ok) {
-                              setStatus("success");
-                              setForm({ name: "", email: "", role: "" });
-                            } else {
-                              setStatus("error");
-                            }
+                        joinWaitlist({ ...form, source: "waitlist-page", landing: window.location.pathname, ...getAttribution() })
+                          .then(() => {
+                            setStatus("success");
+                            setForm({ name: "", email: "", role: "" });
                           })
                           .catch(() => setStatus("error"));
                       }}

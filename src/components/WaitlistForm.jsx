@@ -1,24 +1,20 @@
 import { useState } from "react";
 import { getAttribution, track } from "../lib/tracking";
+import { joinWaitlist } from "../lib/api";
 
 // Shared waitlist form for the campaign pages. `source` tags each submission by campaign.
-const FORMSPREE = "https://formspree.io/f/mqeoyedd"; // same endpoint as /waitlist
 
 export default function WaitlistForm({ where, source, askPhone = false }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [honeypot, setHoneypot] = useState(""); // hidden; only bots fill it
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
   async function submit(e) {
     e.preventDefault();
     setStatus("loading");
     try {
-      const res = await fetch(FORMSPREE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ email, phone, source, form_location: where, ...getAttribution() }),
-      });
-      if (!res.ok) throw new Error("bad status");
+      await joinWaitlist({ email, phone, company: honeypot, source, form_location: where, landing: window.location.pathname, ...getAttribution() });
       setStatus("success");
       track("waitlist_join", { location: where, phone });
     } catch {
@@ -40,6 +36,7 @@ export default function WaitlistForm({ where, source, askPhone = false }) {
       onFocus={() => { if (!sessionStorage.getItem("yati_wl_started")) { sessionStorage.setItem("yati_wl_started", "1"); track("waitlist_start", { location: where }); } }}
       className="w-full max-w-lg"
     >
+      <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
       <div className="flex flex-col gap-3 sm:flex-row">
         <label className="sr-only" htmlFor={`email-${where}`}>Email</label>
         <input
