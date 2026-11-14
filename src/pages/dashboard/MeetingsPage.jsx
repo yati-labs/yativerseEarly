@@ -552,6 +552,9 @@ export default function MeetingsPage() {
                             {s.highlights.map((h, i) => (
                               <figure key={i} className="border-l-2 border-brand-gold/40 pl-3.5">
                                 <blockquote className="text-sm italic text-white/80">“{h.quote}”</blockquote>
+                                {h.translation && (
+                                  <p className="mt-1 text-sm text-white/60">{h.translation}</p>
+                                )}
                                 <figcaption className="mt-1 flex items-center gap-2 text-xs text-white/40">
                                   {h.why}
                                   <Timestamp seconds={h.start_seconds} onSeek={seek} />
