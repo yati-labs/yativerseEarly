@@ -69,7 +69,7 @@ export default function BrandCampaign() {
             <p className="mt-4 text-sm text-white/50">Free to join. Pendant orders open in a few weeks, and waitlist members hear first.</p>
           </div>
           <div className="flex justify-center">
-            <HeroVideo poster="/pendant1.jpeg" />
+            <HeroVideo poster="/video/hero-poster.jpg" />
           </div>
         </section>
 
