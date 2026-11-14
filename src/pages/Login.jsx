@@ -8,6 +8,7 @@ import SEO from "../components/SEO";
 import FirebaseSignIn from "../components/FirebaseSignIn";
 import { fadeUp, fadeRight } from "../lib/motion";
 import { useAuth, enterDemoMode } from "../lib/auth";
+import { captureAttribution, track } from "../lib/tracking";
 
 // Passkey and SSO are part of the design but neither is available yet, so by
 // default they are not shown. Set to true to show them as disabled "Soon" buttons.
@@ -88,6 +89,12 @@ export default function Login() {
     return () => clearTimeout(t);
   }, [cooldown]);
 
+  function startSignupOnce() {
+    if (sessionStorage.getItem("yati_signup_started")) return;
+    sessionStorage.setItem("yati_signup_started", "1");
+    track("signup_start");
+  }
+
   function switchMode(next) {
     setMode(next);
     setError(null);
@@ -95,7 +102,11 @@ export default function Login() {
     setPassword("");
   }
 
+  // Ads can link straight here with UTMs, so capture them on this page too.
+  useEffect(() => { captureAttribution(); }, []);
+
   function done() {
+    if (mode === "signup" || mode === "verify") track("sign_up", { method: "email_or_google" });
     refresh();
     navigate(redirectTo, { replace: true });
   }
@@ -367,7 +378,7 @@ export default function Login() {
                   </form>
                 ) : (
                   <>
-                    <form onSubmit={mode === "signup" ? handleSignUp : handleSignIn} className="mt-6 flex flex-col gap-5">
+                    <form onSubmit={mode === "signup" ? handleSignUp : handleSignIn} onFocus={mode === "signup" ? startSignupOnce : undefined} className="mt-6 flex flex-col gap-5">
                       <div>
                         <label htmlFor="email" className={labelClass}>Email address</label>
                         <input id="email" type="email" required autoComplete="email" placeholder="you@startup.com" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />

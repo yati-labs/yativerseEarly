@@ -15,6 +15,7 @@ import YATI from './pages/yAtI'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import CookiePolicy from './pages/CookiePolicy'
 import Login from './pages/Login'
+import CampaignLanding from './pages/CampaignLanding'
 import Dashboard from './pages/Dashboard'
 import PlanPage from './pages/PlanPage'
 import AgentsPage from './pages/dashboard/AgentsPage'
@@ -58,6 +59,7 @@ export default function App() {
           <Route path="/cookie-policy" element={<CookiePolicy />} />
            <Route path="/founder-os" element={<OSPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/start" element={<CampaignLanding />} />
           <Route path="/signup" element={<Navigate to="/login" replace />} />
           <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
           <Route
