@@ -91,7 +91,7 @@ export default function CampaignLanding() {
       <SEO
         title="Never let a deal go quiet again"
         description="yAtI watches your HubSpot pipeline and drafts the follow-up. You approve every message before it goes out."
-        path="/start"
+        path="/sales-agent"
       />
 
       <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-brand-bg/90 backdrop-blur">
