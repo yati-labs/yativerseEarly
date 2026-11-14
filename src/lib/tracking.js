@@ -32,7 +32,7 @@ export function track(name, params = {}) {
     if (typeof window.gtag === "function") window.gtag("event", name, payload);
     (window.dataLayer = window.dataLayer || []).push({ event: `yati_${name}`, ...payload });
     if (typeof window.fbq === "function") {
-      const std = { sign_up: "CompleteRegistration", signup_start: "InitiateCheckout", cta_click: "Lead" }[name];
+      const std = { sign_up: "CompleteRegistration", signup_start: "InitiateCheckout", waitlist_start: "InitiateCheckout", waitlist_join: "Lead" }[name];
       if (std) window.fbq("track", std);
       else window.fbq("trackCustom", name, payload);
     }
