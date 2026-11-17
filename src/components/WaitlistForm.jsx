@@ -2,11 +2,14 @@ import { useState } from "react";
 import { getAttribution, track } from "../lib/tracking";
 import { joinWaitlist } from "../lib/api";
 
-// Shared waitlist form for the campaign pages. `source` tags each submission by campaign.
+const field = "w-full rounded-lg border border-white/15 bg-white/[0.06] px-4 py-3 text-white outline-none focus:border-brand-gold";
 
-export default function WaitlistForm({ where, source, askPhone = false }) {
+// Shared waitlist form. `source` tags each signup by campaign.
+// Optional: askPhone (device select), model + onModelChange (model select), askConsent (marketing checkbox).
+export default function WaitlistForm({ where, source, askPhone = false, model, onModelChange, askConsent = false, stacked = false }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [consent, setConsent] = useState(false);
   const [honeypot, setHoneypot] = useState(""); // hidden; only bots fill it
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
@@ -14,9 +17,12 @@ export default function WaitlistForm({ where, source, askPhone = false }) {
     e.preventDefault();
     setStatus("loading");
     try {
-      await joinWaitlist({ email, phone, company: honeypot, source, form_location: where, landing: window.location.pathname, ...getAttribution() });
+      await joinWaitlist({
+        email, phone, model, marketing_consent: consent, company: honeypot, source,
+        form_location: where, landing: window.location.pathname, ...getAttribution(),
+      });
       setStatus("success");
-      track("waitlist_join", { location: where, phone });
+      track("waitlist_join", { location: where, phone, model });
     } catch {
       setStatus("error");
     }
@@ -25,7 +31,7 @@ export default function WaitlistForm({ where, source, askPhone = false }) {
   if (status === "success") {
     return (
       <p role="status" className="rounded-xl border border-brand-teal/30 bg-brand-teal/10 p-4 text-white">
-        You are on the list. We will email you when pendant orders open.
+        You are on the list. We will email you when orders open.
       </p>
     );
   }
@@ -37,32 +43,41 @@ export default function WaitlistForm({ where, source, askPhone = false }) {
       className="w-full max-w-lg"
     >
       <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <label className="sr-only" htmlFor={`email-${where}`}>Email</label>
-        <input
-          id={`email-${where}`} type="email" required autoComplete="email" placeholder="you@company.com"
-          value={email} onChange={(e) => setEmail(e.target.value)}
-          className="min-w-0 flex-1 rounded-full border border-white/15 bg-white/[0.06] px-5 py-3.5 text-white placeholder-white/35 outline-none focus:border-brand-purple"
-        />
+      <div className={stacked ? "flex flex-col gap-4" : "flex flex-col gap-3 sm:flex-row"}>
+        <div className={stacked ? "" : "min-w-0 flex-1"}>
+          <label className={stacked ? "mb-1.5 block text-sm" : "sr-only"} htmlFor={`email-${where}`}>Email address</label>
+          <input id={`email-${where}`} type="email" required autoComplete="email" placeholder="you@company.com"
+            value={email} onChange={(e) => setEmail(e.target.value)}
+            className={stacked ? field : "w-full rounded-full border border-white/15 bg-white/[0.06] px-5 py-3.5 text-white placeholder-white/35 outline-none focus:border-brand-purple"} />
+        </div>
+        {onModelChange && (
+          <div>
+            <label className="mb-1.5 block text-sm" htmlFor={`model-${where}`}>Which model interests you?</label>
+            <select id={`model-${where}`} value={model} onChange={(e) => onModelChange(e.target.value)} className={field}>
+              {["Not sure yet", "Thread Max", "Thread One", "Both"].map((m) => <option key={m}>{m}</option>)}
+            </select>
+          </div>
+        )}
+        {askPhone && (
+          <div>
+            <label className="mb-1.5 block text-sm" htmlFor={`phone-${where}`}>Your device <span className="text-white/45">(optional)</span></label>
+            <select id={`phone-${where}`} value={phone} onChange={(e) => setPhone(e.target.value)} className={field}>
+              <option value="">Prefer not to say</option>
+              <option>iPhone</option><option>Mac</option><option value="Android">Android (planned)</option>
+            </select>
+          </div>
+        )}
+        {askConsent && (
+          <label className="flex items-start gap-3 text-sm text-white/65">
+            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 accent-[#C9A84C]" />
+            <span>Email me product and launch updates (optional). See our <a href="/privacy-policy" className="underline">Privacy Policy</a>.</span>
+          </label>
+        )}
         <button type="submit" disabled={status === "loading"} className="btn-primary justify-center disabled:opacity-50">
           {status === "loading" ? "Joining…" : "Join the waitlist"}
         </button>
       </div>
-      {askPhone && (
-      <div className="mt-3 flex items-center gap-2 text-sm text-white/55">
-        <label htmlFor={`phone-${where}`}>My phone is</label>
-        <select id={`phone-${where}`} value={phone} onChange={(e) => setPhone(e.target.value)}
-          className="rounded-md border border-white/15 bg-brand-bg px-2 py-1 text-white/80">
-          <option value="">Select (optional)</option>
-          <option>iPhone</option>
-          <option>Android</option>
-        </select>
-      </div>
-      )}
-      {status === "error" && (
-        <p role="alert" className="mt-3 text-sm text-brand-rose">We could not save that. Check your email address and try again.</p>
-      )}
+      {status === "error" && <p role="alert" className="mt-3 text-sm text-brand-rose">We could not save that. Check your email address and try again.</p>}
     </form>
   );
 }
-
