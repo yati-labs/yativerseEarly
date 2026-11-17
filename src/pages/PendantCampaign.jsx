@@ -30,6 +30,19 @@ const FAQ = [
   ["Can I record anyone?", "Rules on recording conversations vary by place. You are responsible for getting consent where it is required."], // legal review before running ads
 ];
 
+const BEYOND = [
+  ["Linked to the right meeting", "Connect Gmail and Calendar so each recording lands with the meeting it belongs to. You confirm the match."],
+  ["Know who said what", "Speaker labels you can rename, so a transcript reads like a real conversation."],
+  ["One account across your devices", "The same yAtI account works across your yAtI devices."],
+];
+
+// Public-safe version of the internal roadmap: no funding or staffing language.
+const PATH = [
+  { when: "Phase I · Post-Thanksgiving 2026", t: "Capture & follow up", items: ["Transcripts, summaries and next steps", "Gmail draft and calendar context"], note: "iPhone and Mac first. Device availability follows testing." },
+  { when: "Phase II · Planned January 2027", t: "Connect your sales work", items: ["Android after testing", "Approved HubSpot notes and tasks", "CRM-informed follow-ups"], note: "" },
+  { when: "Phase III · Planned for early 2027", t: "Build customer memory", items: ["Ask questions across your conversations", "Meeting preparation briefs", "Small-team shared history"], note: "" },
+];
+
 const cream = "bg-[#f4f1e9] text-[#191b1d]";
 const h2 = "text-3xl font-semibold tracking-tight md:text-5xl";
 
@@ -152,6 +165,33 @@ export default function PendantCampaign() {
               <div className="border-b border-[#e1ddd5] py-5"><strong>{t.head}</strong><p className="mt-2 text-[15px] text-[#3a3d40]">{t.body}</p></div>
               <span className="mt-4 inline-block rounded bg-[#f4e5b0] px-2 py-1 text-xs text-[#51411a]">{t.state}</span>
             </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-5 py-20">
+          <h2 className={h2}>More than a recording.</h2>
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
+            {BEYOND.map(([a, b]) => (
+              <div key={a} className="border-t border-white/15 pt-5"><h3 className="font-display text-xl font-bold">{a}</h3><p className="mt-2 text-white/65">{b}</p></div>
+            ))}
+          </div>
+        </section>
+
+        <section className={`${cream} py-20`} id="path">
+          <div className="mx-auto max-w-6xl px-5">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7b5c06]">A clear launch path</p>
+            <h2 className={`${h2} mt-3`}>Start useful. Get more connected.</h2>
+            <div className="mt-10 grid gap-8 md:grid-cols-3">
+              {PATH.map((p) => (
+                <article key={p.t} className="border-t-2 border-[#c49b28] pt-5">
+                  <p className="text-xs text-[#856914]">{p.when}</p>
+                  <h3 className="mt-2 font-display text-xl font-bold">{p.t}</h3>
+                  <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] text-[#3a3d40]">{p.items.map((i) => <li key={i}>{i}</li>)}</ul>
+                  {p.note && <p className="mt-3 text-sm text-[#575b60]">{p.note}</p>}
+                </article>
+              ))}
+            </div>
+            <p className="mt-8 text-xs text-[#575b60]">Planned features are not guaranteed, and timing may change as we test with founders.</p>
           </div>
         </section>
 
