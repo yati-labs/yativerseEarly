@@ -22,6 +22,7 @@ export default function WaitlistForm({ where, source, askPhone = false, model, o
         form_location: where, landing: window.location.pathname, ...getAttribution(),
       });
       setStatus("success");
+      try { localStorage.setItem("yati_wl_joined", "1"); } catch { /* ignore */ }
       track("waitlist_join", { location: where, phone, model });
     } catch {
       setStatus("error");

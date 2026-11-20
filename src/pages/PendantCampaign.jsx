@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import SEO from "../components/SEO";
 import WaitlistForm from "../components/WaitlistForm";
 import HeroVideo from "../components/HeroVideo";
+import WaitlistModal from "../components/WaitlistModal";
 import { captureAttribution, initMetaPixel, track } from "../lib/tracking";
 
 // Campaign 2: yAtI FLOW (Thread Max + Thread One). One goal: join the waitlist.
@@ -51,6 +52,7 @@ export default function PendantCampaign() {
   const [model, setModel] = useState("Not sure yet");
   const [tab, setTab] = useState("followup");
   const [showBar, setShowBar] = useState(false);
+  const [modal, setModal] = useState(false);
   const t = TABS[tab];
 
   useEffect(() => {
@@ -69,16 +71,31 @@ export default function PendantCampaign() {
     return () => { m.remove(); io.disconnect(); };
   }, []);
 
-  function goHero(where) {
+  function openModal(where) {
     track("cta_click", { location: where });
-    document.getElementById("hero-form")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(() => document.getElementById("email-hero")?.focus({ preventScroll: true }), 400);
+    track("modal_open", { trigger: where });
+    setModal(true);
   }
   function pick(id) {
     setModel(id);
     track("model_interest", { model: id });
-    document.getElementById("join")?.scrollIntoView({ behavior: "smooth" });
+    openModal("model_card");
   }
+
+  // Exit-intent prompt: desktop only, once per visit, never after joining, not in the first 8 seconds.
+  useEffect(() => {
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    const start = Date.now();
+    const onOut = (e) => {
+      if (e.relatedTarget || e.clientY > 0 || Date.now() - start < 8000) return;
+      try { if (sessionStorage.getItem("yati_modal_seen") || localStorage.getItem("yati_wl_joined")) return; } catch { return; }
+      sessionStorage.setItem("yati_modal_seen", "1");
+      track("modal_open", { trigger: "exit_intent" });
+      setModal(true);
+    };
+    document.addEventListener("mouseout", onOut);
+    return () => document.removeEventListener("mouseout", onOut);
+  }, []);
 
   return (
     <div className="min-h-screen bg-brand-bg pb-20 font-body text-white">
@@ -87,7 +104,7 @@ export default function PendantCampaign() {
       <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-brand-bg/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <Link to="/" aria-label="yAtIverse home"><img src="/logo.png" alt="yAtIverse" width="34" height="28" className="h-7 w-auto" /></Link>
-          <button onClick={() => goHero("header")} className="btn-primary !px-5 !py-2">Join the waitlist</button>
+          <button onClick={() => openModal("header")} className="btn-primary !px-5 !py-2">Join the waitlist</button>
         </div>
       </header>
 
@@ -230,9 +247,10 @@ export default function PendantCampaign() {
       <div className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-brand-bg/95 px-5 py-3 backdrop-blur transition-transform ${showBar ? "translate-y-0" : "translate-y-full"}`} aria-hidden={!showBar}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <p className="text-sm"><b>yAtI FLOW</b> <span className="text-white/55">· Early access</span></p>
-          <button tabIndex={showBar ? 0 : -1} onClick={() => goHero("sticky_bar")} className="btn-primary !px-5 !py-2">Join the waitlist</button>
+          <button tabIndex={showBar ? 0 : -1} onClick={() => openModal("sticky_bar")} className="btn-primary !px-5 !py-2">Join the waitlist</button>
         </div>
       </div>
+      <WaitlistModal open={modal} onClose={() => setModal(false)} source="flow-campaign" model={model} onModelChange={setModel} />
     </div>
   );
 }
