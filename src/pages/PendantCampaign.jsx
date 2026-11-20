@@ -104,17 +104,9 @@ export default function PendantCampaign() {
             <div id="hero-form" className="mt-8"><WaitlistForm where="hero" source="flow-campaign" model={model} /></div>
             <p className="mt-4 text-xs leading-relaxed text-white/50">Free to join. iPhone and Mac first. Android planned.<br />Renders show proposed branding; final finish may vary.</p>
           </div>
-          <div className="relative flex items-end justify-center gap-4 overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_50%_60%,rgba(201,168,76,0.16),transparent_65%)] px-4 py-10">
-            {/* Background loop. Files: public/flow/hero-loop.mp4 and hero-poster.jpg. Hidden until they exist. */}
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_50%_60%,rgba(201,168,76,0.16),#0b0f24_70%)]">
+            {/* Hero loop. Files: public/flow/hero-loop.mp4 and hero-poster.jpg */}
             <HeroVideo className="absolute inset-0" poster="/flow/hero-poster.jpg" mp4="/flow/hero-loop.mp4" webm={null} />
-            {MODELS.map((m) => (
-              <figure key={m.id} className="relative w-[46%] text-center">
-                <div className="overflow-hidden rounded-2xl bg-[#14151a]">
-                  <img src={m.img} alt={`${m.id} concept`} width={m.w} height={m.h} fetchpriority="high" className="h-auto w-full" />
-                </div>
-                <figcaption className="mt-3 text-sm font-semibold">{m.id}<span className="block text-xs font-normal text-white/50">{m.cap}</span></figcaption>
-              </figure>
-            ))}
           </div>
         </section>
 
