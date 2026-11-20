@@ -1,116 +1,225 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import SEO from "../components/SEO";
 import WaitlistForm from "../components/WaitlistForm";
+import HeroVideo from "../components/HeroVideo";
+import WaitlistModal from "../components/WaitlistModal";
 import { captureAttribution, initMetaPixel, track } from "../lib/tracking";
 
-const STEPS = [
-  { t: "Capture", d: "Tap the pendant when a conversation starts. The recording syncs to the yAtI app." },
-  { t: "Understand", d: "Get a transcript, a short summary and action items you can edit, with audio playback." },
-  { t: "Follow up", d: "Pick a recording and the Sales Agent drafts the follow-up email." },
-  { t: "Review and send", d: "You edit the draft and you send it. Nothing goes out on its own." },
+// Campaign 2: yAtI FLOW (Thread Max + Thread One). One goal: join the waitlist.
+// TODO: replace /flow/*.jpg placeholders with the original renders / real device photos.
+const MODELS = [
+  { id: "Thread Max", tag: "Wearable design", img: "/flow/thread-max.jpg", w: 248, h: 382, cap: "Wearable capture",
+    d: "A compact capsule for capturing the conversations and ideas that happen while you are building." },
+  { id: "Thread One", tag: "Slim card design", img: "/flow/thread-one.jpg", w: 295, h: 363, cap: "Slim card capture",
+    d: "A slim recorder for your meeting table, pocket or bag. A different shape for the same founder ambition." },
 ];
 
-const FEATURES = [
-  ["Searchable recording library", "Find any conversation later by what was said."],
-  ["Linked to your meetings", "Notes attach to the calendar meeting they belong to."],
-  ["Works with Gmail and Calendar", "Uses the accounts you already have."],
-  ["Editable everywhere", "Summaries, action items and email drafts are yours to change."],
-];
+const TABS = {
+  followup: { label: "Follow-up", title: "Keep the conversation moving.", input: "“Maya wants to explore a pilot. Send the overview and ask about a follow-up next week.”",
+    head: "Sales Agent draft", body: "Hi Maya, great meeting you. Here is the overview we discussed. Would you like to find a time next week to talk through the pilot?", state: "Review before sending" },
+  crm: { label: "HubSpot", title: "Put the next step in the right place.", input: "Approved meeting summary + a confirmed HubSpot contact or deal.",
+    head: "Planned CRM action", body: "Save the meeting note. Create a follow-up task with a confirmed owner and due date. You review before anything is written to HubSpot.", state: "Planned for January 2027" },
+};
 
 const FAQ = [
-  ["When can I order the pendant?", "Orders open in a few weeks. Waitlist members are emailed first."],
-  ["What does it cost?", "Pricing will be shared when orders open. Joining the waitlist is free and has no obligation."],
-  ["Does it work on Android?", "We launch on iPhone and Mac first. Tell us your phone when you join and we will let you know when that changes."],
-  ["Does it email people automatically?", "No. The Sales Agent writes a draft. You review, edit and send it."],
+  ["When can I order?", "Orders open in a few weeks. Waitlist members are emailed first. Final configuration and pricing are confirmed when orders open."],
+  ["Does Founder OS send emails automatically?", "No. The Sales Agent prepares a draft. You review and send."],
+  ["Is HubSpot available at launch?", "Approved HubSpot notes and tasks are planned for January 2027."],
+  ["Can I use Android?", "iPhone and Mac come first. Android is planned after testing."],
+  ["Is this a replacement for my CRM?", "No. The aim is to connect your conversations to the tools you already use. HubSpot stays your customer system."],
   ["Can I record anyone?", "Rules on recording conversations vary by place. You are responsible for getting consent where it is required."], // legal review before running ads
-  ["Do I need the Signal Ring?", "No. The pendant works on its own."],
 ];
 
+const BEYOND = [
+  ["Linked to the right meeting", "Connect Gmail and Calendar so each recording lands with the meeting it belongs to. You confirm the match."],
+  ["Know who said what", "Speaker labels you can rename, so a transcript reads like a real conversation."],
+  ["One account across your devices", "The same yAtI account works across your yAtI devices."],
+];
+
+// Public-safe version of the internal roadmap: no funding or staffing language.
+const PATH = [
+  { when: "Phase I · Post-Thanksgiving 2026", t: "Capture & follow up", items: ["Transcripts, summaries and next steps", "Gmail draft and calendar context"], note: "iPhone and Mac first. Device availability follows testing." },
+  { when: "Phase II · Planned January 2027", t: "Connect your sales work", items: ["Android after testing", "Approved HubSpot notes and tasks", "CRM-informed follow-ups"], note: "" },
+  { when: "Phase III · Planned for early 2027", t: "Build customer memory", items: ["Ask questions across your conversations", "Meeting preparation briefs", "Small-team shared history"], note: "" },
+];
+
+const cream = "bg-[#f4f1e9] text-[#191b1d]";
+const h2 = "text-3xl font-semibold tracking-tight md:text-5xl";
+
 export default function PendantCampaign() {
+  const [model, setModel] = useState("Not sure yet");
+  const [tab, setTab] = useState("followup");
+  const [showBar, setShowBar] = useState(false);
+  const [modal, setModal] = useState(false);
+  const t = TABS[tab];
+
   useEffect(() => {
     captureAttribution();
     initMetaPixel();
     const m = document.createElement("meta");
     m.name = "robots"; m.content = "noindex, follow";
     document.head.appendChild(m);
-    track("campaign_view", { campaign: "pendant" });
-    return () => m.remove();
+    track("campaign_view", { campaign: "flow" });
+    const seen = new Set(); // sticky bar shows only while neither form is on screen
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => (e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id)));
+      setShowBar(seen.size === 0 && window.scrollY > 200);
+    });
+    ["hero-form", "join-form"].forEach((id) => { const el = document.getElementById(id); el && io.observe(el); });
+    return () => { m.remove(); io.disconnect(); };
   }, []);
 
-  function toTop() {
-    track("cta_click", { location: "header" });
-    document.getElementById("hero-form")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(() => document.getElementById("email-hero")?.focus({ preventScroll: true }), 400);
+  function openModal(where) {
+    track("cta_click", { location: where });
+    track("modal_open", { trigger: where });
+    setModal(true);
+  }
+  function pick(id) {
+    setModel(id);
+    track("model_interest", { model: id });
+    openModal("model_card");
   }
 
+  // Exit-intent prompt: desktop only, once per visit, never after joining, not in the first 8 seconds.
+  useEffect(() => {
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    const start = Date.now();
+    const onOut = (e) => {
+      if (e.relatedTarget || e.clientY > 0 || Date.now() - start < 8000) return;
+      try { if (sessionStorage.getItem("yati_modal_seen") || localStorage.getItem("yati_wl_joined")) return; } catch { return; }
+      sessionStorage.setItem("yati_modal_seen", "1");
+      track("modal_open", { trigger: "exit_intent" });
+      setModal(true);
+    };
+    document.addEventListener("mouseout", onOut);
+    return () => document.removeEventListener("mouseout", onOut);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-brand-bg font-body text-white">
-      <SEO title="Every conversation, followed up" description="The Thread Pendant records your conversations. yAtI turns them into summaries and a follow-up draft you review and send. Join the waitlist." path="/pendant" />
+    <div className="min-h-screen bg-brand-bg pb-20 font-body text-white">
+      <SEO title="Thread Max and Thread One by yAtI FLOW" description="Capture the conversation, get a follow-up draft you review and send. Join the waitlist for yAtI FLOW: Thread Max and Thread One." path="/pendant" />
 
       <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-brand-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
-          <Link to="/" aria-label="yAtIverse home" className="flex items-center gap-2">
-            <img src="/logo.png" alt="" width="28" height="28" className="h-7 w-7 rounded-md" />
-            <span className="font-display text-base font-bold">yAtIverse</span>
-          </Link>
-          <button onClick={toTop} className="btn-primary !px-5 !py-2">Join the waitlist</button>
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+          <Link to="/" aria-label="yAtIverse home"><img src="/logo.png" alt="yAtIverse" width="34" height="28" className="h-7 w-auto" /></Link>
+          <button onClick={() => openModal("header")} className="btn-primary !px-5 !py-2">Join the waitlist</button>
         </div>
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-12 md:grid-cols-[1.15fr_0.85fr] md:pt-20">
+        <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-14 pt-12 md:grid-cols-[1.05fr_1fr] md:pt-20">
           <div>
-            <p className="mb-4 text-sm text-white/55">Thread Pendant by yAtIverse</p>
-            <h1 className="font-display text-4xl font-extrabold leading-[1.08] md:text-6xl">Every conversation, followed up.</h1>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">
-              Wear the pendant. yAtI records, summarizes and drafts the follow-up email while you get on with building. You review and send.
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold">yAtI FLOW · Startup Right</p>
+            <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+              Turn founder conversations into your <span className="text-brand-gold2">next move.</span>
+            </h1>
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-white/70">
+              Meet Thread Max and Thread One. Capture the conversation, get a follow-up draft, and build toward a connected sales workflow with Founder OS. You review and send.
             </p>
-            <div id="hero-form" className="mt-8"><WaitlistForm where="hero" source="pendant-campaign" askPhone /></div>
-            <p className="mt-4 text-sm text-white/50">Orders open in a few weeks. Waitlist members hear first. Launching on iPhone and Mac.</p>
+            <div id="hero-form" className="mt-8"><WaitlistForm where="hero" source="flow-campaign" model={model} /></div>
+            <p className="mt-4 text-xs leading-relaxed text-white/50">Free to join. iPhone and Mac first. Android planned.<br />Renders show proposed branding; final finish may vary.</p>
           </div>
-          <div className="flex justify-center">
-            <img src="/pendant1.jpeg" alt="Thread Pendant on a rose-gold chain" width="768" height="1376" fetchpriority="high"
-              className="max-h-[520px] w-auto rounded-3xl object-cover" />
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_50%_60%,rgba(201,168,76,0.16),#0b0f24_70%)]">
+            {/* Hero loop. Files: public/flow/hero-loop.mp4 and hero-poster.jpg */}
+            <HeroVideo className="absolute inset-0" poster="/flow/hero-poster.jpg" mp4="/flow/hero-loop.mp4" webm={null} />
           </div>
         </section>
 
-        <section className="border-y border-white/[0.06] bg-brand-bg2 py-20">
-          <div className="mx-auto max-w-6xl px-5">
-            <h2 className="font-display text-3xl font-bold md:text-4xl">From conversation to sent email</h2>
-            <ol className="mt-10 grid gap-8 md:grid-cols-4">
-              {STEPS.map((s, i) => (
-                <li key={s.t}>
-                  <span className="font-display text-sm text-brand-gold">Step {i + 1}</span>
-                  <h3 className="mt-2 font-display text-xl font-bold">{s.t}</h3>
-                  <p className="mt-2 leading-relaxed text-white/65">{s.d}</p>
-                </li>
-              ))}
-            </ol>
+        <div className="mx-auto grid max-w-6xl gap-4 border-t border-white/10 px-5 py-6 text-sm text-white/60 sm:grid-cols-2 md:grid-cols-4">
+          <span><b className="text-white">Capture</b> the conversation</span><span><b className="text-white">Prepare</b> the follow-up</span>
+          <span><b className="text-white">Connect</b> your sales workflow</span><span><b className="text-white">You</b> approve every send</span>
+        </div>
+
+        <section className="mx-auto max-w-6xl px-5 py-20">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold">One product line · two form factors</p>
+          <h2 className={`${h2} mt-3`}>Keep your momentum. Choose your Thread.</h2>
+          <p className="mt-4 max-w-xl text-white/65">Pick the shape that fits your day. Final configuration, pricing and availability are confirmed before orders open.</p>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {MODELS.map((m) => (
+              <article key={m.id} className="rounded-2xl border border-white/10 bg-brand-bg2 p-7">
+                <span className="rounded-full border border-brand-gold/40 px-3 py-1 text-[11px] uppercase tracking-wider text-brand-gold2">{m.tag}</span>
+                <div className="my-6 flex h-72 items-center justify-center rounded-xl bg-[#14151a]">
+                  <img src={m.img} alt={m.id} width={m.w} height={m.h} loading="lazy" className="max-h-full w-auto" />
+                </div>
+                <h3 className="font-display text-2xl font-bold">{m.id}</h3>
+                <p className="mt-2 text-white/65">{m.d}</p>
+                <button onClick={() => pick(m.id)} className="btn-primary mt-6 !px-6 !py-2.5">I’m interested</button>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-white/40">Concept renders, not shown to relative scale.</p>
+        </section>
+
+        <section className={`${cream} py-20`}>
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 md:grid-cols-2">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7b5c06]">Founder OS · built around the next step</p>
+              <h2 className={`${h2} mt-3`}>A useful note is just the beginning.</h2>
+              <p className="mt-4 text-[#575b60]">The work after the conversation matters as much as the conversation itself.</p>
+              <ol className="mt-6 divide-y divide-[#cecac0] border-y border-[#cecac0]">
+                {[["Capture with FLOW", "Bring a conversation into your workflow."], ["Prepare a follow-up", "The Sales Agent drafts a message. You review and send."], ["Connect the next action", "HubSpot notes and tasks are planned for January 2027."]].map(([a, b], i) => (
+                  <li key={a} className="flex gap-5 py-4"><span className="text-sm text-[#856914]">0{i + 1}</span><div><strong className="block">{a}</strong>{b}</div></li>
+                ))}
+              </ol>
+            </div>
+            <div className="rounded-xl border border-[#d9d4c9] bg-white p-7 shadow-xl shadow-black/5">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-[#696969]">Illustrative workflow · not a live app</p>
+              <div role="tablist" aria-label="Workflow examples" className="my-5 flex gap-2">
+                {Object.entries(TABS).map(([k, v]) => (
+                  <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+                    className={`rounded px-4 py-2 text-sm ${tab === k ? "bg-[#1a1c1f] text-white" : "border border-[#b5b3ad]"}`}>{v.label}</button>
+                ))}
+              </div>
+              <h3 className="font-display text-xl font-bold">{t.title}</h3>
+              <p className="mt-3 border-l-4 border-[#c49b28] bg-[#f4f1e9] p-4 text-[15px]">{t.input}</p>
+              <div className="border-b border-[#e1ddd5] py-5"><strong>{t.head}</strong><p className="mt-2 text-[15px] text-[#3a3d40]">{t.body}</p></div>
+              <span className="mt-4 inline-block rounded bg-[#f4e5b0] px-2 py-1 text-xs text-[#51411a]">{t.state}</span>
+            </div>
           </div>
         </section>
 
         <section className="mx-auto max-w-6xl px-5 py-20">
-          <h2 className="font-display text-3xl font-bold md:text-4xl">Nothing you said gets lost</h2>
-          <div className="mt-10 grid gap-8 sm:grid-cols-2">
-            {FEATURES.map(([t, d]) => (
-              <div key={t}><h3 className="font-display text-xl font-bold">{t}</h3><p className="mt-2 text-white/65">{d}</p></div>
+          <h2 className={h2}>More than a recording.</h2>
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
+            {BEYOND.map(([a, b]) => (
+              <div key={a} className="border-t border-white/15 pt-5"><h3 className="font-display text-xl font-bold">{a}</h3><p className="mt-2 text-white/65">{b}</p></div>
             ))}
           </div>
         </section>
 
-        <section className="border-y border-white/[0.06] bg-brand-bg2 py-20">
-          <div className="mx-auto max-w-3xl px-5">
-            <h2 className="font-display text-3xl font-bold md:text-4xl">Built for the founder’s day</h2>
-            <p className="mt-5 text-lg leading-relaxed text-white/70">
-              Founders talk to customers, investors and teammates all day, and the follow-up is what gets dropped. yAtIverse puts AI in the things you already wear, so capturing a conversation takes no extra effort. The pendant and Sales Agent come first. We are building toward more, with the Signal Ring and Founder OS alongside.
-            </p>
+        <section className={`${cream} py-20`} id="path">
+          <div className="mx-auto max-w-6xl px-5">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7b5c06]">A clear launch path</p>
+            <h2 className={`${h2} mt-3`}>Start useful. Get more connected.</h2>
+            <div className="mt-10 grid gap-8 md:grid-cols-3">
+              {PATH.map((p) => (
+                <article key={p.t} className="border-t-2 border-[#c49b28] pt-5">
+                  <p className="text-xs text-[#856914]">{p.when}</p>
+                  <h3 className="mt-2 font-display text-xl font-bold">{p.t}</h3>
+                  <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] text-[#3a3d40]">{p.items.map((i) => <li key={i}>{i}</li>)}</ul>
+                  {p.note && <p className="mt-3 text-sm text-[#575b60]">{p.note}</p>}
+                </article>
+              ))}
+            </div>
+            <p className="mt-8 text-xs text-[#575b60]">Planned features are not guaranteed, and timing may change as we test with founders.</p>
           </div>
         </section>
 
-        <section className="mx-auto max-w-3xl px-5 py-20">
-          <h2 className="font-display text-3xl font-bold md:text-4xl">Questions, answered</h2>
+        <section id="join" className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-2">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold">Early access</p>
+            <h2 className={`${h2} mt-3`}>Build your next chapter. Keep the thread.</h2>
+            <p className="mt-4 max-w-md text-white/65">Tell us which model interests you. We will email you when orders open. Free to join, no purchase required.</p>
+          </div>
+          <div id="join-form" className="rounded-2xl border border-white/10 bg-brand-bg2 p-7">
+            <WaitlistForm where="final" source="flow-campaign" askPhone askConsent stacked model={model} onModelChange={setModel} />
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-3xl px-5 pb-20">
+          <h2 className={h2}>A few useful answers.</h2>
           <div className="mt-8 divide-y divide-white/10 border-y border-white/10">
             {FAQ.map(([q, a]) => (
               <details key={q} className="group py-4" onToggle={(e) => e.currentTarget.open && track("faq_open", { question: q })}>
@@ -122,19 +231,11 @@ export default function PendantCampaign() {
             ))}
           </div>
         </section>
-
-        <section className="border-t border-white/[0.06] bg-brand-bg2 py-24 text-center">
-          <div className="mx-auto flex max-w-2xl flex-col items-center px-5">
-            <h2 className="font-display text-3xl font-bold md:text-5xl">Be first to wear it.</h2>
-            <p className="mb-8 mt-4 text-lg text-white/65">Join the waitlist and we will email you when orders open.</p>
-            <WaitlistForm where="final" source="pendant-campaign" askPhone />
-          </div>
-        </section>
       </main>
 
       <footer className="border-t border-white/[0.06] py-8">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 text-sm text-white/50">
-          <span>© {new Date().getFullYear()} yAtIverse</span>
+          <span>© {new Date().getFullYear()} yAtIverse · Startup Right</span>
           <nav aria-label="Legal" className="flex gap-5">
             <Link to="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
             <Link to="/cookie-policy" className="hover:text-white">Cookie Policy</Link>
@@ -142,6 +243,14 @@ export default function PendantCampaign() {
           </nav>
         </div>
       </footer>
+
+      <div className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-brand-bg/95 px-5 py-3 backdrop-blur transition-transform ${showBar ? "translate-y-0" : "translate-y-full"}`} aria-hidden={!showBar}>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+          <p className="text-sm"><b>yAtI FLOW</b> <span className="text-white/55">· Early access</span></p>
+          <button tabIndex={showBar ? 0 : -1} onClick={() => openModal("sticky_bar")} className="btn-primary !px-5 !py-2">Join the waitlist</button>
+        </div>
+      </div>
+      <WaitlistModal open={modal} onClose={() => setModal(false)} source="flow-campaign" model={model} onModelChange={setModel} />
     </div>
   );
 }
