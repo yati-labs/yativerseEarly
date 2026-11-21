@@ -6,7 +6,7 @@ const field = "w-full rounded-lg border border-white/15 bg-white/[0.06] px-4 py-
 
 // Shared waitlist form. `source` tags each signup by campaign.
 // Optional: askPhone (device select), model + onModelChange (model select), askConsent (marketing checkbox).
-export default function WaitlistForm({ where, source, askPhone = false, model, onModelChange, askConsent = false, stacked = false }) {
+export default function WaitlistForm({ where, source, askPhone = false, model, onModelChange, askConsent = false, stacked = false, cta = "Join the waitlist", onStart, onSuccess }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
@@ -24,6 +24,7 @@ export default function WaitlistForm({ where, source, askPhone = false, model, o
       setStatus("success");
       try { localStorage.setItem("yati_wl_joined", "1"); } catch { /* ignore */ }
       track("waitlist_join", { location: where, phone, model });
+      onSuccess?.(where, model);
     } catch {
       setStatus("error");
     }
@@ -40,7 +41,7 @@ export default function WaitlistForm({ where, source, askPhone = false, model, o
   return (
     <form
       onSubmit={submit}
-      onFocus={() => { if (!sessionStorage.getItem("yati_wl_started")) { sessionStorage.setItem("yati_wl_started", "1"); track("waitlist_start", { location: where }); } }}
+      onFocus={() => { if (!sessionStorage.getItem("yati_wl_started")) { sessionStorage.setItem("yati_wl_started", "1"); track("waitlist_start", { location: where }); onStart?.(where); } }}
       className="w-full max-w-lg"
     >
       <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
@@ -75,7 +76,7 @@ export default function WaitlistForm({ where, source, askPhone = false, model, o
           </label>
         )}
         <button type="submit" disabled={status === "loading"} className="btn-primary justify-center disabled:opacity-50">
-          {status === "loading" ? "Joining…" : "Join the waitlist"}
+          {status === "loading" ? "Joining…" : cta}
         </button>
       </div>
       {status === "error" && <p role="alert" className="mt-3 text-sm text-brand-rose">We could not save that. Check your email address and try again.</p>}

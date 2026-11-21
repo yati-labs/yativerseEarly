@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Homepage    from './pages/Homepage'
 import Wearables   from './pages/Wearables'
@@ -16,7 +16,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import CookiePolicy from './pages/CookiePolicy'
 import Login from './pages/Login'
 import CampaignLanding from './pages/CampaignLanding'
-import PendantCampaign from './pages/PendantCampaign'
+import YatiFlow from './pages/YatiFlow'
 import BrandCampaign from './pages/BrandCampaign'
 import Dashboard from './pages/Dashboard'
 import PlanPage from './pages/PlanPage'
@@ -37,6 +37,12 @@ function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => { window.scrollTo(0, 0) }, [pathname])
   return null
+}
+
+// Client-side fallback for the old campaign URL (the 301 itself is set in vercel.json / _redirects).
+function RedirectKeepQuery({ to }) {
+  const { search, hash } = useLocation()
+  return <Navigate to={to + search + hash} replace />
 }
 
 export default function App() {
@@ -63,7 +69,8 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/start" element={<BrandCampaign />} />
           <Route path="/sales-agent" element={<CampaignLanding />} />
-          <Route path="/pendant" element={<PendantCampaign />} />
+          <Route path="/yati-flow" element={<YatiFlow />} />
+          <Route path="/pendant" element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/signup" element={<Navigate to="/login" replace />} />
           <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
           <Route

@@ -5,6 +5,7 @@ Allow: /
 # Campaign pages — allow full indexing
 Allow: /signal-ring
 Allow: /early-access
+Allow: /yati-flow
 
 # Disallow nothing on this site
 Disallow:

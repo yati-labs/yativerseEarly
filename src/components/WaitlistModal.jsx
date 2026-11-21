@@ -4,7 +4,7 @@ import WaitlistForm from "./WaitlistForm";
 import { track } from "../lib/tracking";
 
 // Waitlist popup. Opens from buttons (and exit intent on desktop); closes on Esc, backdrop or the X.
-export default function WaitlistModal({ open, onClose, source, model, onModelChange }) {
+export default function WaitlistModal({ open, onClose, source, model, onModelChange, cta, onStart, onSuccess }) {
   const ref = useRef(null);
 
   function close() {
@@ -44,7 +44,7 @@ export default function WaitlistModal({ open, onClose, source, model, onModelCha
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold">yAtI FLOW · Early access</p>
         <h2 id="wl-title" className="mt-2 text-2xl font-semibold tracking-tight">Be first when orders open.</h2>
         <p className="mb-5 mt-2 text-sm text-white/65">Free to join. No purchase required.</p>
-        <WaitlistForm where="modal" source={source} askPhone askConsent stacked model={model} onModelChange={onModelChange} />
+        <WaitlistForm where="modal" source={source} askPhone askConsent stacked model={model} onModelChange={onModelChange} cta={cta} onStart={onStart} onSuccess={onSuccess} />
       </div>
     </div>
   );

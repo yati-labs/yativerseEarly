@@ -9,7 +9,7 @@ one unified system — always working, never sleeping.
 ## Products
 
 - Signal Ring: A smart wearable that tracks founder focus, biometrics, and work state
-- Thread Pendant: A second wearable for passive context and presence signaling
+- yAtI Flow (Thread One and Thread Max): AI conversation recorders that capture, transcribe and summarize conversations and help draft follow-ups
 - yAtI OS: A personal command center for goals, launches, workflows, and daily priorities
 - AI Agents: Four specialized agents (Launch, Network, Focus, Brand) that run autonomously
 
@@ -18,7 +18,7 @@ one unified system — always working, never sleeping.
 - [Home](https://yativerse.ai/): Product overview and waitlist signup
 - [AI Agents](https://yativerse.ai/agents): The invisible team — Launch, Network, Focus, Brand agents
 - [yAtI OS](https://yativerse.ai/os): Founder OS command center details
-- [Wearables](https://yativerse.ai/wearables): Signal Ring and Thread Pendant
+- [Wearables](https://yativerse.ai/wearables): Signal Ring and yAtI Flow Thread One and Thread Max
 - [Waitlist](https://yativerse.ai/waitlist): Early access signup — limited spots
 
 ## Audience

@@ -6,7 +6,7 @@ import WaitlistForm from "../components/WaitlistForm";
 import HeroVideo from "../components/HeroVideo";
 import { captureAttribution, initMetaPixel, track } from "../lib/tracking";
 
-// Campaign 1: introduce the brand. One goal: join the waitlist (brand + first product, the Thread Pendant).
+// Campaign 1: introduce the brand. One goal: join the waitlist (brand + first product, yAtI Flow).
 const PROBLEMS = [
   "You are the seller, the marketer, the operator and the finance lead, all before lunch.",
   "The follow-up after a good conversation is the first thing to slip.",
@@ -14,7 +14,7 @@ const PROBLEMS = [
 ];
 
 const SYSTEM = [
-  { t: "Thread Pendant", tag: "First in line", d: "Captures your conversations. yAtI turns them into summaries, action items and a follow-up draft." },
+  { t: "yAtI Flow: Thread One and Thread Max", tag: "First in line", d: "Captures your conversations. yAtI turns them into summaries, action items and a follow-up draft." },
   { t: "Signal Ring", tag: "Coming", d: "Tracks steps, sleep and recovery, so your energy is part of how you plan your day." },
   { t: "AI agents", tag: "Sales Agent first", d: "A Sales Agent drafts follow-ups from your CRM. More agents are planned." },
   { t: "Founder OS", tag: "Coming", d: "One place where your devices, data and agents work together." },
@@ -22,7 +22,7 @@ const SYSTEM = [
 
 const FAQ = [
   ["What is yAtIverse?", "An AI ecosystem for founders: wearables, AI agents and a Founder OS that connects them."],
-  ["What am I joining the waitlist for?", "Early access to yAtIverse, starting with the Thread Pendant. Orders for the pendant open in a few weeks, and waitlist members are emailed first."],
+  ["What am I joining the waitlist for?", "Early access to yAtIverse, starting with yAtI Flow. Orders for yAtI Flow open in a few weeks, and waitlist members are emailed first."],
   ["Does it cost anything to join?", "No. Joining is free and carries no obligation. Pricing will be shared when orders open."],
   ["Do the AI agents act without me?", "No. Agents draft and suggest. You review and approve before anything is sent."],
   ["Which phones are supported?", "iPhone and Mac first. Tell us your phone when you join and we will let you know about Android."],
@@ -47,7 +47,7 @@ export default function BrandCampaign() {
 
   return (
     <div className="min-h-screen bg-brand-bg font-body text-white">
-      <SEO title="Start up right" description="yAtIverse brings AI wearables and agents together for founders. Join the waitlist for early access, starting with the Thread Pendant." path="/start" />
+      <SEO title="Start up right" description="yAtIverse brings AI wearables and agents together for founders. Join the waitlist for early access, starting with yAtI Flow." path="/start" />
 
       <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-brand-bg/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
@@ -63,10 +63,10 @@ export default function BrandCampaign() {
           <div>
             <h1 className="font-body text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl">AI that lives in your day, not in another tab.</h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">
-              yAtIverse brings wearables and AI agents together for founders. First up is the Thread Pendant, which captures your conversations and drafts the follow-up. You stay in charge.
+              yAtIverse brings wearables and AI agents together for founders. First up is yAtI Flow, which captures your conversations and drafts the follow-up. You stay in charge.
             </p>
             <div id="hero-form" className="mt-8"><WaitlistForm where="hero" source="brand-campaign" /></div>
-            <p className="mt-4 text-sm text-white/50">Free to join. Pendant orders open in a few weeks, and waitlist members hear first.</p>
+            <p className="mt-4 text-sm text-white/50">Free to join. Orders open in a few weeks, and waitlist members hear first.</p>
           </div>
           <div className="flex justify-center">
             <HeroVideo poster="/video/hero-poster.jpg" />
@@ -82,7 +82,7 @@ export default function BrandCampaign() {
 
         <section className="mx-auto max-w-6xl px-5 py-20">
           <h2 className="font-display text-3xl font-bold md:text-4xl">One ecosystem, built around the founder</h2>
-          <p className="mt-4 max-w-2xl text-lg text-white/65">We are launching in order, starting with the pendant. Joining the waitlist puts you first in line for all of it.</p>
+          <p className="mt-4 max-w-2xl text-lg text-white/65">We are launching in order, starting with yAtI Flow. Joining the waitlist puts you first in line for all of it.</p>
           <div className="mt-10 grid gap-10 sm:grid-cols-2">
             {SYSTEM.map((s) => (
               <div key={s.t}>
@@ -123,7 +123,7 @@ export default function BrandCampaign() {
         <section className="border-t border-white/[0.06] bg-brand-bg2 py-24 text-center">
           <div className="mx-auto flex max-w-2xl flex-col items-center px-5">
             <h2 className="font-display text-3xl font-bold md:text-5xl">Start up right. Be first in line.</h2>
-            <p className="mb-8 mt-4 text-lg text-white/65">Join the waitlist and we will email you when pendant orders open.</p>
+            <p className="mb-8 mt-4 text-lg text-white/65">Join the waitlist and we will email you when orders open.</p>
             <WaitlistForm where="final" source="brand-campaign" />
           </div>
         </section>

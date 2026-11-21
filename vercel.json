@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/pendant",
+      "destination": "/yati-flow",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

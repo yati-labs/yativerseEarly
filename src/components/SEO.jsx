@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const BASE_URL = 'https://yAtIverse.com'
+const BASE_URL = 'https://yativerse.ai'
 const DEFAULTS = {
   title:       'yAtIverse — Start Up Right. Every tool a founder needs, in one place.',
   description: 'AI-native ecosystem for ambitious founders. Wearables, AI agents, and Founder OS — every tool a founder needs, in one place.',
@@ -8,12 +8,12 @@ const DEFAULTS = {
   type:        'website',
 }
 
-export default function SEO({ title, description, image, type = 'website', path = '', schema }) {
+export default function SEO({ title, description, image, type = 'website', path = '', schema, raw = false }) {
   const t   = title       || DEFAULTS.title
   const d   = description || DEFAULTS.description
   const img = image       || DEFAULTS.image
   const url = `${BASE_URL}${path}`
-  const fullTitle = t.includes('yAtIverse') ? t : `${t} — yAtIverse`
+  const fullTitle = raw || t.includes('yAtIverse') ? t : `${t} — yAtIverse`
 
   useEffect(() => {
     document.title = fullTitle

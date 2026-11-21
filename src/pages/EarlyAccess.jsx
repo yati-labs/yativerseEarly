@@ -43,7 +43,7 @@ const TIERS = [
     price:      '$149',
     period:     'full reservation',
     desc:       'Reserve the ring + get full platform access from day one.',
-    features:   ['Everything in Pioneer','Thread Pendant pre-order slot','Full AI agent suite — 6 months free','1:1 onboarding call','Founding member badge'],
+    features:   ['Everything in Pioneer','yAtI Flow Thread pre-order slot','Full AI agent suite — 6 months free','1:1 onboarding call','Founding member badge'],
     cta:        'Reserve Full Stack',
     highlight:  false,
     color:      PURPLE,

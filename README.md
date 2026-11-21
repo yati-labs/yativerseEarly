@@ -125,7 +125,7 @@ For self-hosted fonts (faster, offline-safe):
 | Route | File | Description |
 |-------|------|-------------|
 | `/` | Homepage.jsx | Hero, journey, products, testimonials, CTA |
-| `/wearables` | Wearables.jsx | Signal Ring, Thread Pendant, AI Earbuds |
+| `/wearables` | Wearables.jsx | Signal Ring, yAtI Flow Thread One and Thread Max, AI Earbuds |
 | `/agents` | Agents.jsx | 4 AI agents with tabbed detail |
 | `/journey` | Journey.jsx | 4-step founder path + 90-day timeline |
 | `/community` | Community.jsx | Testimonials, Discord, stats, trust |
