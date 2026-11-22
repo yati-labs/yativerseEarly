@@ -4,6 +4,11 @@
       "source": "/pendant",
       "destination": "/yati-flow",
       "permanent": true
+    },
+    {
+      "source": "/wearables",
+      "destination": "/yati-flow",
+      "permanent": true
     }
   ],
   "headers": [

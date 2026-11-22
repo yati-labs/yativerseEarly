@@ -88,13 +88,13 @@ const SIGNALS = [
 ];
 
 const HERO_PILLS = [
-  { dot: "#605CFF", label: "YATI Flow — Signal Ring available soon" },
+  { dot: "#605CFF", label: "YATI Flow — Thread One & Thread Max" },
   { dot: "#C86DD7", label: "Digital C-Suite — your AI team" },
   { dot: "#FF6B8A", label: "Founder OS — your command center" },
 ];
 
 const QUICK_LINKS = [
-  { title: "YATI Flow", text: "The ring — available soon", href: "/wearables" },
+  { title: "YATI Flow", text: "Thread One & Thread Max — early access", href: "/yati-flow" },
   { title: "Digital C-Suite", text: "Your invisible AI team", href: "/agents" },
   { title: "Founder OS", text: "Your daily command center", href: "/" },
   { title: "Community", text: "Founders who live it", href: "/community" },
@@ -121,10 +121,10 @@ const PILLARS = [
     id: "flow",
     eyebrow: "Pillar 01 · Wearables",
     name: "YATI Flow",
-    tagline: "Starts with a ring. Built to grow.",
-    text: "YATI Flow is our line of AI-native wearables. The Signal Ring will be available soon — tracking sleep, heart rate, activity, and recovery — with more devices in the category to come.",
+    tagline: "Starts with your conversations. Built to grow.",
+    text: "YATI Flow is our line of AI-native wearables. Thread One and Thread Max capture your conversations and turn them into follow-ups. The Signal Ring follows later, tracking sleep, heart rate, activity, and recovery.",
     accent: "#605CFF",
-    link: "/wearables",
+    link: "/yati-flow",
     linkText: "Explore YATI Flow",
   },
   {
@@ -150,13 +150,9 @@ const PILLARS = [
 ];
 
 const AVAILABILITY = [
-  {
-    name: "Signal Ring",
-    pillar: "YATI Flow",
-    status: "Available soon",
-    accent: "#605CFF",
-    dot: "#77d6a1",
-  },
+  { name: "Thread One", pillar: "YATI Flow", status: "Early access", accent: "#C9A84C", dot: "#F5C542" },
+  { name: "Thread Max", pillar: "YATI Flow", status: "Early access", accent: "#C9A84C", dot: "#F5C542" },
+  { name: "Signal Ring", pillar: "YATI Flow", status: "Coming later", accent: "#605CFF", dot: "#b9b0a2" },
   {
     name: "Founder OS",
     pillar: "Command center",
@@ -509,7 +505,7 @@ export default function Homepage() {
       <SEO
         path="/"
         title="yAtIverse — AI Lifestyle for Founders. YATI Flow, Digital C-Suite & OS."
-        description="YATIVerse is an AI lifestyle for founders, built on three pillars: YATI Flow (the ring), a Digital C-Suite of AI executives, and a Founder OS connecting it all into one daily rhythm."
+        description="YATIVerse is an AI lifestyle for founders, built on three pillars: YATI Flow (Thread One and Thread Max, with the Signal Ring to follow), a Digital C-Suite of AI executives, and a Founder OS connecting it all into one daily rhythm."
         canonical="https://yativerse.ai/"
         ogImage="https://yativerse.ai/og-image.png"
       />
@@ -532,17 +528,17 @@ export default function Homepage() {
 
             <div className="relative z-10 max-w-3xl w-full text-center mx-auto">
               <Link
-                to="/wearables"
-                aria-label="yAtI Flow — Signal Ring available soon"
+                to="/yati-flow"
+                aria-label="yAtI Flow — Thread One and Thread Max, early access"
                 className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide border border-white/10 bg-white/[0.05] text-[#F5C542] hover:text-white transition-colors"
               >
                 <span
                   className="w-1.5 h-1.5 rounded-full bg-[#605CFF] animate-pulse flex-shrink-0"
                   aria-hidden="true"
                 />
-                Introducing yAtI AI-1 &nbsp;
+                Introducing yAtI Flow &nbsp;
                 <span className="text-brand-purple font-semibold">
-                  Explore the system →
+                  Thread One & Thread Max →
                 </span>
               </Link>
 
@@ -615,15 +611,13 @@ export default function Homepage() {
               </ul>
 
               <div className="flex flex-wrap gap-3 justify-center mb-10">
-                <Link to="/waitlist" className="btn-primary">
-                  Join the Waitlist →
+                <Link to="/yati-flow" className="btn-primary"> Get Early Access →
                 </Link>
-                <Link to="/wearables" className="btn-ghost">
-                  Explore YATI Flow
+                <Link to="/waitlist" className="btn-ghost"> Join the Waitlist
                 </Link>
               </div>
               <p className="text-xs text-white/35 font-body">
-                Free to join · No credit card · YATI Flow ships first
+                Free to join · No credit card · Thread One and Thread Max ship first
               </p>
             </div>
 
@@ -909,24 +903,20 @@ export default function Homepage() {
                   className="font-display font-bold tracking-tight text-white mb-5"
                   style={{ fontSize: "clamp(28px,3.5vw,44px)" }}
                 >
-                  It starts with a signal.{" "}
+                  It starts with a conversation.{" "}
                   <span className="text-gradient">
                     It's just the beginning.
                   </span>
                 </h2>
                 <p className="font-body text-base text-white/55 leading-relaxed mb-4 max-w-md">
-                  The Signal Ring — our first YATI Flow device — tracks your
-                  sleep, heart rate, activity, and recovery, giving you the
-                  daily readiness data founders need to operate at their best.
+                  Thread One and Thread Max record your conversations, turn them into summaries and action items, and draft the follow-up for you to review and send.
                 </p>
                 <p className="font-body text-sm text-white/38 leading-relaxed mb-8 max-w-md">
-                  It's the foundation everything else gets built on, as Founder
-                  OS and your Digital C-Suite come online around it — and as
-                  more YATI Flow devices join the category.
+                  They feed Founder OS and your Digital C-Suite with what was said and what comes next. The Signal Ring follows later, adding sleep, heart rate and recovery.
                 </p>
-                <Link to="/wearables" className="btn-ghost">
-                  Explore YATI Flow →
+                <Link to="/yati-flow" className="btn-ghost"> Explore Thread One & Thread Max →
                 </Link>
+                <p className="mt-6 font-body text-sm text-white/40">Coming later: <Link to="/signal-ring" className="text-brand-purple underline-offset-4 hover:underline">Signal Ring</Link></p>
               </Reveal>
 
               <Reveal delay={0.15}>
@@ -938,15 +928,15 @@ export default function Homepage() {
                       "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(96,92,255,0.18), rgba(5,8,20,0.9) 70%)",
                   }}
                 >
-                  <RingCarousel images={RING_IMAGES} />
+                  <img src="/flow/flow-devices.jpg" alt="yAtI Flow Thread One and Thread Max" width="580" height="578" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="glass rounded-xl px-4 py-3 flex items-center justify-between">
                       <div>
                         <p className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-0.5">
-                          YATI Flow · Live
+                          YATI Flow · Early access
                         </p>
                         <p className="font-display text-sm font-semibold text-white">
-                          {signal}
+                          Thread One & Thread Max
                         </p>
                       </div>
                       <span

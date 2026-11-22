@@ -1,32 +1,31 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import Homepage    from './pages/Homepage'
-import Wearables   from './pages/Wearables'
-import Agents      from './pages/Agents'
-import Journey     from './pages/Journey'
-import Community   from './pages/Community'
-import Waitlist    from './pages/Waitlist'
-import SignalRing  from './pages/SignalRing'
-import EarlyAccess from './pages/EarlyAccess'
-import Order       from './pages/Order'
-import Checkout    from './pages/Checkout'
-import OSPage from './pages/os'
-import YATI from './pages/yAtI'
-import PrivacyPolicy from './pages/PrivacyPolicy'
-import CookiePolicy from './pages/CookiePolicy'
-import Login from './pages/Login'
-import CampaignLanding from './pages/CampaignLanding'
-import YatiFlow from './pages/YatiFlow'
-import BrandCampaign from './pages/BrandCampaign'
-import Dashboard from './pages/Dashboard'
-import PlanPage from './pages/PlanPage'
-import AgentsPage from './pages/dashboard/AgentsPage'
-import ContactsPage from './pages/dashboard/ContactsPage'
-import DraftsPage from './pages/dashboard/DraftsPage'
-import InboxPage from './pages/dashboard/InboxPage'
-import DealsPage from './pages/dashboard/DealsPage'
-import MeetingsPage from './pages/dashboard/MeetingsPage'
-import SettingsPage from './pages/dashboard/SettingsPage'
+const Agents = lazy(() => import('./pages/Agents'))
+const Journey = lazy(() => import('./pages/Journey'))
+const Community = lazy(() => import('./pages/Community'))
+const Waitlist = lazy(() => import('./pages/Waitlist'))
+const SignalRing = lazy(() => import('./pages/SignalRing'))
+const EarlyAccess = lazy(() => import('./pages/EarlyAccess'))
+const Order = lazy(() => import('./pages/Order'))
+const Checkout = lazy(() => import('./pages/Checkout'))
+const OSPage = lazy(() => import('./pages/os'))
+const YATI = lazy(() => import('./pages/yAtI'))
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
+const Login = lazy(() => import('./pages/Login'))
+const CampaignLanding = lazy(() => import('./pages/CampaignLanding'))
+const YatiFlow = lazy(() => import('./pages/YatiFlow'))
+const BrandCampaign = lazy(() => import('./pages/BrandCampaign'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const PlanPage = lazy(() => import('./pages/PlanPage'))
+const AgentsPage = lazy(() => import('./pages/dashboard/AgentsPage'))
+const ContactsPage = lazy(() => import('./pages/dashboard/ContactsPage'))
+const DraftsPage = lazy(() => import('./pages/dashboard/DraftsPage'))
+const InboxPage = lazy(() => import('./pages/dashboard/InboxPage'))
+const DealsPage = lazy(() => import('./pages/dashboard/DealsPage'))
+const MeetingsPage = lazy(() => import('./pages/dashboard/MeetingsPage'))
+const SettingsPage = lazy(() => import('./pages/dashboard/SettingsPage'))
 import { AuthProvider, RequireAuth, RequireFounderOS } from './lib/auth'
 import { ChatProvider } from './lib/chatContext'
 import { CartProvider } from './lib/cart'
@@ -51,9 +50,10 @@ export default function App() {
       <ChatProvider>
       <CartProvider>
         <ScrollToTop />
+        <Suspense fallback={<div className="min-h-screen bg-brand-bg" />}>
         <Routes>
           <Route path="/"             element={<Homepage />}    />
-          <Route path="/wearables"    element={<Wearables />}   />
+          <Route path="/wearables"    element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/agents"       element={<Agents />}      />
           <Route path="/journey"      element={<Journey />}     />
           <Route path="/community"    element={<Community />}   />
@@ -157,6 +157,7 @@ export default function App() {
             }
           />
         </Routes>
+        </Suspense>
         <CartDrawer />
         <SessionExpiredDialog />
       </CartProvider>

@@ -8,7 +8,7 @@ one unified system — always working, never sleeping.
 
 ## Products
 
-- Signal Ring: A smart wearable that tracks founder focus, biometrics, and work state
+- Signal Ring (coming later): A smart wearable that tracks founder focus, biometrics, and work state
 - yAtI Flow (Thread One and Thread Max): AI conversation recorders that capture, transcribe and summarize conversations and help draft follow-ups
 - yAtI OS: A personal command center for goals, launches, workflows, and daily priorities
 - AI Agents: Four specialized agents (Launch, Network, Focus, Brand) that run autonomously
@@ -18,7 +18,7 @@ one unified system — always working, never sleeping.
 - [Home](https://yativerse.ai/): Product overview and waitlist signup
 - [AI Agents](https://yativerse.ai/agents): The invisible team — Launch, Network, Focus, Brand agents
 - [yAtI OS](https://yativerse.ai/os): Founder OS command center details
-- [Wearables](https://yativerse.ai/wearables): Signal Ring and yAtI Flow Thread One and Thread Max
+- [yAtI Flow](https://yativerse.ai/yati-flow): Thread One and Thread Max AI conversation recorders; the Signal Ring follows later
 - [Waitlist](https://yativerse.ai/waitlist): Early access signup — limited spots
 
 ## Audience
@@ -29,8 +29,7 @@ the infrastructure of a full team without hiring one.
 ## Status
 
 Currently in early access. Waitlist open at https://yativerse.ai/waitlist
-Signal Ring targeting Q4 2026 for early access members. All deposits refundable.
-Pioneer tier starts at $49 deposit.
+Thread One and Thread Max are open for early access at https://yativerse.ai/yati-flow. The Signal Ring launches later.
 
 ## Contact
 
