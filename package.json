@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/route-heads.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:legal": "node scripts/check-legal.mjs"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^6.12.0",

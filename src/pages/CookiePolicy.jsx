@@ -1,61 +1,46 @@
+import { Link } from "react-router-dom";
+import SEO from "../components/SEO";
+import LegalLayout, { A, H2, PrivacyEmail, UL } from "../legal/LegalLayout";
+
 export default function CookiePolicy() {
   return (
-    <div className="bg-[#02030A] text-white min-h-screen py-24 px-6">
-      <div className="max-w-4xl mx-auto">
+    <>
+      <SEO
+        title="Cookie Policy"
+        description="How yAtIverse uses cookies, local storage, Meta Pixel and Google Analytics, and how to control them."
+        path="/cookie-policy"
+      />
+      <LegalLayout
+        title="Cookie Policy"
+        intro={
+          <>
+            This policy explains how yAtIverse uses cookies and similar technologies, including advertising and analytics tools. It
+            works together with our <Link className="text-brand-gold underline underline-offset-2" to="/privacy-policy">Privacy Policy</Link>.
+          </>
+        }
+      >
+        <H2 id="types">1. What we use</H2>
+        <UL>
+          <li><strong>Essential storage.</strong> Items in your browser that keep you signed in, remember whether you already joined the waitlist or closed a pop-up, and keep the campaign link you arrived from so we can attribute your sign-up. These are first-party and needed for the site to work properly.</li>
+          <li><strong>Analytics.</strong> Google Analytics 4 and Google Tag Manager measure visits and how people move through our pages.</li>
+          <li><strong>Advertising measurement.</strong> The Meta Pixel records actions on our site (such as a page view or a waitlist sign-up) and sends them to Meta so we can measure our Facebook and Instagram ads and improve how they are delivered.</li>
+        </UL>
+        <p>Analytics and advertising tools may set their own cookies. We do not control how long those last. Each provider’s policy explains this.</p>
 
-        <h1 className="font-display text-4xl sm:text-6xl font-bold mb-10">
-          Cookie Policy
-        </h1>
+        <H2 id="control">2. Your choices</H2>
+        <UL>
+          <li>Block or delete cookies in your browser settings. Blocking essential storage can stop sign-in from working.</li>
+          <li>Manage Facebook and Instagram ads in <A href="https://www.facebook.com/adpreferences/ad_settings">Meta ad preferences</A>.</li>
+          <li>Opt out of Google Analytics with the <A href="https://tools.google.com/dlpage/gaoptout">browser add-on</A>.</li>
+          <li>Opt out of interest-based ads from many companies at <A href="https://optout.aboutads.info">optout.aboutads.info</A>.</li>
+        </UL>
 
-        <p className="text-white/60 mb-8">
-          Last updated: May 2026
-        </p>
+        <H2 id="updates">3. Updates</H2>
+        <p>We may update this policy when our tools or the law change. The date at the top shows the latest version.</p>
 
-        <section className="space-y-6 text-white/80 leading-relaxed">
-
-          <p>
-            This Cookie Policy explains how <strong>yAtIverse</strong> (“we”, “us”, “our”) uses cookies and similar technologies to operate, secure, and improve our platform. We keep things simple: no ads, no cross‑site tracking, no selling data.
-          </p>
-
-          <h2 className="text-2xl font-semibold text-white mt-10">1. What Cookies We Use</h2>
-
-          <h3 className="text-xl font-semibold text-white mt-6">A. Essential Cookies (Required)</h3>
-          <p>
-            These cookies are required for yAtIverse to function. They handle authentication, security, routing, and user preferences. They are first‑party, secure, and not used for tracking.
-          </p>
-
-          <h3 className="text-xl font-semibold text-white mt-6">B. Analytics Cookies (Optional)</h3>
-          <p>
-            We use privacy‑focused analytics tools such as Plausible or PostHog. These help us understand product usage and improve yAtIverse. We do not use advertising trackers or third‑party marketing cookies.
-          </p>
-
-          <h3 className="text-xl font-semibold text-white mt-6">C. Product Cookies</h3>
-          <p>
-            If you create an account, we may store first‑party cookies related to your session, preferences, agent settings, and onboarding progress.
-          </p>
-
-          <h2 className="text-2xl font-semibold text-white mt-10">2. How Long Cookies Last</h2>
-          <p>
-            Session cookies expire when you close your browser. Persistent cookies may last from 7 to 365 days depending on their purpose.
-          </p>
-
-          <h2 className="text-2xl font-semibold text-white mt-10">3. Managing Cookies</h2>
-          <p>
-            You can control cookies through your browser settings. Blocking essential cookies may prevent yAtIverse from functioning properly.
-          </p>
-
-          <h2 className="text-2xl font-semibold text-white mt-10">4. Updates</h2>
-          <p>
-            We may update this Cookie Policy to reflect product changes or legal requirements.
-          </p>
-
-          <h2 className="text-2xl font-semibold text-white mt-10">5. Contact</h2>
-          <p>
-            For questions, contact us at <strong>support@yati.app</strong>.
-          </p>
-
-        </section>
-      </div>
-    </div>
-  )
+        <H2 id="contact">4. Contact</H2>
+        <p>Questions about cookies or tracking: <PrivacyEmail />.</p>
+      </LegalLayout>
+    </>
+  );
 }
