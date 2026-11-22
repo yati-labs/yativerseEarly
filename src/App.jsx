@@ -10,7 +10,6 @@ const YATI = lazy(() => import('./pages/yAtI'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
 const Login = lazy(() => import('./pages/Login'))
-const CampaignLanding = lazy(() => import('./pages/CampaignLanding'))
 const YatiFlow = lazy(() => import('./pages/YatiFlow'))
 const BrandCampaign = lazy(() => import('./pages/BrandCampaign'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -65,7 +64,8 @@ export default function App() {
            <Route path="/founder-os" element={<OSPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/start" element={<BrandCampaign />} />
-          <Route path="/sales-agent" element={<CampaignLanding />} />
+          {/* Parked: its CTA goes to /login. Back to this element when the CRM campaign resumes. */}
+          <Route path="/sales-agent" element={<RedirectKeepQuery to="/start" />} />
           <Route path="/yati-flow" element={<YatiFlow />} />
           <Route path="/pendant" element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/signup" element={<Navigate to="/login" replace />} />

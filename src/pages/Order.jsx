@@ -255,7 +255,7 @@ export default function Order() {
 
             {/* ── MORE FROM yAtIverse (locked yAtI Flow) ── */}
             <motion.div {...fadeUp(0.05)} className="mb-16">
-              <p className="font-mono text-[10px] tracking-widest uppercase text-white/38 mb-4">More from yAtIverse</p>
+              <p className="font-mono text-[10px] tracking-widest uppercase text-white/38 mb-4">More from <span className="normal-case">yAtIverse</span></p>
               <div className="rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
                 <div className="relative w-full sm:w-40 h-40 rounded-2xl overflow-hidden flex-shrink-0">
                   <img src="/flow/thread-max.jpg" alt="yAtI Flow Thread Max" className="w-full h-full object-cover grayscale opacity-40" />

@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ShoppingBag } from "lucide-react";
 import { useCart } from "../lib/cart";
-import { useAuth } from "../lib/auth";
 
 const MEGA = {
   wearables: {
@@ -82,7 +81,6 @@ function CartButton({ className = "" }) {
 }
 
 export default function Navbar() {
-  const { authenticated } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [openMega, setOpenMega] = useState(null);
   const [mobileOpen, setMobile] = useState(false);
@@ -184,12 +182,7 @@ export default function Navbar() {
 
         {/* Right */}
         <div className="hidden lg:flex items-center gap-3">
-          <Link
-            to={authenticated ? "/dashboard" : "/login"}
-            className="text-sm font-medium text-white/45 hover:text-white transition-colors px-3 py-2 font-body"
-          >
-            {authenticated ? "Dashboard" : "Sign in"}
-          </Link>
+          {/* Sign in / Dashboard links hidden for now. Routes /login and /dashboard still work by URL. */}
           {/* <CartButton /> hidden until checkout launches */}
           <Link to="/yati-flow" className="btn-primary !py-2.5 !px-5 !text-xs">
             Get early access →
@@ -335,13 +328,6 @@ export default function Navbar() {
                 </Link>
               );
             })}
-
-            <Link
-              to={authenticated ? "/dashboard" : "/login"}
-              className="text-center text-base font-medium text-white/60 hover:text-white py-3 mt-4"
-            >
-              {authenticated ? "Dashboard" : "Sign in"}
-            </Link>
 
             <Link
               to="/waitlist"

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import BrandText from "./BrandText";
 import { X } from "lucide-react";
 import WaitlistForm from "./WaitlistForm";
 import { track } from "../lib/tracking";
@@ -44,7 +45,7 @@ export default function WaitlistModal({
         onClickCapture={(e) => onCta && e.target.closest?.('button[type="submit"]') && onCta()}
         className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-brand-gold/25 bg-brand-bg2 p-7 text-white shadow-2xl">
         <button onClick={close} aria-label="Close" className="absolute right-4 top-4 text-white/60 hover:text-white"><X size={20} /></button>
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold">{eyebrow}</p>
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold"><BrandText>{eyebrow}</BrandText></p>
         <h2 id={`${where}-title`} className="mt-2 pr-6 text-2xl font-semibold tracking-tight">{title}</h2>
         <p className="mb-5 mt-2 text-sm text-white/65">{body}</p>
         <WaitlistForm where={where} source={source} askPhone={!compact} askConsent={!compact} stacked model={model} onModelChange={onModelChange} cta={cta} onStart={onStart} onSuccess={onSuccess} />

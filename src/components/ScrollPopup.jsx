@@ -64,7 +64,7 @@ export default function ScrollPopup({ source, blocked, model, onModelChange, onE
   return (
     <div role="dialog" aria-label={stage.title} className="fixed inset-x-3 bottom-20 z-40 rounded-2xl border border-brand-gold/30 bg-brand-bg2 p-5 text-white shadow-2xl shadow-black/50 sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[360px]">
       <button onClick={dismiss} aria-label="Close" className="absolute right-3 top-3 rounded p-1 text-white/60 hover:text-white"><X size={18} /></button>
-      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-gold">yAtI Flow</p>
+      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-gold"><span className="normal-case">yAtI</span> Flow</p>
       <h2 className="mt-2 pr-6 text-lg font-semibold tracking-tight">{stage.title}</h2>
       <p className="mb-4 mt-1 text-sm text-white/65">{stage.body}</p>
       <button className="btn-primary w-full justify-center !py-2.5" onClick={() => { onEvent("thread_popup_cta_click", { stage: stage.at, kind: "card" }); setStage(null); onOpenSignup("scroll_card_" + stage.at); }}>Get early access</button>

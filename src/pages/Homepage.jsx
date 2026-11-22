@@ -102,7 +102,7 @@ const QUICK_LINKS = [
 
 // ── STORY TEASER — points to the dedicated /yAtI story page ──
 const STORY = {
-  kicker: "Why yAtIverse exists",
+  kicker: <>Why <span className="normal-case">yAtIverse</span> exists</>,
   title: "yAtI — Your Story.",
   subtitle:
     "The path you carve, the wilderness you walk, the future only you can see.",
@@ -932,7 +932,7 @@ export default function Homepage() {
                     <div className="glass rounded-xl px-4 py-3 flex items-center justify-between">
                       <div>
                         <p className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-0.5">
-                          yAtI Flow · Early access
+                          <span className="normal-case">yAtI</span> Flow · Early access
                         </p>
                         <p className="font-display text-sm font-semibold text-white">
                           Thread One & Thread Max
