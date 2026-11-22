@@ -16,12 +16,25 @@ const SOURCE = "flow-campaign";
 const ev = (name, p = {}) => track(name, { campaign: "yati_flow", ...p }); // all thread_* events
 
 const MODELS = [
-  { id: "Thread One", tag: "Slim card", img: "/flow/thread-one.jpg", w: 225, h: 495, alt: "yAtI Flow Thread One slim card recorder",
-    d: "A slim recorder for your meeting table, pocket or bag.", fit: "Choose Thread One if your best conversations happen across a desk or table." },
-  { id: "Thread Max", tag: "Wearable capsule", img: "/flow/thread-max.jpg", w: 230, h: 405, alt: "yAtI Flow Thread Max wearable capsule recorder",
-    d: "A compact capsule for capturing conversations and ideas as your day moves.", fit: "Choose Thread Max if you want capture with you as you move around." },
+  { id: "Thread One", tag: "Slim card", img: "/flow/thread-one.jpg", w: 225, h: 495, alt: "yAtI Flow Thread One slim card recorder", grams: 54, material: "Aluminum alloy", hl: ["87 × 56 mm, 5.9 mm thin", "54 g", "About 18 h recording"],
+    d: "An ultra-slim aluminum card for your meeting table, pocket or bag, with a built-in magnet.", fit: "Choose Thread One if your best conversations happen across a desk or table." },
+  { id: "Thread Max", tag: "Wearable capsule", img: "/flow/thread-max.jpg", w: 230, h: 405, alt: "yAtI Flow Thread Max wearable capsule recorder", grams: 23, material: "Aluminum alloy and ABS", hl: ["50.5 × 22 mm", "23 g", "21 h recording"],
+    d: "A compact 23 g wearable capsule with a one-touch record button, for conversations on the move.", fit: "Choose Thread Max if you want capture with you as you move around." },
 ];
-const SPECS = {}; // TODO: add confirmed specs per model, e.g. { "Thread One": [["Battery", "…"]] }. Hidden until filled.
+// Hardware specs from the manufacturer listings (LA519 = Thread One, LA367 = Thread Max).
+// TODO: confirm against sample units; Thread One storage is listed as 8–128 GB options.
+const SPEC_ROWS = [
+  ["Form", "Slim card", "Wearable capsule"],
+  ["Size", "87 × 56 × 5.9 mm (3.43 × 2.20 × 0.23 in)", "50.5 × 22 × 12.2 mm (1.99 × 0.87 × 0.48 in)"],
+  ["Weight", "54 g (1.9 oz)", "23 g (0.81 oz)"],
+  ["Material", "Aluminum alloy", "Aluminum alloy and ABS"],
+  ["Recording time", "About 18 h", "21 h continuous"],
+  ["Charging", "3 h (1 h with wireless charger)", "2 h"],
+  ["Storage", "Up to 128 GB", "64 GB"],
+  ["Controls", "Touch controls", "One-touch button and app"],
+  ["Extras", "Built-in magnet, noise reduction", "Lightweight, all-day wear"],
+  ["Operating temperature", "-5 to 40 °C", "-5 to 40 °C"],
+];
 
 const COMPARE_BASE = ["Records conversations", "Transcribes audio", "Creates summaries"];
 const COMPARE_FLOW = [
@@ -69,7 +82,9 @@ const FAQ = [
   ["How is my data handled?", "Details on storage and deletion will be published before orders open. See our Privacy Policy for how we handle data today."],
   ["Can I record anyone?", "Rules on recording conversations vary by place. You are responsible for getting consent where it is required."], // legal review before ads
   ["What phones and computers does it work with?", "iPhone and Mac first. Android is planned after testing."],
-  ["When can I order, and which model should I pick?", "Orders open in a few weeks, and waitlist members are emailed first. Thread One is a slim card for tables and pockets; Thread Max is a wearable capsule. Pricing and final specifications are confirmed when orders open."],
+  ["When can I order?", "Orders open in a few weeks, and waitlist members are emailed first. Pricing is announced when orders open."],
+  ["Which model should I pick?", "Thread One is a slim card (87 × 56 mm, 54 g) for tables, pockets and bags. Thread Max is a compact wearable capsule (50.5 × 22 mm, 23 g). Both work with yAtI."],
+  ["How long does the battery last?", "Thread One records for about 18 hours. Thread Max records for 21 hours continuously."],
 ];
 
 function R({ children, className = "" }) {
@@ -98,7 +113,7 @@ export default function YatiFlow() {
     if (!viewed.current) { viewed.current = true; ev("thread_page_view"); track("campaign_view", { campaign: "yati_flow" }); }
     const ld = document.createElement("script"); ld.type = "application/ld+json"; ld.id = "ld-yati-flow";
     ld.text = JSON.stringify({ "@context": "https://schema.org", "@graph": [
-      ...MODELS.map((m) => ({ "@type": "Product", name: `yAtI Flow ${m.id}`, description: m.d, image: SITE + m.img, brand: { "@type": "Brand", name: "yAtI Flow" } })),
+      ...MODELS.map((m) => ({ "@type": "Product", name: `yAtI Flow ${m.id}`, description: m.d, image: SITE + m.img, brand: { "@type": "Brand", name: "yAtI Flow" }, weight: { "@type": "QuantitativeValue", value: m.grams, unitCode: "GRM" }, material: m.material })),
       { "@type": "FAQPage", mainEntity: FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
     ] });
     document.head.appendChild(ld);
@@ -147,7 +162,7 @@ export default function YatiFlow() {
               <WaitlistForm where="hero" source={SOURCE} cta="Get early access" model={model} {...formEvents} />
             </div>
             <a href="#journey" onClick={() => ev("thread_demo_click")} className="mt-5 inline-block text-sm font-semibold text-brand-gold2 underline-offset-4 hover:underline">Discover what it can do →</a>
-            <p className="mt-4 text-xs leading-relaxed text-white/50">Free to join. No purchase required. iPhone and Mac first. Renders show proposed branding; final finish may vary.</p>
+            <p className="mt-4 text-xs leading-relaxed text-white/50">Free to join. No purchase required.</p>
           </div>
           <HeroVideo className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl bg-brand-bg2" poster="/flow/flow-devices.jpg" mp4="/flow/hero-loop.mp4" webm={null} />
         </section>
@@ -155,7 +170,7 @@ export default function YatiFlow() {
         <div className="mx-auto grid max-w-6xl gap-3 border-t border-white/10 px-5 py-6 text-sm text-white/65 sm:grid-cols-3">
           <span className="flex items-center gap-2"><ShieldCheck size={16} className="text-brand-gold" aria-hidden="true" /> You review and approve every send</span>
           <span className="flex items-center gap-2"><Mail size={16} className="text-brand-gold" aria-hidden="true" /> Gmail, Calendar, Slack, HubSpot</span>
-          <span className="flex items-center gap-2"><Check size={16} className="text-brand-gold" aria-hidden="true" /> iPhone and Mac first</span>
+          <span className="flex items-center gap-2"><Check size={16} className="text-brand-gold" aria-hidden="true" /> Two models, one yAtI account</span>
         </div>
 
         <section className="mx-auto max-w-6xl px-5 py-20">
@@ -231,12 +246,18 @@ export default function YatiFlow() {
                 <div className="my-6 flex h-72 items-center justify-center rounded-xl bg-[#14151a]"><img src={m.img} alt={m.alt} width={m.w} height={m.h} loading="lazy" className="max-h-full w-auto" /></div>
                 <h3 className="font-display text-2xl font-bold">{m.id}</h3>
                 <p className="mt-2 text-white/70">{m.d}</p><p className="mt-2 text-sm text-white/55">{m.fit}</p>
-                {SPECS[m.id] && <dl className="mt-4 divide-y divide-white/10 text-sm">{SPECS[m.id].map(([k, v]) => <div key={k} className="flex justify-between py-2"><dt className="text-white/55">{k}</dt><dd>{v}</dd></div>)}</dl>}
+                <ul className="mt-4 flex flex-wrap gap-2">{m.hl.map((h) => <li key={h} className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/70">{h}</li>)}</ul>
                 <button onClick={() => pick(m.id)} className="btn-primary mt-6 !px-6 !py-2.5">I’m interested in {m.id}</button>
               </article>
             ))}
           </div>
-          <p className="mt-4 text-xs text-white/45">Both models work with yAtI. Full specifications, finish and pricing are confirmed when orders open. Concept renders, not shown to relative scale.</p>
+          <R className="mt-12 overflow-x-auto rounded-2xl border border-white/10">
+            <table className="w-full min-w-[560px] text-left text-sm">
+              <caption className="sr-only">Thread One and Thread Max specifications</caption>
+              <thead className="bg-brand-bg2 text-white/70"><tr><th scope="col" className="p-4 font-semibold">Specification</th><th scope="col" className="p-4 font-semibold">Thread One</th><th scope="col" className="p-4 font-semibold">Thread Max</th></tr></thead>
+              <tbody className="divide-y divide-white/10">{SPEC_ROWS.map(([k, a, b]) => <tr key={k}><th scope="row" className="p-4 font-normal text-white/55">{k}</th><td className="p-4">{a}</td><td className="p-4">{b}</td></tr>)}</tbody>
+            </table>
+          </R>
         </section>
 
         <section className="border-y border-white/[0.06] bg-brand-bg2 py-20">
@@ -282,7 +303,7 @@ export default function YatiFlow() {
         </div>
       </div>
 
-      <ScrollPopup source={SOURCE} blocked={modal} model={model} onEvent={ev} formEvents={formEvents} />
+      <ScrollPopup source={SOURCE} blocked={modal} model={model} onModelChange={setModel} onEvent={ev} formEvents={formEvents} onOpenSignup={(w) => { track("modal_open", { trigger: w }); setModal(true); }} />
       <WaitlistModal open={modal} onClose={() => setModal(false)} source={SOURCE} model={model} onModelChange={setModel} cta="Get early access" {...formEvents} />
     </div>
   );
