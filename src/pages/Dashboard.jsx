@@ -34,7 +34,7 @@ const COMING_SOON = [
     icon: Cpu,
     title: "Systems & Devices",
     phase: "Phase 4+",
-    description: "Pendant and multi-device health once the Pendant Decision Gate is passed.",
+    description: "yAtI Flow Thread devices and multi-device health, as they launch.",
   },
   {
     icon: ShieldCheck,
