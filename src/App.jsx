@@ -5,10 +5,6 @@ const Agents = lazy(() => import('./pages/Agents'))
 const Journey = lazy(() => import('./pages/Journey'))
 const Community = lazy(() => import('./pages/Community'))
 const Waitlist = lazy(() => import('./pages/Waitlist'))
-const SignalRing = lazy(() => import('./pages/SignalRing'))
-const EarlyAccess = lazy(() => import('./pages/EarlyAccess'))
-const Order = lazy(() => import('./pages/Order'))
-const Checkout = lazy(() => import('./pages/Checkout'))
 const OSPage = lazy(() => import('./pages/os'))
 const YATI = lazy(() => import('./pages/yAtI'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
@@ -29,7 +25,6 @@ const SettingsPage = lazy(() => import('./pages/dashboard/SettingsPage'))
 import { AuthProvider, RequireAuth, RequireFounderOS } from './lib/auth'
 import { ChatProvider } from './lib/chatContext'
 import { CartProvider } from './lib/cart'
-import CartDrawer from './components/CartDrawer'
 import SessionExpiredDialog from './components/SessionExpiredDialog'
 
 function ScrollToTop() {
@@ -58,10 +53,12 @@ export default function App() {
           <Route path="/journey"      element={<Journey />}     />
           <Route path="/community"    element={<Community />}   />
           <Route path="/waitlist"     element={<Waitlist />}    />
-          <Route path="/signal-ring"  element={<SignalRing />}  />
-          <Route path="/early-access" element={<EarlyAccess />} />
-          <Route path="/order"        element={<Order />}       />
-          <Route path="/checkout"     element={<Checkout />}    />
+          {/* PARKED until the ring and store launch: pages kept in src/pages (SignalRing, EarlyAccess, Order, Checkout).
+              To bring back: restore the lazy imports, swap these redirects for the routes, re-add <CartDrawer /> and the nav cart button. */}
+          <Route path="/signal-ring"  element={<RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/early-access" element={<RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/order"        element={<RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/checkout"     element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/yAtI" element={<YATI />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
@@ -158,7 +155,7 @@ export default function App() {
           />
         </Routes>
         </Suspense>
-        <CartDrawer />
+        {/* <CartDrawer /> hidden until checkout launches */}
         <SessionExpiredDialog />
       </CartProvider>
       </ChatProvider>

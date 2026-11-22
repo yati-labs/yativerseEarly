@@ -142,7 +142,7 @@ const PILLARS = [
     eyebrow: "Pillar 03 · Your command center",
     name: "Founder OS",
     tagline: "Where it all comes together.",
-    text: "One operating rhythm for goals, priorities, and decisions. Founder OS connects what your ring senses and what your agents produce into a single daily view.",
+    text: "One operating rhythm for goals, priorities, and decisions. Founder OS connects what you capture and what your agents produce into a single daily view.",
     accent: "#4ECDC4",
     link: "/",
     linkText: "See how it works",
@@ -175,8 +175,8 @@ const ECOSYSTEM_VALUE = [
     text: "Instead of separate tools for notes, content, tasks, and decisions — one connected system that grows with you.",
   },
   {
-    title: "Turns daily signals into momentum",
-    text: "What your ring senses and what your agents produce become structured next actions, not lost data.",
+    title: "Turns conversations into momentum",
+    text: "What Thread captures and what your agents produce become structured next actions, not lost data.",
   },
   {
     title: "Creates founder-level leverage",
@@ -184,7 +184,7 @@ const ECOSYSTEM_VALUE = [
   },
   {
     title: "Scales with you, not ahead of you",
-    text: "Start with the ring. Add the OS when you're ready. Activate agents as your business actually needs them.",
+    text: "Start with Thread. Add the OS when you're ready. Activate agents as your business actually needs them.",
   },
 ];
 
@@ -230,8 +230,8 @@ const BEFORE_AFTER = [
   },
   {
     before:
-      "You have no idea if you're actually in shape to make big calls today.",
-    after: "Your ring tells you. You decide with real signal, not guesswork.",
+      "Follow-ups slip because the details lived in your head.",
+    after: "Thread captures what was said. You decide from the record, not from memory.",
   },
 ];
 
@@ -239,12 +239,12 @@ const JOURNEY = [
   {
     n: "01",
     title: "Wear it",
-    text: "Start with YATI Flow. Daily signal, always with you, before you open a laptop.",
+    text: "Start with YATI Flow. Thread One or Thread Max goes where you go.",
   },
   {
     n: "02",
     title: "Capture",
-    text: "Voice notes, ideas, and signals collected automatically as you move through your day.",
+    text: "Conversations, ideas, and voice notes recorded and turned into summaries and next steps.",
   },
   {
     n: "03",
@@ -560,7 +560,7 @@ export default function Homepage() {
               </p>
 
               <p className="font-mono text-xs text-white/35 mb-8 tracking-wide">
-                A ring · an AI team · an operating system — built to work
+                Thread · an AI team · an operating system — built to work
                 together
               </p>
 
@@ -837,7 +837,7 @@ export default function Homepage() {
                 <div className="mt-6 glass rounded-2xl p-8">
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-2 flex-wrap">
                     {[
-                      { label: "Ring", sub: "Signal", accent: "#605CFF" },
+                      { label: "Thread", sub: "Capture", accent: "#605CFF" },
                       { label: "OS", sub: "Structure", accent: "#4ECDC4" },
                       { label: "Agents", sub: "Leverage", accent: "#FF6B8A" },
                       {
@@ -916,7 +916,6 @@ export default function Homepage() {
                 </p>
                 <Link to="/yati-flow" className="btn-ghost"> Explore Thread One & Thread Max →
                 </Link>
-                <p className="mt-6 font-body text-sm text-white/40">Coming later: <Link to="/signal-ring" className="text-brand-purple underline-offset-4 hover:underline">Signal Ring</Link></p>
               </Reveal>
 
               <Reveal delay={0.15}>
@@ -1140,7 +1139,7 @@ export default function Homepage() {
                 <Reveal delay={0.1}>
                   <p className="font-body text-base text-white/58 leading-relaxed lg:pt-14">
                     Every part of YATIVerse makes the next part more useful. The
-                    ring gives you signal. The OS gives you structure. The
+                    Thread captures what was said. The OS gives you structure. The
                     C-Suite gives you leverage.
                   </p>
                 </Reveal>
@@ -1364,7 +1363,7 @@ export default function Homepage() {
                     className="font-display font-bold leading-tight tracking-tight text-white"
                     style={{ fontSize: "clamp(28px,3.5vw,44px)" }}
                   >
-                    Start with a signal.
+                    Start with a conversation.
                     <br />
                     End up running a company.
                   </h2>

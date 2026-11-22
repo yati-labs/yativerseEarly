@@ -17,7 +17,7 @@ one unified system — always working, never sleeping.
 
 - [Home](https://yativerse.ai/): Product overview and waitlist signup
 - [AI Agents](https://yativerse.ai/agents): The invisible team — Launch, Network, Focus, Brand agents
-- [yAtI OS](https://yativerse.ai/os): Founder OS command center details
+- [yAtI OS](https://yativerse.ai/founder-os): Founder OS command center details
 - [yAtI Flow](https://yativerse.ai/yati-flow): Thread One and Thread Max AI conversation recorders; the Signal Ring follows later
 - [Waitlist](https://yativerse.ai/waitlist): Early access signup — limited spots
 

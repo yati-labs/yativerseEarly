@@ -12,7 +12,6 @@ const MEGA = {
     items: [
       { name: "Thread One", desc: "Slim card recorder. Every conversation, followed up.", tag: "Early access", color: "#C9A84C", img: "/flow/thread-one.jpg", href: "/yati-flow" },
       { name: "Thread Max", desc: "Wearable capsule. Capture on the move.", tag: "Early access", color: "#C9A84C", img: "/flow/thread-max.jpg", href: "/yati-flow" },
-      { name: "Signal Ring", desc: "Sleep, activity and recovery.", tag: "Coming later", color: "#605CFF", img: "/ring1.jpeg", href: "/signal-ring" },
     ],
     cta: { label: "Explore YATI Flow", href: "/yati-flow" },
   },
@@ -191,7 +190,7 @@ export default function Navbar() {
           >
             {authenticated ? "Dashboard" : "Sign in"}
           </Link>
-          <CartButton />
+          {/* <CartButton /> hidden until checkout launches */}
           <Link to="/yati-flow" className="btn-primary !py-2.5 !px-5 !text-xs">
             Get early access →
           </Link>
@@ -199,7 +198,7 @@ export default function Navbar() {
 
         {/* Mobile: cart + hamburger */}
         <div className="flex lg:hidden items-center gap-1">
-          <CartButton />
+          {/* <CartButton /> hidden until checkout launches */}
           <button
             className="flex flex-col gap-[5px] p-2"
             onClick={() => setMobile(!mobileOpen)}

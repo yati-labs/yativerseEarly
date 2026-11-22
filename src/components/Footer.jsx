@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { fadeUp } from "../lib/motion";
+import { joinWaitlist } from "../lib/api";
+import { getAttribution, track } from "../lib/tracking";
 
 const COLS = [
   {
     title: "Products",
     links: [
-      { l: "Signal Ring (coming later)", h: "/signal-ring" },
       { l: "YATI Flow",       h: "/yati-flow" },
-      { l: "Founder OS",      h: "/os"        },
+      { l: "Founder OS",      h: "/founder-os" },
       { l: "Digital C-Suite", h: "/agents"    },
     ],
   },
@@ -94,15 +95,12 @@ export default function Footer() {
                   onSubmit={(e) => {
                     e.preventDefault();
                     setStatus("loading");
-                    fetch("https://formspree.io/f/mykankad", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ email }),
+                    joinWaitlist({
+                      email, source: "footer-subscribe", form_location: "footer",
+                      marketing_consent: true, company: "",
+                      landing: window.location.pathname, ...getAttribution(),
                     })
-                      .then((res) => {
-                        if (res.ok) { setStatus("success"); setEmail(""); }
-                        else setStatus("error");
-                      })
+                      .then(() => { setStatus("success"); setEmail(""); track("subscribe", { location: "footer" }); })
                       .catch(() => setStatus("error"));
                   }}
                 >
