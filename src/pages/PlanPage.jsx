@@ -84,7 +84,7 @@ function findCatalogEntry(catalog, planId) {
 function mailtoUpgrade(accountEmail, targetPlanName) {
   const subject = encodeURIComponent(`Upgrade to ${targetPlanName}`);
   const body = encodeURIComponent(
-    `Hi YATIverse team,\n\nI'd like to upgrade my account (${accountEmail || "—"}) to ${targetPlanName}.\n\nThanks!`
+    `Hi yAtIverse team,\n\nI'd like to upgrade my account (${accountEmail || "—"}) to ${targetPlanName}.\n\nThanks!`
   );
   return `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
 }

@@ -253,12 +253,12 @@ export default function Order() {
               </motion.div>
             </div>
 
-            {/* ── MORE FROM YATIVERSE (locked Pendant) ── */}
+            {/* ── MORE FROM yAtIverse (locked yAtI Flow) ── */}
             <motion.div {...fadeUp(0.05)} className="mb-16">
               <p className="font-mono text-[10px] tracking-widest uppercase text-white/38 mb-4">More from yAtIverse</p>
               <div className="rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
                 <div className="relative w-full sm:w-40 h-40 rounded-2xl overflow-hidden flex-shrink-0">
-                  <img src="pendant1.jpeg" alt="yAtIverse Pendant" className="w-full h-full object-cover grayscale opacity-40" />
+                  <img src="/flow/thread-max.jpg" alt="yAtI Flow Thread Max" className="w-full h-full object-cover grayscale opacity-40" />
                   <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.35)' }}>
                     <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.2)' }}>
                       <Lock className="w-4 h-4 text-white/70" />
@@ -267,13 +267,13 @@ export default function Order() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-display font-bold text-white text-lg">Pendant</h3>
+                    <h3 className="font-display font-bold text-white text-lg">yAtI Flow</h3>
                     <span className="text-[10px] font-mono px-2 py-1 rounded-full uppercase tracking-widest" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      Phase 4+ · Coming soon
+                      Coming soon
                     </span>
                   </div>
                   <p className="font-body text-sm text-white/50 max-w-md">
-                    A second wearable for multi-device health, once the Pendant Decision Gate is passed. Not orderable yet.
+                    Thread One and Thread Max turn your conversations into follow-ups. Not orderable yet. Join the waitlist.
                   </p>
                 </div>
                 <button type="button" disabled

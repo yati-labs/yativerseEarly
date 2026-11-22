@@ -1,36 +1,30 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
 import Homepage    from './pages/Homepage'
-import Wearables   from './pages/Wearables'
-import Agents      from './pages/Agents'
-import Journey     from './pages/Journey'
-import Community   from './pages/Community'
-import Waitlist    from './pages/Waitlist'
-import SignalRing  from './pages/SignalRing'
-import EarlyAccess from './pages/EarlyAccess'
-import Order       from './pages/Order'
-import Checkout    from './pages/Checkout'
-import OSPage from './pages/os'
-import YATI from './pages/yAtI'
-import PrivacyPolicy from './pages/PrivacyPolicy'
-import CookiePolicy from './pages/CookiePolicy'
-import Login from './pages/Login'
-import CampaignLanding from './pages/CampaignLanding'
-import PendantCampaign from './pages/PendantCampaign'
-import BrandCampaign from './pages/BrandCampaign'
-import Dashboard from './pages/Dashboard'
-import PlanPage from './pages/PlanPage'
-import AgentsPage from './pages/dashboard/AgentsPage'
-import ContactsPage from './pages/dashboard/ContactsPage'
-import DraftsPage from './pages/dashboard/DraftsPage'
-import InboxPage from './pages/dashboard/InboxPage'
-import DealsPage from './pages/dashboard/DealsPage'
-import MeetingsPage from './pages/dashboard/MeetingsPage'
-import SettingsPage from './pages/dashboard/SettingsPage'
+const Agents = lazy(() => import('./pages/Agents'))
+const Journey = lazy(() => import('./pages/Journey'))
+const Community = lazy(() => import('./pages/Community'))
+const Waitlist = lazy(() => import('./pages/Waitlist'))
+const OSPage = lazy(() => import('./pages/os'))
+const YATI = lazy(() => import('./pages/yAtI'))
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
+const Login = lazy(() => import('./pages/Login'))
+const CampaignLanding = lazy(() => import('./pages/CampaignLanding'))
+const YatiFlow = lazy(() => import('./pages/YatiFlow'))
+const BrandCampaign = lazy(() => import('./pages/BrandCampaign'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const PlanPage = lazy(() => import('./pages/PlanPage'))
+const AgentsPage = lazy(() => import('./pages/dashboard/AgentsPage'))
+const ContactsPage = lazy(() => import('./pages/dashboard/ContactsPage'))
+const DraftsPage = lazy(() => import('./pages/dashboard/DraftsPage'))
+const InboxPage = lazy(() => import('./pages/dashboard/InboxPage'))
+const DealsPage = lazy(() => import('./pages/dashboard/DealsPage'))
+const MeetingsPage = lazy(() => import('./pages/dashboard/MeetingsPage'))
+const SettingsPage = lazy(() => import('./pages/dashboard/SettingsPage'))
 import { AuthProvider, RequireAuth, RequireFounderOS } from './lib/auth'
 import { ChatProvider } from './lib/chatContext'
 import { CartProvider } from './lib/cart'
-import CartDrawer from './components/CartDrawer'
 import SessionExpiredDialog from './components/SessionExpiredDialog'
 
 function ScrollToTop() {
@@ -39,23 +33,32 @@ function ScrollToTop() {
   return null
 }
 
+// Client-side fallback for the old campaign URL (the 301 itself is set in vercel.json / _redirects).
+function RedirectKeepQuery({ to }) {
+  const { search, hash } = useLocation()
+  return <Navigate to={to + search + hash} replace />
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <ChatProvider>
       <CartProvider>
         <ScrollToTop />
+        <Suspense fallback={<div className="min-h-screen bg-brand-bg" />}>
         <Routes>
           <Route path="/"             element={<Homepage />}    />
-          <Route path="/wearables"    element={<Wearables />}   />
+          <Route path="/wearables"    element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/agents"       element={<Agents />}      />
           <Route path="/journey"      element={<Journey />}     />
           <Route path="/community"    element={<Community />}   />
           <Route path="/waitlist"     element={<Waitlist />}    />
-          <Route path="/signal-ring"  element={<SignalRing />}  />
-          <Route path="/early-access" element={<EarlyAccess />} />
-          <Route path="/order"        element={<Order />}       />
-          <Route path="/checkout"     element={<Checkout />}    />
+          {/* PARKED until the ring and store launch: pages kept in src/pages (SignalRing, EarlyAccess, Order, Checkout).
+              To bring back: restore the lazy imports, swap these redirects for the routes, re-add <CartDrawer /> and the nav cart button. */}
+          <Route path="/signal-ring"  element={<RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/early-access" element={<RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/order"        element={<RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/checkout"     element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/yAtI" element={<YATI />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
@@ -63,7 +66,8 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/start" element={<BrandCampaign />} />
           <Route path="/sales-agent" element={<CampaignLanding />} />
-          <Route path="/pendant" element={<PendantCampaign />} />
+          <Route path="/yati-flow" element={<YatiFlow />} />
+          <Route path="/pendant" element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/signup" element={<Navigate to="/login" replace />} />
           <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
           <Route
@@ -150,7 +154,8 @@ export default function App() {
             }
           />
         </Routes>
-        <CartDrawer />
+        </Suspense>
+        {/* <CartDrawer /> hidden until checkout launches */}
         <SessionExpiredDialog />
       </CartProvider>
       </ChatProvider>

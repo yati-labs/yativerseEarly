@@ -10,7 +10,7 @@ function uSrc(id, w) { return `${U}${id}?auto=format&fit=crop&w=${w}&q=80`; }
 const OS_PREVIEW_ID = "photo-1551288049-bebda4e38f71";
 
 const TIMELINE_CARDS = [
-  { time: "06:00", title: "Morning check-in",  text: "Recovery and readiness from your ring. Founder OS surfaces your top priority for the day." },
+  { time: "06:00", title: "Morning check-in",  text: "Yesterday's conversations, summarized. Founder OS surfaces your top priority for the day." },
   { time: "12:30", title: "Decision queue",    text: "Three items ready for review. Market note flagged. Draft approved. Each takes under a minute." },
   { time: "17:00", title: "Day closed",        text: "Agents keep working. Content drafted. Leads scored. Numbers updated. You live your life." },
 ];
@@ -23,7 +23,7 @@ const PILLARS_OF_OS = [
   },
   {
     title: "Priorities",
-    text:  "Founder OS surfaces what matters today, pulled from your ring's readiness data and your agents' overnight work.",
+    text:  "Founder OS surfaces what matters today, pulled from your captured conversations and your agents' overnight work.",
     accent: "#C86DD7",
   },
   {
@@ -70,10 +70,10 @@ export default function OSPage() {
   return (
     <>
       <SEO
-        path="/os"
+        path="/founder-os"
         title="Founder OS — Your Command Center | yAtIverse"
-        description="Founder OS connects what your ring senses and what your agents produce into a single daily view. One operating rhythm for goals, priorities, and decisions."
-        canonical="https://yativerse.ai/os"
+        description="Founder OS connects what you capture and what your agents produce into a single daily view. One operating rhythm for goals, priorities, and decisions."
+        canonical="https://yativerse.ai/founder-os"
         ogImage="https://yativerse.ai/og-image.png"
       />
       <div className="bg-brand-bg text-white min-h-screen">
@@ -93,7 +93,7 @@ export default function OSPage() {
                   <span className="text-gradient">without the chaos.</span>
                 </h1>
                 <p className="font-body text-lg text-white/55 leading-relaxed max-w-xl mx-auto mb-8">
-                  Founder OS connects what your ring senses and what your agents produce into a single daily view. One operating rhythm for goals, priorities, and decisions.
+                  Founder OS connects what you capture and what your agents produce into a single daily view. One operating rhythm for goals, priorities, and decisions.
                 </p>
                 <Link to="/waitlist" className="btn-primary">Join the Waitlist →</Link>
               </Reveal>

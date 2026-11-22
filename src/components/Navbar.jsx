@@ -8,18 +8,12 @@ import { useAuth } from "../lib/auth";
 const MEGA = {
   wearables: {
     eyebrow: "Hardware",
-    headline: "Wear your identity.",
+    headline: "Capture it. Act on it.",
     items: [
-      {
-        name: "Signal Ring",
-        desc: "Subtle intelligence. Powerful presence.",
-        tag: "Available",
-        color: "#605CFF",
-        img: "ring1.jpeg",
-        href: "/wearables",
-      },
+      { name: "Thread One", desc: "Slim card recorder. Every conversation, followed up.", tag: "Early access", color: "#C9A84C", img: "/flow/thread-one.jpg", href: "/yati-flow" },
+      { name: "Thread Max", desc: "Wearable capsule. Capture on the move.", tag: "Early access", color: "#C9A84C", img: "/flow/thread-max.jpg", href: "/yati-flow" },
     ],
-    cta: { label: "Explore YATI Flow", href: "/wearables" },
+    cta: { label: "Explore yAtI Flow", href: "/yati-flow" },
   },
   agents: {
     eyebrow: "Your AI C-Suite",
@@ -60,7 +54,7 @@ const MEGA = {
 
 const NAV_LINKS = [
   { label: "yAtI — Your Story", href: "/yAtI" },
-  { label: "YATI Flow", href: "/wearables", mega: "wearables" },
+  { label: "yAtI Flow", href: "/yati-flow", mega: "wearables" },
   { label: "Digital C-Suite", href: "/agents", mega: "agents" },
   { label: "Founder-OS", href: "/founder-os" },
 ];
@@ -196,15 +190,15 @@ export default function Navbar() {
           >
             {authenticated ? "Dashboard" : "Sign in"}
           </Link>
-          <CartButton />
-          <Link to="/waitlist" className="btn-primary !py-2.5 !px-5 !text-xs">
-            Join yAtIverse →
+          {/* <CartButton /> hidden until checkout launches */}
+          <Link to="/yati-flow" className="btn-primary !py-2.5 !px-5 !text-xs">
+            Get early access →
           </Link>
         </div>
 
         {/* Mobile: cart + hamburger */}
         <div className="flex lg:hidden items-center gap-1">
-          <CartButton />
+          {/* <CartButton /> hidden until checkout launches */}
           <button
             className="flex flex-col gap-[5px] p-2"
             onClick={() => setMobile(!mobileOpen)}

@@ -3,71 +3,50 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <url>
-    <loc>https://yAtIverse.com/</loc>
+    <loc>https://yativerse.ai/</loc>
     <lastmod>2026-05-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://yAtIverse.com/og-image.png</image:loc>
+      <image:loc>https://yativerse.ai/og-image.png</image:loc>
       <image:title>yAtIverse — Start Up Right</image:title>
     </image:image>
   </url>
 
-  <url>
-    <loc>https://yAtIverse.com/signal-ring</loc>
-    <lastmod>2026-05-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-    <image:image>
-      <image:loc>https://yAtIverse.com/og-signal-ring.png</image:loc>
-      <image:title>yAtIverse Signal Ring — Wear the Signal</image:title>
-    </image:image>
-  </url>
+
 
   <url>
-    <loc>https://yAtIverse.com/early-access</loc>
-    <lastmod>2026-05-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-    <image:image>
-      <image:loc>https://yAtIverse.com/og-early-access.png</image:loc>
-      <image:title>yAtIverse Early Access — Reserve Your Signal Ring</image:title>
-    </image:image>
-  </url>
-
-  <url>
-    <loc>https://yAtIverse.com/wearables</loc>
+    <loc>https://yativerse.ai/agents</loc>
     <lastmod>2026-05-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://yAtIverse.com/agents</loc>
-    <lastmod>2026-05-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://yAtIverse.com/journey</loc>
+    <loc>https://yativerse.ai/journey</loc>
     <lastmod>2026-05-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://yAtIverse.com/community</loc>
+    <loc>https://yativerse.ai/community</loc>
     <lastmod>2026-05-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://yAtIverse.com/waitlist</loc>
+    <loc>https://yativerse.ai/waitlist</loc>
     <lastmod>2026-05-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 
+  <url>
+    <loc>https://yativerse.ai/yati-flow</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
