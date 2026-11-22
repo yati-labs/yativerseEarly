@@ -57,24 +57,19 @@
          MUST be here in HTML — JS-injected preloads are discovered too late.
          imagesrcset lets the browser pick 300w on mobile, 600w on desktop.
          fetchpriority="high" tells the browser to fetch these before anything else. -->
-    <link rel="preload" as="image"
-      href="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=600&q=82"
-      imagesrcset="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=300&q=82 300w,
-                   https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=600&q=82 600w"
-      imagesizes="(max-width: 768px) 33vw, 300px"
-      fetchpriority="high" />
-    <link rel="preload" as="image"
-      href="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=600&q=82"
-      imagesrcset="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=300&q=82 300w,
-                   https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=600&q=82 600w"
-      imagesizes="(max-width: 768px) 33vw, 300px"
-      fetchpriority="high" />
-    <link rel="preload" as="image"
-      href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=82"
-      imagesrcset="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=300&q=82 300w,
-                   https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=82 600w"
-      imagesizes="(max-width: 768px) 33vw, 300px"
-      fetchpriority="high" />
+
+    <script>
+      // Homepage-only LCP preloads (other routes do not use these images).
+      if (location.pathname === '/') {
+        ['photo-1506784983877-45594efa4cbe', 'photo-1551434678-e076c223a692', 'photo-1498050108023-c5249f4df085'].forEach(function (id) {
+          var u = 'https://images.unsplash.com/' + id + '?auto=format&fit=crop&q=82&w=', l = document.createElement('link');
+          l.rel = 'preload'; l.as = 'image'; l.href = u + '600';
+          l.setAttribute('imagesrcset', u + '300 300w, ' + u + '600 600w');
+          l.setAttribute('imagesizes', '(max-width: 768px) 33vw, 300px'); l.setAttribute('fetchpriority', 'high');
+          document.head.appendChild(l);
+        });
+      }
+    </script>
 
     <!-- ── FONTS ──
          FIX: was render-blocking (saves 1,050ms mobile).
@@ -142,13 +137,11 @@
         "@type": "BreadcrumbList",
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home",        "item": "https://yativerse.ai/" },
-          { "@type": "ListItem", "position": 2, "name": "Signal Ring", "item": "https://yativerse.ai/signal-ring" },
-          { "@type": "ListItem", "position": 3, "name": "Early Access","item": "https://yativerse.ai/early-access" },
-          { "@type": "ListItem", "position": 4, "name": "Wearables",   "item": "https://yativerse.ai/wearables" },
-          { "@type": "ListItem", "position": 5, "name": "AI Agents",   "item": "https://yativerse.ai/agents" },
-          { "@type": "ListItem", "position": 6, "name": "Journey",     "item": "https://yativerse.ai/journey" },
-          { "@type": "ListItem", "position": 7, "name": "Community",   "item": "https://yativerse.ai/community" },
-          { "@type": "ListItem", "position": 8, "name": "Waitlist",    "item": "https://yativerse.ai/waitlist" }
+          { "@type": "ListItem", "position": 2, "name": "yAtI Flow",   "item": "https://yativerse.ai/yati-flow" },
+          { "@type": "ListItem", "position": 3, "name": "AI Agents",   "item": "https://yativerse.ai/agents" },
+          { "@type": "ListItem", "position": 4, "name": "Journey",     "item": "https://yativerse.ai/journey" },
+          { "@type": "ListItem", "position": 5, "name": "Community",   "item": "https://yativerse.ai/community" },
+          { "@type": "ListItem", "position": 6, "name": "Waitlist",    "item": "https://yativerse.ai/waitlist" }
         ]
       }
     </script>
@@ -167,7 +160,7 @@
           {
             "@type": "Question",
             "name": "What does yAtIverse cost?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Waitlist members get exclusive early pricing. The Pioneer tier starts at $49 deposit for the Signal Ring." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Joining the waitlist is free. Pricing for Thread One, Thread Max and the Signal Ring is announced when orders open." }
           },
           {
             "@type": "Question",
@@ -177,7 +170,7 @@
           {
             "@type": "Question",
             "name": "When does the Signal Ring ship?",
-            "acceptedAnswer": { "@type": "Answer", "text": "We're targeting Q4 2026 for early access members. All deposits are fully refundable." }
+            "acceptedAnswer": { "@type": "Answer", "text": "The Signal Ring launches after Thread One and Thread Max. Join the waitlist to hear first." }
           }
         ]
       }

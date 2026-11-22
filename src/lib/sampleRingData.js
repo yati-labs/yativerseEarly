@@ -42,7 +42,7 @@ export const SAMPLE_RING_DATA = {
 // whether the site itself works.
 export const SAMPLE_ENTITLEMENTS = {
   planId: "founder",
-  planName: "YATI Founder (sample)",
+  planName: "yAtI Founder (sample)",
   status: "trial",
   agents: {
     family: ["ai_cmo", "ai_cro", "ai_cfo", "ai_coo"],

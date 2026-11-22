@@ -3,15 +3,13 @@ User-agent: *
 Allow: /
 
 # Campaign pages — allow full indexing
-Allow: /signal-ring
-Allow: /early-access
 Allow: /yati-flow
 
 # Disallow nothing on this site
 Disallow:
 
 # Sitemap location
-Sitemap: https://yAtIverse.com/sitemap.xml
+Sitemap: https://yativerse.ai/sitemap.xml
 
 # Crawl-delay for bots (polite crawling)
 Crawl-delay: 1

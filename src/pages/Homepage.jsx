@@ -88,13 +88,13 @@ const SIGNALS = [
 ];
 
 const HERO_PILLS = [
-  { dot: "#605CFF", label: "YATI Flow — Signal Ring available soon" },
+  { dot: "#605CFF", label: "yAtI Flow — Thread One & Thread Max" },
   { dot: "#C86DD7", label: "Digital C-Suite — your AI team" },
   { dot: "#FF6B8A", label: "Founder OS — your command center" },
 ];
 
 const QUICK_LINKS = [
-  { title: "YATI Flow", text: "The ring — available soon", href: "/wearables" },
+  { title: "yAtI Flow", text: "Thread One & Thread Max — early access", href: "/yati-flow" },
   { title: "Digital C-Suite", text: "Your invisible AI team", href: "/agents" },
   { title: "Founder OS", text: "Your daily command center", href: "/" },
   { title: "Community", text: "Founders who live it", href: "/community" },
@@ -102,7 +102,7 @@ const QUICK_LINKS = [
 
 // ── STORY TEASER — points to the dedicated /yAtI story page ──
 const STORY = {
-  kicker: "Why YATIVerse exists",
+  kicker: "Why yAtIverse exists",
   title: "yAtI — Your Story.",
   subtitle:
     "The path you carve, the wilderness you walk, the future only you can see.",
@@ -120,12 +120,12 @@ const PILLARS = [
   {
     id: "flow",
     eyebrow: "Pillar 01 · Wearables",
-    name: "YATI Flow",
-    tagline: "Starts with a ring. Built to grow.",
-    text: "YATI Flow is our line of AI-native wearables. The Signal Ring will be available soon — tracking sleep, heart rate, activity, and recovery — with more devices in the category to come.",
+    name: "yAtI Flow",
+    tagline: "Starts with your conversations. Built to grow.",
+    text: "yAtI Flow is our line of AI-native wearables. Thread One and Thread Max capture your conversations and turn them into follow-ups. The Signal Ring follows later, tracking sleep, heart rate, activity, and recovery.",
     accent: "#605CFF",
-    link: "/wearables",
-    linkText: "Explore YATI Flow",
+    link: "/yati-flow",
+    linkText: "Explore yAtI Flow",
   },
   {
     id: "csuite",
@@ -142,7 +142,7 @@ const PILLARS = [
     eyebrow: "Pillar 03 · Your command center",
     name: "Founder OS",
     tagline: "Where it all comes together.",
-    text: "One operating rhythm for goals, priorities, and decisions. Founder OS connects what your ring senses and what your agents produce into a single daily view.",
+    text: "One operating rhythm for goals, priorities, and decisions. Founder OS connects what you capture and what your agents produce into a single daily view.",
     accent: "#4ECDC4",
     link: "/",
     linkText: "See how it works",
@@ -150,13 +150,9 @@ const PILLARS = [
 ];
 
 const AVAILABILITY = [
-  {
-    name: "Signal Ring",
-    pillar: "YATI Flow",
-    status: "Available soon",
-    accent: "#605CFF",
-    dot: "#77d6a1",
-  },
+  { name: "Thread One", pillar: "yAtI Flow", status: "Early access", accent: "#C9A84C", dot: "#F5C542" },
+  { name: "Thread Max", pillar: "yAtI Flow", status: "Early access", accent: "#C9A84C", dot: "#F5C542" },
+  { name: "Signal Ring", pillar: "yAtI Flow", status: "Coming later", accent: "#605CFF", dot: "#b9b0a2" },
   {
     name: "Founder OS",
     pillar: "Command center",
@@ -179,8 +175,8 @@ const ECOSYSTEM_VALUE = [
     text: "Instead of separate tools for notes, content, tasks, and decisions — one connected system that grows with you.",
   },
   {
-    title: "Turns daily signals into momentum",
-    text: "What your ring senses and what your agents produce become structured next actions, not lost data.",
+    title: "Turns conversations into momentum",
+    text: "What Thread captures and what your agents produce become structured next actions, not lost data.",
   },
   {
     title: "Creates founder-level leverage",
@@ -188,7 +184,7 @@ const ECOSYSTEM_VALUE = [
   },
   {
     title: "Scales with you, not ahead of you",
-    text: "Start with the ring. Add the OS when you're ready. Activate agents as your business actually needs them.",
+    text: "Start with Thread. Add the OS when you're ready. Activate agents as your business actually needs them.",
   },
 ];
 
@@ -234,8 +230,8 @@ const BEFORE_AFTER = [
   },
   {
     before:
-      "You have no idea if you're actually in shape to make big calls today.",
-    after: "Your ring tells you. You decide with real signal, not guesswork.",
+      "Follow-ups slip because the details lived in your head.",
+    after: "Thread captures what was said. You decide from the record, not from memory.",
   },
 ];
 
@@ -243,12 +239,12 @@ const JOURNEY = [
   {
     n: "01",
     title: "Wear it",
-    text: "Start with YATI Flow. Daily signal, always with you, before you open a laptop.",
+    text: "Start with yAtI Flow. Thread One or Thread Max goes where you go.",
   },
   {
     n: "02",
     title: "Capture",
-    text: "Voice notes, ideas, and signals collected automatically as you move through your day.",
+    text: "Conversations, ideas, and voice notes recorded and turned into summaries and next steps.",
   },
   {
     n: "03",
@@ -318,7 +314,7 @@ const AGENTS = [
 const AUDIENCE = [
   {
     title: "First-time founders",
-    text: "Stop guessing what to do next. YATIVerse gives you a repeatable launch rhythm from day one.",
+    text: "Stop guessing what to do next. yAtIverse gives you a repeatable launch rhythm from day one.",
     id: IMG_ID.audienceFounder,
     alt: "Young founder focused at their laptop",
   },
@@ -417,7 +413,7 @@ function RingCarousel({ images, intervalMs = 3200 }) {
         <img
           key={src}
           src={src}
-          alt={`YATI Flow ring — view ${i + 1}`}
+          alt={`yAtI Flow ring — view ${i + 1}`}
           width={640}
           height={420}
           loading={i === 0 ? "eager" : "lazy"}
@@ -508,8 +504,8 @@ export default function Homepage() {
     <>
       <SEO
         path="/"
-        title="yAtIverse — AI Lifestyle for Founders. YATI Flow, Digital C-Suite & OS."
-        description="YATIVerse is an AI lifestyle for founders, built on three pillars: YATI Flow (the ring), a Digital C-Suite of AI executives, and a Founder OS connecting it all into one daily rhythm."
+        title="yAtIverse — AI Lifestyle for Founders. yAtI Flow, Digital C-Suite & OS."
+        description="yAtIverse is an AI lifestyle for founders, built on three pillars: yAtI Flow (Thread One and Thread Max, with the Signal Ring to follow), a Digital C-Suite of AI executives, and a Founder OS connecting it all into one daily rhythm."
         canonical="https://yativerse.ai/"
         ogImage="https://yativerse.ai/og-image.png"
       />
@@ -532,17 +528,17 @@ export default function Homepage() {
 
             <div className="relative z-10 max-w-3xl w-full text-center mx-auto">
               <Link
-                to="/wearables"
-                aria-label="yAtI Flow — Signal Ring available soon"
+                to="/yati-flow"
+                aria-label="yAtI Flow — Thread One and Thread Max, early access"
                 className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide border border-white/10 bg-white/[0.05] text-[#F5C542] hover:text-white transition-colors"
               >
                 <span
                   className="w-1.5 h-1.5 rounded-full bg-[#605CFF] animate-pulse flex-shrink-0"
                   aria-hidden="true"
                 />
-                Introducing yAtI AI-1 &nbsp;
+                Introducing yAtI Flow &nbsp;
                 <span className="text-brand-purple font-semibold">
-                  Explore the system →
+                  Thread One & Thread Max →
                 </span>
               </Link>
 
@@ -558,13 +554,13 @@ export default function Homepage() {
               </h1>
 
               <p className="font-body text-lg text-white/60 max-w-xl mx-auto leading-relaxed mb-3">
-                You need a smarter life. YATIVerse gives founders an AI
-                lifestyle — YATI Flow wearables, a Digital C-Suite running your
+                You need a smarter life. yAtIverse gives founders an AI
+                lifestyle — yAtI Flow wearables, a Digital C-Suite running your
                 business, and a Founder OS keeping you in control.
               </p>
 
               <p className="font-mono text-xs text-white/35 mb-8 tracking-wide">
-                A ring · an AI team · an operating system — built to work
+                Thread · an AI team · an operating system — built to work
                 together
               </p>
 
@@ -615,15 +611,13 @@ export default function Homepage() {
               </ul>
 
               <div className="flex flex-wrap gap-3 justify-center mb-10">
-                <Link to="/waitlist" className="btn-primary">
-                  Join the Waitlist →
+                <Link to="/yati-flow" className="btn-primary"> Get Early Access →
                 </Link>
-                <Link to="/wearables" className="btn-ghost">
-                  Explore YATI Flow
+                <Link to="/waitlist" className="btn-ghost"> Join the Waitlist
                 </Link>
               </div>
               <p className="text-xs text-white/35 font-body">
-                Free to join · No credit card · YATI Flow ships first
+                Free to join · No credit card · Thread One and Thread Max ship first
               </p>
             </div>
 
@@ -843,7 +837,7 @@ export default function Homepage() {
                 <div className="mt-6 glass rounded-2xl p-8">
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-2 flex-wrap">
                     {[
-                      { label: "Ring", sub: "Signal", accent: "#605CFF" },
+                      { label: "Thread", sub: "Capture", accent: "#605CFF" },
                       { label: "OS", sub: "Structure", accent: "#4ECDC4" },
                       { label: "Agents", sub: "Leverage", accent: "#FF6B8A" },
                       {
@@ -893,7 +887,7 @@ export default function Homepage() {
             </div>
           </section>
 
-          {/* ══ YATI FLOW — pillar 01 detail ══ */}
+          {/* ══ yAtI FLOW — pillar 01 detail ══ */}
           <section
             className="py-20 px-6 border-t border-white/[0.06]"
             id="wearables"
@@ -909,23 +903,18 @@ export default function Homepage() {
                   className="font-display font-bold tracking-tight text-white mb-5"
                   style={{ fontSize: "clamp(28px,3.5vw,44px)" }}
                 >
-                  It starts with a signal.{" "}
+                  It starts with a conversation.{" "}
                   <span className="text-gradient">
                     It's just the beginning.
                   </span>
                 </h2>
                 <p className="font-body text-base text-white/55 leading-relaxed mb-4 max-w-md">
-                  The Signal Ring — our first YATI Flow device — tracks your
-                  sleep, heart rate, activity, and recovery, giving you the
-                  daily readiness data founders need to operate at their best.
+                  Thread One and Thread Max record your conversations, turn them into summaries and action items, and draft the follow-up for you to review and send.
                 </p>
                 <p className="font-body text-sm text-white/38 leading-relaxed mb-8 max-w-md">
-                  It's the foundation everything else gets built on, as Founder
-                  OS and your Digital C-Suite come online around it — and as
-                  more YATI Flow devices join the category.
+                  They feed Founder OS and your Digital C-Suite with what was said and what comes next. The Signal Ring follows later, adding sleep, heart rate and recovery.
                 </p>
-                <Link to="/wearables" className="btn-ghost">
-                  Explore YATI Flow →
+                <Link to="/yati-flow" className="btn-ghost"> Explore Thread One & Thread Max →
                 </Link>
               </Reveal>
 
@@ -938,15 +927,15 @@ export default function Homepage() {
                       "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(96,92,255,0.18), rgba(5,8,20,0.9) 70%)",
                   }}
                 >
-                  <RingCarousel images={RING_IMAGES} />
+                  <img src="/flow/flow-devices.jpg" alt="yAtI Flow Thread One and Thread Max" width="580" height="578" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="glass rounded-xl px-4 py-3 flex items-center justify-between">
                       <div>
                         <p className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-0.5">
-                          YATI Flow · Live
+                          yAtI Flow · Early access
                         </p>
                         <p className="font-display text-sm font-semibold text-white">
-                          {signal}
+                          Thread One & Thread Max
                         </p>
                       </div>
                       <span
@@ -1149,8 +1138,8 @@ export default function Homepage() {
                 </Reveal>
                 <Reveal delay={0.1}>
                   <p className="font-body text-base text-white/58 leading-relaxed lg:pt-14">
-                    Every part of YATIVerse makes the next part more useful. The
-                    ring gives you signal. The OS gives you structure. The
+                    Every part of yAtIverse makes the next part more useful. The
+                    Thread captures what was said. The OS gives you structure. The
                     C-Suite gives you leverage.
                   </p>
                 </Reveal>
@@ -1204,7 +1193,7 @@ export default function Homepage() {
                   <p className="font-body text-base text-white/58 leading-relaxed lg:pt-14">
                     Hiring a full-time CMO, CRO, CFO, and COO in a US startup
                     costs over $750,000 in base salaries alone — before
-                    benefits, bonuses, or equity. YATIVerse gives you the same
+                    benefits, bonuses, or equity. yAtIverse gives you the same
                     functional coverage at a fraction of the cost, working 24/7
                     with no hiring process or notice period.
                   </p>
@@ -1246,7 +1235,7 @@ export default function Homepage() {
                 ))}
               </div>
 
-              {/* Total vs YATIVerse row */}
+              {/* Total vs yAtIverse row */}
               <Reveal delay={0.32}>
                 <div className="glass rounded-2xl p-6 grid sm:grid-cols-2 gap-4 items-center">
                   <div className="flex items-start gap-3">
@@ -1321,8 +1310,8 @@ export default function Homepage() {
                     className="font-display font-bold tracking-tight text-white"
                     style={{ fontSize: "clamp(28px,3.5vw,44px)" }}
                   >
-                    Before YATIVerse.{" "}
-                    <span className="text-gradient">After YATIVerse.</span>
+                    Before yAtIverse.{" "}
+                    <span className="text-gradient">After yAtIverse.</span>
                   </h2>
                 </Reveal>
               </div>
@@ -1374,7 +1363,7 @@ export default function Homepage() {
                     className="font-display font-bold leading-tight tracking-tight text-white"
                     style={{ fontSize: "clamp(28px,3.5vw,44px)" }}
                   >
-                    Start with a signal.
+                    Start with a conversation.
                     <br />
                     End up running a company.
                   </h2>
@@ -1382,7 +1371,7 @@ export default function Homepage() {
                 <Reveal delay={0.1}>
                   <p className="font-body text-base text-white/58 leading-relaxed lg:pt-14">
                     Every product you add compounds the one before it. The more
-                    of YATIVerse you use, the more leverage you get.
+                    of yAtIverse you use, the more leverage you get.
                   </p>
                 </Reveal>
               </div>
@@ -1435,7 +1424,7 @@ export default function Homepage() {
                 <Reveal delay={0.1}>
                   <p className="font-body text-base text-white/55 leading-relaxed lg:pt-14">
                     Whether you're validating your first idea or running a lean
-                    operation solo — YATIVerse gives you the infrastructure that
+                    operation solo — yAtIverse gives you the infrastructure that
                     used to cost a full-time staff.
                   </p>
                 </Reveal>
@@ -1599,7 +1588,7 @@ export default function Homepage() {
                       </span>
                     </h2>
                     <p className="font-body text-white/60 mt-4 max-w-xl mx-auto leading-relaxed mb-8">
-                      Join the waitlist. YATI Flow ships first. Your Digital
+                      Join the waitlist. yAtI Flow ships first. Your Digital
                       C-Suite and Founder OS follow. Your AI lifestyle starts
                       here.
                     </p>

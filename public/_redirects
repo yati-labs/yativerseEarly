@@ -1,5 +1,6 @@
 # Old campaign URL -> new (301, query string preserved)
 /pendant /yati-flow 301
+/wearables /yati-flow 301
 
 # SPA fallback for Cloudflare Pages — without this, a direct load or
 # refresh on any route other than "/" (e.g. /order, /checkout, /dashboard)

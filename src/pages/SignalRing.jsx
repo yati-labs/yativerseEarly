@@ -184,6 +184,7 @@ export default function SignalRing() {
             Real sleep, activity, and Balance scores — with honest numbers and daily insights, not guesses.
           </motion.p>
 
+          <p className="mb-4 font-body text-sm text-white/55">Coming later. The Signal Ring launches after Thread One and Thread Max. Reserve early access to be first in line.</p>
           <motion.div {...heroEntrance(0.75)} className="flex flex-col sm:flex-row gap-3 items-center">
             <a href="#reserve"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-display font-bold text-sm text-black transition-all duration-300 hover:scale-105"
