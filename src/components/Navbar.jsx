@@ -13,7 +13,7 @@ const MEGA = {
       { name: "Thread One", desc: "Slim card recorder. Every conversation, followed up.", tag: "Early access", color: "#C9A84C", img: "/flow/thread-one.jpg", href: "/yati-flow" },
       { name: "Thread Max", desc: "Wearable capsule. Capture on the move.", tag: "Early access", color: "#C9A84C", img: "/flow/thread-max.jpg", href: "/yati-flow" },
     ],
-    cta: { label: "Explore YATI Flow", href: "/yati-flow" },
+    cta: { label: "Explore yAtI Flow", href: "/yati-flow" },
   },
   agents: {
     eyebrow: "Your AI C-Suite",
@@ -54,7 +54,7 @@ const MEGA = {
 
 const NAV_LINKS = [
   { label: "yAtI — Your Story", href: "/yAtI" },
-  { label: "YATI Flow", href: "/yati-flow", mega: "wearables" },
+  { label: "yAtI Flow", href: "/yati-flow", mega: "wearables" },
   { label: "Digital C-Suite", href: "/agents", mega: "agents" },
   { label: "Founder-OS", href: "/founder-os" },
 ];

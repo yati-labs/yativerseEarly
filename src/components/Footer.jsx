@@ -9,7 +9,7 @@ const COLS = [
   {
     title: "Products",
     links: [
-      { l: "YATI Flow",       h: "/yati-flow" },
+      { l: "yAtI Flow",       h: "/yati-flow" },
       { l: "Founder OS",      h: "/founder-os" },
       { l: "Digital C-Suite", h: "/agents"    },
     ],

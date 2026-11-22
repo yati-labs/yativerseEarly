@@ -253,7 +253,7 @@ export default function Order() {
               </motion.div>
             </div>
 
-            {/* ── MORE FROM YATIVERSE (locked yAtI Flow) ── */}
+            {/* ── MORE FROM yAtIverse (locked yAtI Flow) ── */}
             <motion.div {...fadeUp(0.05)} className="mb-16">
               <p className="font-mono text-[10px] tracking-widest uppercase text-white/38 mb-4">More from yAtIverse</p>
               <div className="rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>

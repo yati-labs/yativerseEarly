@@ -72,7 +72,7 @@ const HOW_IT_WORKS = [
   {
     n: "03",
     title: "They connect through Founder OS",
-    text:  "Your Digital C-Suite plugs into the same daily rhythm as everything else in YATIVerse — one system, not four separate tools.",
+    text:  "Your Digital C-Suite plugs into the same daily rhythm as everything else in yAtIverse — one system, not four separate tools.",
   },
 ];
 

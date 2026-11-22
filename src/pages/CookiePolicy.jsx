@@ -14,19 +14,19 @@ export default function CookiePolicy() {
         <section className="space-y-6 text-white/80 leading-relaxed">
 
           <p>
-            This Cookie Policy explains how <strong>Yati</strong> (“we”, “us”, “our”) uses cookies and similar technologies to operate, secure, and improve our platform. We keep things simple: no ads, no cross‑site tracking, no selling data.
+            This Cookie Policy explains how <strong>yAtIverse</strong> (“we”, “us”, “our”) uses cookies and similar technologies to operate, secure, and improve our platform. We keep things simple: no ads, no cross‑site tracking, no selling data.
           </p>
 
           <h2 className="text-2xl font-semibold text-white mt-10">1. What Cookies We Use</h2>
 
           <h3 className="text-xl font-semibold text-white mt-6">A. Essential Cookies (Required)</h3>
           <p>
-            These cookies are required for Yati to function. They handle authentication, security, routing, and user preferences. They are first‑party, secure, and not used for tracking.
+            These cookies are required for yAtIverse to function. They handle authentication, security, routing, and user preferences. They are first‑party, secure, and not used for tracking.
           </p>
 
           <h3 className="text-xl font-semibold text-white mt-6">B. Analytics Cookies (Optional)</h3>
           <p>
-            We use privacy‑focused analytics tools such as Plausible or PostHog. These help us understand product usage and improve Yati. We do not use advertising trackers or third‑party marketing cookies.
+            We use privacy‑focused analytics tools such as Plausible or PostHog. These help us understand product usage and improve yAtIverse. We do not use advertising trackers or third‑party marketing cookies.
           </p>
 
           <h3 className="text-xl font-semibold text-white mt-6">C. Product Cookies</h3>
@@ -41,7 +41,7 @@ export default function CookiePolicy() {
 
           <h2 className="text-2xl font-semibold text-white mt-10">3. Managing Cookies</h2>
           <p>
-            You can control cookies through your browser settings. Blocking essential cookies may prevent Yati from functioning properly.
+            You can control cookies through your browser settings. Blocking essential cookies may prevent yAtIverse from functioning properly.
           </p>
 
           <h2 className="text-2xl font-semibold text-white mt-10">4. Updates</h2>

@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
         <section className="space-y-6 text-white/80 leading-relaxed">
 
           <p>
-            Yati (“we”, “us”, “our”) is committed to protecting your privacy. We collect only what we need to operate the platform, improve the product, and support your experience. We do not sell your data or use it for advertising.
+            yAtIverse (“we”, “us”, “our”) is committed to protecting your privacy. We collect only what we need to operate the platform, improve the product, and support your experience. We do not sell your data or use it for advertising.
           </p>
 
           <h2 className="text-2xl font-semibold text-white mt-10">1. Information We Collect</h2>
@@ -36,7 +36,7 @@ export default function PrivacyPolicy() {
 
           <h2 className="text-2xl font-semibold text-white mt-10">2. How We Use Your Data</h2>
           <p>
-            We use your data to operate Yati, authenticate your account, personalize your experience, improve features, provide support, and ensure security.
+            We use your data to operate yAtIverse, authenticate your account, personalize your experience, improve features, provide support, and ensure security.
           </p>
 
           <h2 className="text-2xl font-semibold text-white mt-10">3. How We Protect Data</h2>
@@ -46,7 +46,7 @@ export default function PrivacyPolicy() {
 
           <h2 className="text-2xl font-semibold text-white mt-10">4. Sharing Data</h2>
           <p>
-            We only share data with service providers who help us operate Yati (hosting, analytics, email delivery) or when required by law. We never sell or rent your data.
+            We only share data with service providers who help us operate yAtIverse (hosting, analytics, email delivery) or when required by law. We never sell or rent your data.
           </p>
 
           <h2 className="text-2xl font-semibold text-white mt-10">5. Your Rights</h2>
@@ -61,12 +61,12 @@ export default function PrivacyPolicy() {
 
           <h2 className="text-2xl font-semibold text-white mt-10">7. Children’s Privacy</h2>
           <p>
-            Yati is not intended for individuals under 13. We do not knowingly collect data from children.
+            yAtIverse is not intended for individuals under 13. We do not knowingly collect data from children.
           </p>
 
           <h2 className="text-2xl font-semibold text-white mt-10">8. Changes to This Policy</h2>
           <p>
-            We may update this Privacy Policy as Yati evolves. We will notify you of significant changes.
+            We may update this Privacy Policy as yAtIverse evolves. We will notify you of significant changes.
           </p>
 
           <h2 className="text-2xl font-semibold text-white mt-10">9. Contact</h2>
