@@ -184,12 +184,15 @@ export default function Navbar() {
 
         {/* Right */}
         <div className="hidden lg:flex items-center gap-3">
+          {/* Sign in hidden for now. Signed-in users still see Dashboard. */}
+          {authenticated && (
           <Link
             to={authenticated ? "/dashboard" : "/login"}
             className="text-sm font-medium text-white/45 hover:text-white transition-colors px-3 py-2 font-body"
           >
-            {authenticated ? "Dashboard" : "Sign in"}
+            Dashboard
           </Link>
+          )}
           {/* <CartButton /> hidden until checkout launches */}
           <Link to="/yati-flow" className="btn-primary !py-2.5 !px-5 !text-xs">
             Get early access →
@@ -336,12 +339,14 @@ export default function Navbar() {
               );
             })}
 
+            {authenticated && (
             <Link
               to={authenticated ? "/dashboard" : "/login"}
               className="text-center text-base font-medium text-white/60 hover:text-white py-3 mt-4"
             >
-              {authenticated ? "Dashboard" : "Sign in"}
+              Dashboard
             </Link>
+            )}
 
             <Link
               to="/waitlist"

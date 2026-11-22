@@ -155,7 +155,7 @@ export default function YatiFlow() {
       <main>
         <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-12 pt-12 md:grid-cols-[1.05fr_1fr] md:pt-20">
           <div>
-            <p className={`${eyebrow} text-brand-gold`}>yAtI Flow + Founder OS</p>
+            <p className={`${eyebrow} text-brand-gold`}><span className="normal-case">yAtI</span> Flow + Founder OS</p>
             <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">Your conversations. <span className="text-brand-gold2">Put to work.</span></h1>
             <p className="mt-5 max-w-lg text-lg leading-relaxed text-white/70">Meet yAtI Flow: Thread One and Thread Max. AI-powered companions that record, transcribe and summarize your conversations, then help turn them into email drafts, follow-ups and action.</p>
             <div id="hero-form" className="mt-8" onClickCapture={(e) => e.target.closest?.('button[type="submit"]') && ev("thread_hero_cta_click", { location: "hero" })}>
