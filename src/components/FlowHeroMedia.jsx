@@ -4,9 +4,9 @@ import HeroVideo from "./HeroVideo";
 // with live-text model labels. Once the files are in public/flow, set mp4 (and optionally webm) below.
 // The video must NOT have text baked into it; a moving frame cannot carry reliable labels.
 export const HERO_VIDEO = {
-  mp4: null,   // e.g. "/flow/hero-loop.mp4"
-  webm: null,  // e.g. "/flow/hero-loop.webm"
-  poster: "/flow/flow-devices.jpg",
+  mp4: "/flow/hero-loop.mp4",
+  webm: "/flow/hero-loop.webm",
+  poster: "/flow/hero-poster.jpg",
 };
 
 export default function FlowHeroMedia({ className = "" }) {
