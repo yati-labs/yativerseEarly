@@ -83,14 +83,14 @@ const SIGNALS = [
 
 const HERO_PILLS = [
   { dot: "#605CFF", label: "yAtI Flow — Thread One & Thread Max" },
-  { dot: "#C86DD7", label: "Digital C-Suite — your AI team" },
-  { dot: "#FF6B8A", label: "Founder OS — your command center" },
+  { dot: "#C86DD7", label: "Digital C-Suite — coming next" },
+  { dot: "#FF6B8A", label: "Founder OS — early access" },
 ];
 
 const QUICK_LINKS = [
   { title: "yAtI Flow", text: "Thread One & Thread Max — early access", href: "/yati-flow" },
-  { title: "Digital C-Suite", text: "Your invisible AI team", href: "/agents" },
-  { title: "Founder OS", text: "Your daily command center", href: "/founder-os" },
+  { title: "Digital C-Suite", text: "Coming next: your AI team", href: "/agents" },
+  { title: "Founder OS", text: "Early access: your command center", href: "/founder-os" },
   { title: "Community", text: "Founders who live it", href: "/community" },
 ];
 
@@ -126,7 +126,7 @@ const PILLARS = [
     eyebrow: "Pillar 02 · Your AI team",
     name: "Digital C-Suite",
     tagline: "Executives, without the overhead.",
-    text: "Role-based AI agents — CMO, CRO, CFO, COO — each running real workflows in your business. Strategy, growth, finance, and execution, working in the background every day.",
+    text: "Coming next: role-based AI agents — CMO, CRO, CFO, COO — built to run workflows for you to review. Strategy, growth, finance, and execution, working in the background.",
     accent: "#FF6B8A",
     link: "/agents",
     linkText: "Meet your C-Suite",
@@ -157,7 +157,7 @@ const AVAILABILITY = [
   {
     name: "Digital C-Suite",
     pillar: "AI executives",
-    status: "Waitlist",
+    status: "Coming",
     accent: "#FF6B8A",
     dot: "#b9b0a2",
   },
@@ -220,7 +220,7 @@ const BEFORE_AFTER = [
   },
   {
     before: "Hiring a CMO, CFO, and COO costs $600K+ a year.",
-    after: "Your Digital C-Suite works 24/7 for a fraction of that.",
+    after: "Your Digital C-Suite, coming next, is built to take on that work.",
   },
   {
     before:
@@ -248,7 +248,7 @@ const JOURNEY = [
   {
     n: "04",
     title: "Scale",
-    text: "Deploy your Digital C-Suite. AI executives handle strategy, growth, and ops while you focus.",
+    text: "Join the waitlist for your Digital C-Suite, coming next. AI executives will draft and recommend while you decide.",
   },
 ];
 
@@ -526,8 +526,8 @@ export default function Homepage() {
 
               <p className="font-body text-lg text-white/60 max-w-xl mx-auto leading-relaxed mb-3">
                 yAtI Flow captures your conversations. Founder OS organizes your
-                priorities. Your Digital C-Suite supports marketing, revenue,
-                finance, and operations.
+                priorities in early access. Your Digital C-Suite, coming next, will
+                support marketing, revenue, finance, and operations.
               </p>
 
               <p className="font-mono text-xs text-white/65 mb-8 tracking-wide">
@@ -915,13 +915,13 @@ export default function Homepage() {
                     className="font-display font-bold tracking-tight text-white mb-5"
                     style={{ fontSize: "clamp(28px,3.5vw,44px)" }}
                   >
-                    They work while you sleep.{" "}
-                    <span className="text-gradient">You wake up ahead.</span>
+                    Built to work while you sleep.{" "}
+                    <span className="text-gradient">You stay in charge.</span>
                   </h2>
                   <p className="font-body text-base text-white/55 leading-relaxed max-w-md">
-                    Role-based AI executives across strategy, marketing,
-                    revenue, and operations. Each one owns a function. All of
-                    them report to you.
+                    Coming next: role-based AI executives across strategy,
+                    marketing, revenue, and operations. Each one will own a
+                    function. All of them report to you.
                   </p>
                 </Reveal>
                 <Reveal delay={0.1} className="lg:text-right">
@@ -1227,7 +1227,7 @@ export default function Homepage() {
                         A fraction of that
                       </p>
                       <p className="font-body text-xs text-white/65 mt-1">
-                        24/7 · no hiring · no notice period · no equity dilution
+                        Coming next · no hiring process · every draft reviewed by you
                       </p>
                     </div>
                   </div>
@@ -1458,9 +1458,9 @@ export default function Homepage() {
                       </span>
                     </h2>
                     <p className="font-body text-white/60 mt-4 max-w-xl mx-auto leading-relaxed mb-8">
-                      Join the waitlist. yAtI Flow ships first. Your Digital
-                      C-Suite and Founder OS follow. Your AI lifestyle starts
-                      here.
+                      Join the waitlist. yAtI Flow ships first. Founder OS is in
+                      early access and your Digital C-Suite is coming next. Your
+                      AI lifestyle starts here.
                     </p>
                     <Link
                       to="/waitlist"

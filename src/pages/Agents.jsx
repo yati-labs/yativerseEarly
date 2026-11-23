@@ -63,7 +63,7 @@ const HOW_IT_WORKS = [
   {
     n: "01",
     title: "Each agent owns a function",
-    text:  "Strategy, marketing, sales, finance, and operations — each agent runs real workflows inside that domain, every day.",
+    text:  "Strategy, marketing, sales, finance, and operations — each agent is built to run workflows inside that domain, with you approving the output.",
   },
   {
     n: "02",
@@ -119,7 +119,7 @@ export default function AgentsPage() {
                   <span className="text-gradient">without the overhead.</span>
                 </h1>
                 <p className="font-body text-lg text-white/55 leading-relaxed max-w-xl mx-auto mb-8">
-                  Role-based AI agents — CMO, CRO, CFO, COO — each running real workflows in your business. Strategy, growth, finance, and execution, working in the background every day.
+                  Coming next: role-based AI agents — CMO, CRO, CFO, COO — built to run workflows in your business, with you reviewing every draft and decision. Strategy, growth, finance, and execution, working in the background.
                 </p>
                 <Link to="/waitlist" className="btn-primary">Join the Waitlist →</Link>
               </Reveal>
@@ -275,7 +275,7 @@ export default function AgentsPage() {
                     Build your invisible team.
                   </h2>
                   <p className="font-body text-white/60 mt-2 max-w-xl mx-auto leading-relaxed mb-8">
-                    Join the waitlist to get early access to your Digital C-Suite as it rolls out.
+                    Join the waitlist to hear first when your Digital C-Suite opens.
                   </p>
                   <Link to="/waitlist" className="btn-primary !py-4 !px-10 !text-base uppercase tracking-wide">
                     Join the Waitlist →

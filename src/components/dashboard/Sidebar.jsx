@@ -74,7 +74,7 @@ export default function Sidebar({ onLogout, planLabel, planStatus }) {
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-white/5 bg-brand-bg2 p-5 lg:flex">
       <Link to="/" className="mb-5 flex items-center gap-2 px-1">
-        <img src="/logo.png" alt="yAtIverse" className="h-7 w-7 rounded-lg" />
+        <img src="/logo.jpeg" alt="yAtIverse" className="h-9 w-9 object-contain" />
         <span className="font-display text-sm font-bold text-white">
           Founder Command Center
         </span>
