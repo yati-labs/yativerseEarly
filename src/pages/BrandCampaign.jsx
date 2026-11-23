@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import SEO from "../components/SEO";
 import WaitlistForm from "../components/WaitlistForm";
-import HeroVideo from "../components/HeroVideo";
+import FlowHeroMedia from "../components/FlowHeroMedia";
 import { captureAttribution, initMetaPixel, track } from "../lib/tracking";
 
 // Campaign 1: introduce the brand. One goal: join the waitlist (brand + first product, yAtI Flow).
@@ -52,7 +52,7 @@ export default function BrandCampaign() {
       <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-brand-bg/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
           <Link to="/" aria-label="yAtIverse home" className="flex items-center gap-2">
-            <img src="/logo.png" alt="" width="28" height="28" className="h-7 w-7 rounded-md" />
+            <img src="/logo.jpeg" alt="yAtIverse" width="48" height="48" className="h-12 w-12 object-contain" />
           </Link>
           <button onClick={toForm} className="btn-primary !px-5 !py-2">Join the waitlist</button>
         </div>
@@ -69,7 +69,7 @@ export default function BrandCampaign() {
             <p className="mt-4 text-sm text-white/65">Free to join. We will email waitlist members first when orders open.</p>
           </div>
           <div className="flex justify-center">
-            <HeroVideo poster="/video/hero-poster.jpg" />
+            <FlowHeroMedia className="aspect-square w-full max-w-md overflow-hidden rounded-3xl bg-brand-bg2" />
           </div>
         </section>
 

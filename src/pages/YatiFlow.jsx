@@ -6,7 +6,7 @@ import SEO from "../components/SEO";
 import WaitlistForm from "../components/WaitlistForm";
 import WaitlistModal from "../components/WaitlistModal";
 import ScrollPopup from "../components/ScrollPopup";
-import HeroVideo from "../components/HeroVideo";
+import FlowHeroMedia from "../components/FlowHeroMedia";
 import { captureAttribution, initMetaPixel, track } from "../lib/tracking";
 import { FLOW_SEO, FLOW_PATH, SITE } from "../seo/yatiFlow";
 
@@ -147,7 +147,7 @@ export default function YatiFlow() {
 
       <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-brand-bg/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-          <Link to="/" aria-label="yAtIverse home"><img src="/logo.png" alt="yAtIverse" width="34" height="28" className="h-7 w-auto" /></Link>
+          <Link to="/" aria-label="yAtIverse home"><img src="/logo.jpeg" alt="yAtIverse" width="48" height="48" className="h-12 w-12 object-contain" /></Link>
           <button onClick={() => openModal("header")} className="btn-primary !px-5 !py-2">Get early access</button>
         </div>
       </header>
@@ -164,7 +164,7 @@ export default function YatiFlow() {
             <a href="#journey" onClick={() => ev("thread_demo_click")} className="mt-5 inline-block text-sm font-semibold text-brand-gold2 underline-offset-4 hover:underline">Discover what it can do →</a>
             <p className="mt-4 text-xs leading-relaxed text-white/65">Free to join. No purchase required. Works with iPhone and Mac. Android is planned.</p>
           </div>
-          <HeroVideo className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl bg-brand-bg2" poster="/flow/flow-devices.jpg" mp4="/flow/hero-loop.mp4" webm={null} />
+          <FlowHeroMedia className="mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl bg-brand-bg2" />
         </section>
 
         <div className="mx-auto grid max-w-6xl gap-3 border-t border-white/10 px-5 py-6 text-sm text-white/65 sm:grid-cols-3">

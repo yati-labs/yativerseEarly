@@ -62,7 +62,7 @@ export default function ForgotPassword() {
 
       <motion.div {...fadeUp(0)} className="w-full max-w-md">
         <Link to="/" className="mb-8 flex items-center justify-center gap-2">
-          <img src="/logo.png" alt="yAtIverse" className="h-8 w-8 rounded-lg" />
+          <img src="/logo.jpeg" alt="yAtIverse" className="h-10 w-10 object-contain" />
           <span className="font-display text-lg font-bold">yAtIverse</span>
         </Link>
 

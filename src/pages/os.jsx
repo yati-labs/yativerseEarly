@@ -13,7 +13,7 @@ const OS_PREVIEW_ID = "photo-1551288049-bebda4e38f71";
 const TIMELINE_CARDS = [
   { time: "06:00", title: "Morning check-in",  text: "Yesterday's conversations, summarized. Founder OS surfaces your top priority for the day." },
   { time: "12:30", title: "Decision queue",    text: "Three items ready for review. Market note flagged. Draft approved. Each takes under a minute." },
-  { time: "17:00", title: "Day closed",        text: "Agents keep working. Content drafted. Leads scored. Numbers updated. You live your life." },
+  { time: "17:00", title: "Day closed",        text: "Your Digital C-Suite, coming next, will draft content and score leads for your review. You live your life." },
 ];
 
 const PILLARS_OF_OS = [
@@ -172,7 +172,7 @@ export default function OSPage() {
                 <Reveal>
                   <h2 id="cta-heading" className="font-display font-bold tracking-tight text-white mb-4"
                     style={{ fontSize:"clamp(28px,4vw,48px)" }}>
-                    Your command center is coming.
+                    Founder OS is in early access.
                   </h2>
                   <p className="font-body text-white/60 mt-2 max-w-xl mx-auto leading-relaxed mb-8">
                     Join the waitlist for early access to Founder OS.

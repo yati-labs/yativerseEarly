@@ -97,7 +97,7 @@ export default function CampaignLanding() {
       <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-brand-bg/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
           <Link to="/" aria-label="yAtIverse home" className="flex items-center gap-2">
-            <img src="/logo.png" alt="" width="28" height="28" className="h-7 w-7 rounded-md" />
+            <img src="/logo.jpeg" alt="yAtIverse" width="48" height="48" className="h-12 w-12 object-contain" />
             <span className="font-display text-base font-bold">yAtIverse</span>
           </Link>
           <SignupCTA where="header" className="!px-5 !py-2" />

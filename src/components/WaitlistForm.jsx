@@ -78,12 +78,12 @@ export default function WaitlistForm({ where, source, askPhone = false, model, o
         <button type="submit" disabled={status === "loading"} className="btn-primary justify-center disabled:opacity-50">
           {status === "loading" ? "Joining…" : cta}
         </button>
-        {!askConsent && (
-          <p className="text-xs leading-5 text-white/65">
-            We will email you about launch timing and availability. Unsubscribe anytime. See our <a href="/privacy-policy" className="underline">Privacy Policy</a>.
-          </p>
-        )}
       </div>
+      {!askConsent && (
+        <p className="mt-3 text-xs leading-5 text-white/65">
+          We will email you about launch timing and availability. Unsubscribe anytime. See our <a href="/privacy-policy" className="underline">Privacy Policy</a>.
+        </p>
+      )}
       {status === "error" && <p role="alert" className="mt-3 text-sm text-brand-rose">We could not save that. Check your email address and try again.</p>}
     </form>
   );

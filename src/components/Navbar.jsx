@@ -15,7 +15,7 @@ const MEGA = {
     cta: { label: "Explore yAtI Flow", href: "/yati-flow" },
   },
   agents: {
-    eyebrow: "Your AI C-Suite",
+    eyebrow: "Your AI C-Suite · Coming next",
     headline: "Your invisible executive team.",
     items: [
       {
