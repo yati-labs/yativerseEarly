@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
+import { ROUTE_SEO } from "../seo/routes";
 import { LEGAL } from "../legal/legalConfig";
-import LegalLayout, { A, Entity, H2, H3, Pending, PrivacyEmail, UL } from "../legal/LegalLayout";
+import LegalLayout, { A, H2, H3, PrivacyEmail, UL } from "../legal/LegalLayout";
 
 const TOC = [
   ["scope", "Who we are and what this covers"],
@@ -19,11 +20,7 @@ const TOC = [
 export default function PrivacyPolicy() {
   return (
     <>
-      <SEO
-        title="Privacy Policy"
-        description="How yAtIverse collects, uses, stores and shares information from our website, waitlist, early-access sign-ups and Meta lead forms, and how to opt out or request deletion."
-        path="/privacy-policy"
-      />
+      <SEO path="/privacy-policy" {...ROUTE_SEO["/privacy-policy"]} />
       <LegalLayout
         title="Privacy Policy"
         toc={TOC}
@@ -36,7 +33,7 @@ export default function PrivacyPolicy() {
       >
         <H2 id="scope">1. Who we are and what this covers</H2>
         <p>
-          yAtIverse (“we”, “us”, “our”) is operated by <Entity />. This policy applies to <strong>yativerse.ai</strong>, our campaign
+          yAtIverse (“we”, “us”, “our”){LEGAL.entityName ? <> is operated by {LEGAL.entityName}</> : null}. This policy applies to <strong>yativerse.ai</strong>, our campaign
           and landing pages, our waitlist and early-access sign-ups, the yAtIverse app and dashboard, our emails, and information
           you send us through lead forms on Facebook and Instagram (Meta Instant Forms).
         </p>
@@ -138,8 +135,8 @@ export default function PrivacyPolicy() {
         <UL>
           <li>
             <strong>Waitlist and lead information</strong>: until you unsubscribe or ask us to delete it, or until{" "}
-            {LEGAL.waitlistRetention ? <strong>{LEGAL.waitlistRetention}</strong> : <Pending label="retention period" />} after the
-            early-access program ends, whichever comes first.
+            {LEGAL.waitlistRetention ? <>{LEGAL.waitlistRetention} after the early-access program ends</> : "we no longer need it for the early-access program"}
+            , whichever comes first.
           </li>
           <li><strong>Account information</strong>: while your account is open, and for a limited time afterward where needed for security, accounting or legal reasons.</li>
           <li><strong>Messages to us</strong>: as long as needed to handle your request and keep a reasonable record.</li>
@@ -202,12 +199,9 @@ export default function PrivacyPolicy() {
         <H2 id="contact">10. Contact us</H2>
         <p>For privacy questions, access or deletion requests, or to opt out of marketing:</p>
         <ul className="space-y-1">
-          <li><strong>Company:</strong> <Entity /></li>
+          {LEGAL.entityName && <li><strong>Company:</strong> {LEGAL.entityName}</li>}
           <li><strong>Email:</strong> <PrivacyEmail /></li>
-          <li>
-            <strong>Mailing address:</strong>{" "}
-            {LEGAL.mailingAddress ? <span className="whitespace-pre-line">{LEGAL.mailingAddress}</span> : <Pending label="mailing address" />}
-          </li>
+          {LEGAL.mailingAddress && <li><strong>Mailing address:</strong> <span className="whitespace-pre-line">{LEGAL.mailingAddress}</span></li>}
         </ul>
       </LegalLayout>
     </>

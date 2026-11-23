@@ -5,6 +5,7 @@ import { useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
+import { ROUTE_SEO } from "../seo/routes";
 
 // ─── Fade-up helper ───────────────────────────────────────────────
 const fadeUp = (delay = 0) => ({
@@ -18,7 +19,7 @@ const fadeUp = (delay = 0) => ({
 const SECTIONS = [
   {
     number: "01",
-    eyebrow: "Walks Your Own Path",
+    eyebrow: "Walk Your Own Path",
     title: ["Followers optimize.", "Founders pioneer."],
     body: "Founders create categories, behaviors, and entirely new directions. They move before there is a trail to follow.",
     quote: "Invisible today. Unstoppable tomorrow.",
@@ -221,11 +222,7 @@ export default function YATI() {
 
   return (
     <>
-      <SEO
-        title="yAtI — Your Story"
-        description="yAtI is your story — the path you carve, the wilderness you walk, and the future only you can see."
-        path="/yAtI"
-      />
+      <SEO path="/yAtI" {...ROUTE_SEO["/yAtI"]} />
 
       <div className="bg-[#02030A] text-white min-h-screen overflow-hidden">
         <Navbar />

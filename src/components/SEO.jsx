@@ -8,11 +8,13 @@ const DEFAULTS = {
   type:        'website',
 }
 
-export default function SEO({ title, description, image, type = 'website', path = '', schema, raw = false }) {
+export default function SEO({ title, description, image, type = 'website', path = '', schema, raw = false, noindex = false }) {
+  // No explicit path: use the page the visitor is on, so it never inherits the homepage canonical.
+  const livePath = path || (typeof window !== 'undefined' ? window.location.pathname.replace(/\/+$/, '') : '')
   const t   = title       || DEFAULTS.title
   const d   = description || DEFAULTS.description
   const img = image       || DEFAULTS.image
-  const url = `${BASE_URL}${path}`
+  const url = `${BASE_URL}${livePath}`
   const fullTitle = raw || t.includes('yAtIverse') ? t : `${t} — yAtIverse`
 
   useEffect(() => {
@@ -20,11 +22,13 @@ export default function SEO({ title, description, image, type = 'website', path 
 
     const set = (sel, val) => {
       const el = document.querySelector(sel)
-      if (el) el.setAttribute('content', val)
+      // <link rel="canonical"> carries its URL in href; <meta> tags use content.
+      if (el) el.setAttribute(el.tagName === 'LINK' ? 'href' : 'content', val)
     }
 
     // Primary meta
     set('meta[name="description"]', d)
+    set('meta[name="robots"]', noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
     set('link[rel="canonical"]',    url)
 
     // Open Graph
@@ -38,7 +42,7 @@ export default function SEO({ title, description, image, type = 'website', path 
     set('meta[name="twitter:title"]',       fullTitle)
     set('meta[name="twitter:description"]', d)
     set('meta[name="twitter:image"]',       img)
-  }, [fullTitle, d, img, url, type])
+  }, [fullTitle, d, img, url, type, noindex])
 
   return null
 }

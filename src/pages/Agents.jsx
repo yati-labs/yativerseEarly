@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
+import { ROUTE_SEO } from "../seo/routes";
 
 const U = "https://images.unsplash.com/";
 function uSrc(id, w) { return `${U}${id}?auto=format&fit=crop&w=${w}&q=80`; }
@@ -100,13 +101,7 @@ function Reveal({ children, delay = 0, className = "", style = {} }) {
 export default function AgentsPage() {
   return (
     <>
-      <SEO
-        path="/agents"
-        title="Digital C-Suite — AI Executive Agents | yAtIverse"
-        description="Role-based AI executives across strategy, marketing, sales, finance, and operations. The Digital C-Suite gives founders leadership support without enterprise overhead."
-        canonical="https://yativerse.ai/agents"
-        ogImage="https://yativerse.ai/og-image.png"
-      />
+      <SEO path="/agents" {...ROUTE_SEO["/agents"]} />
       <div className="bg-brand-bg text-white min-h-screen">
         <Navbar />
         <main>
@@ -164,7 +159,7 @@ export default function AgentsPage() {
                         <p className="font-body text-xs text-white/55 leading-relaxed mb-3">{a.text}</p>
                         <div className="flex flex-wrap gap-1.5">
                           {a.tasks.map((t) => (
-                            <span key={t} className="text-[10px] font-body px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/50">{t}</span>
+                            <span key={t} className="text-[10px] font-body px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/65">{t}</span>
                           ))}
                         </div>
                       </div>
@@ -195,7 +190,7 @@ export default function AgentsPage() {
                       <span aria-hidden="true" className="block font-mono text-3xl font-bold mb-4 leading-none"
                         style={{ color:"rgba(255,107,138,0.4)" }}>{item.n}</span>
                       <h3 className="font-display font-semibold text-base text-white mb-2">{item.title}</h3>
-                      <p className="font-body text-sm text-white/50 leading-relaxed">{item.text}</p>
+                      <p className="font-body text-sm text-white/65 leading-relaxed">{item.text}</p>
                     </div>
                   </Reveal>
                 ))}
@@ -232,7 +227,7 @@ export default function AgentsPage() {
                           style={{ color: item.accent }}>{item.role}</span>
                         <p className="font-display font-bold text-white mb-1"
                           style={{ fontSize:"clamp(20px,2.5vw,28px)" }}>{item.cost}</p>
-                        <p className="font-body text-xs text-white/35 leading-relaxed">{item.label}</p>
+                        <p className="font-body text-xs text-white/65 leading-relaxed">{item.label}</p>
                         <p className="font-mono text-[10px] text-white/25 mt-1">{item.sub}</p>
                       </div>
                     </div>
@@ -246,8 +241,8 @@ export default function AgentsPage() {
                     <span className="text-white/20 text-lg font-bold flex-shrink-0 mt-0.5" aria-hidden="true">✕</span>
                     <div>
                       <p className="font-display font-semibold text-white text-base mb-1">Full C-Suite hire</p>
-                      <p className="font-display font-bold text-white/40" style={{ fontSize:"clamp(20px,2vw,24px)" }}>$750,000+ / year</p>
-                      <p className="font-body text-xs text-white/30 mt-1">Base salaries only · benefits, bonuses & equity extra</p>
+                      <p className="font-display font-bold text-white/65" style={{ fontSize:"clamp(20px,2vw,24px)" }}>$750,000+ / year</p>
+                      <p className="font-body text-xs text-white/65 mt-1">Base salaries only · benefits, bonuses & equity extra</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:border-l sm:border-white/[0.06] sm:pl-4">
@@ -255,7 +250,7 @@ export default function AgentsPage() {
                     <div>
                       <p className="font-display font-semibold text-white text-base mb-1">Your Digital C-Suite</p>
                       <p className="font-display font-bold text-[#77d6a1]" style={{ fontSize:"clamp(20px,2vw,24px)" }}>A fraction of that</p>
-                      <p className="font-body text-xs text-white/30 mt-1">24/7 · no hiring · no notice period · no equity dilution</p>
+                      <p className="font-body text-xs text-white/65 mt-1">24/7 · no hiring · no notice period · no equity dilution</p>
                     </div>
                   </div>
                 </div>
