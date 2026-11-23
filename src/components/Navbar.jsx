@@ -55,7 +55,7 @@ const NAV_LINKS = [
   { label: "yAtI — Your Story", href: "/yAtI" },
   { label: "yAtI Flow", href: "/yati-flow", mega: "wearables" },
   { label: "Digital C-Suite", href: "/agents", mega: "agents" },
-  { label: "Founder-OS", href: "/founder-os" },
+  { label: "Founder OS", href: "/founder-os" },
 ];
 
 function CartButton({ className = "" }) {

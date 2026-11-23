@@ -78,16 +78,16 @@ export default function Footer() {
             <Link to="/" className="flex items-center gap-2.5 mb-3">
               <img src="/logo.jpeg" alt="yAtIverse" className="w-12 h-12 object-contain" />
             </Link>
-            <p className="text-sm text-white/38 leading-relaxed max-w-[210px] mb-5 font-body">
+            <p className="text-sm text-white/65 leading-relaxed max-w-[210px] mb-5 font-body">
               Wear your future. Build what matters. Scale with AI.
             </p>
 
-            <p className="text-[11px] font-mono tracking-[0.13em] uppercase text-white/30 mb-2">
+            <p className="text-[11px] font-mono tracking-[0.13em] uppercase text-white/65 mb-2">
               Stay in the loop
             </p>
 
             {status === "success" ? (
-              <p className="text-sm text-brand-teal font-body py-2">✓ You're on the list.</p>
+              <p role="status" className="text-sm text-brand-teal font-body py-2">✓ You're on the list.</p>
             ) : (
               <>
                 <form
@@ -104,8 +104,11 @@ export default function Footer() {
                       .catch(() => setStatus("error"));
                   }}
                 >
+                  <label htmlFor="footer-email" className="sr-only">Email address</label>
                   <input
+                    id="footer-email"
                     type="email"
+                    autoComplete="email"
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -120,25 +123,17 @@ export default function Footer() {
                     {status === "loading" ? "Sending..." : "Subscribe"}
                   </button>
                 </form>
+                <p className="mt-2 max-w-[260px] text-xs leading-5 text-white/60 font-body">
+                  Launch and product updates from yAtIverse. Unsubscribe anytime. See our{" "}
+                  <Link to="/privacy-policy" className="underline underline-offset-2 hover:text-white">Privacy Policy</Link>.
+                </p>
                 {status === "error" && (
-                  <p className="text-[12px] text-red-400 mt-2 font-body">Something went wrong. Try again.</p>
+                  <p role="alert" className="text-[12px] text-red-400 mt-2 font-body">Something went wrong. Try again.</p>
                 )}
               </>
             )}
 
-            <div className="flex gap-2.5 mt-5">
-              {SOCIAL.map((s) => (
-                <a
-                  key={s.s}
-                  href={s.h}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-8 h-8 rounded-[9px] bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-[11px] font-semibold text-white/45 hover:bg-brand-purple/15 hover:border-brand-purple/30 hover:text-white transition-all duration-200 font-body"
-                >
-                  {s.s}
-                </a>
-              ))}
-            </div>
+            {/* Social icons hidden until verified yAtIverse profile URLs are added to SOCIAL. */}
           </div>
 
           {/* Link columns */}
@@ -152,7 +147,7 @@ export default function Footer() {
                   <Link
                     key={link.l}
                     to={link.h}
-                    className="text-sm text-white/50 hover:text-white transition-colors duration-150 font-body"
+                    className="text-sm text-white/65 hover:text-white transition-colors duration-150 font-body"
                   >
                     {link.l}
                   </Link>
@@ -167,11 +162,10 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <p className="text-xs text-white/24 font-body">© 2026 yAtIverse. All rights reserved.</p>
+          <p className="text-xs text-white/65 font-body">© 2026 yAtIverse. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link to="/privacy-policy" className="text-xs text-white/24 hover:text-white/55 transition-colors font-body">Privacy Policy</Link>
-            <Link to="/terms"          className="text-xs text-white/24 hover:text-white/55 transition-colors font-body">Terms</Link>
-            <Link to="/cookie-policy"  className="text-xs text-white/24 hover:text-white/55 transition-colors font-body">Cookies</Link>
+            <Link to="/privacy-policy" className="text-xs text-white/65 hover:text-white transition-colors font-body">Privacy Policy</Link>
+            <Link to="/cookie-policy"  className="text-xs text-white/65 hover:text-white transition-colors font-body">Cookies</Link>
           </div>
         </div>
       </div>

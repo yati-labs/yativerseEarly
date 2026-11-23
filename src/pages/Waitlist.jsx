@@ -5,6 +5,7 @@ import { ArrowRight, Check, ChevronDown } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
+import { ROUTE_SEO } from "../seo/routes";
 import { joinWaitlist } from "../lib/api";
 import { getAttribution } from "../lib/tracking";
 import { fadeUp, fadeLeft, fadeRight } from "../lib/motion";
@@ -13,7 +14,7 @@ const PERKS = [
   {
     icon: "🚀",
     title: "Early access",
-    desc: "Be first into yAtI OS, agents, and the full ecosystem before public launch.",
+    desc: "Be first to hear about yAtI Flow, Founder OS, and the Digital C-Suite before public launch.",
   },
   {
     icon: "💍",
@@ -43,7 +44,7 @@ const FAQS = [
   },
   {
     q: "Do I need the wearables?",
-    a: "No. You can start with yAtI OS and AI agents. Wearables deepen the experience but aren't required.",
+    a: "No. You can start with Founder OS and the Digital C-Suite. yAtI Flow devices deepen the experience but aren't required.",
   },
   {
     q: "What happens after I join?",
@@ -51,17 +52,10 @@ const FAQS = [
   },
   {
     q: "Who is yAtIverse built for?",
-    a: "Ambitious people aged 16–30: solo founders, creators, operators, students with big ideas, and digital-native builders.",
+    a: "Founders, creators, operators, and builders who want to turn ideas into action.",
   },
 ];
 
-const AVATARS = [
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=60&q=80",
-  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=60&q=80",
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=60&q=80",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=60&q=80",
-  "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=60&q=80",
-];
 
 export default function Waitlist() {
   const [form, setForm] = useState({ name: "", email: "", role: "" });
@@ -77,11 +71,7 @@ export default function Waitlist() {
 
   return (
     <>
-      <SEO
-        title="Join the Waitlist — Early Access"
-        description="Join 1,200+ founders on the yAtIverse waitlist. Get early access to yAtI OS, AI agents, and wearable hardware before public launch."
-        path="/waitlist"
-      />
+      <SEO path="/waitlist" {...ROUTE_SEO["/waitlist"]} />
       <div className="bg-brand-bg text-white min-h-screen">
         <Navbar />
 
@@ -108,38 +98,16 @@ export default function Waitlist() {
                 <br />
                 inside the
                 <br />
-                <span className="text-gradient">yAtI-Verse.</span>
+                <span className="text-gradient">yAtIverse.</span>
               </motion.h1>
               <motion.p
                 {...fadeUp(0.13)}
                 className="font-body text-base text-white/55 leading-relaxed mb-7"
               >
-                Join the waitlist for yAtI OS, AI-1 agents, wearable hardware,
-                and a community of builders who don't build alone.
+                Get launch updates for yAtI Flow, Founder OS, and your Digital
+                C-Suite. No purchase required.
               </motion.p>
 
-              {/* Social proof */}
-              <motion.div
-                {...fadeUp(0.17)}
-                className="flex items-center gap-3 mb-8"
-              >
-                <div className="flex">
-                  {AVATARS.map((s, i) => (
-                    <img
-                      key={i}
-                      src={s}
-                      alt=""
-                      className="w-7 h-7 rounded-full object-cover border-2 border-brand-bg -ml-2 first:ml-0"
-                    />
-                  ))}
-                </div>
-                <p className="text-sm font-body text-white/48">
-                  <span className="text-white/75 font-semibold">
-                    1,200+ founders
-                  </span>{" "}
-                  already on the list
-                </p>
-              </motion.div>
 
               {/* Perks */}
               <motion.div {...fadeUp(0.2)} className="flex flex-col gap-3">
@@ -155,7 +123,7 @@ export default function Waitlist() {
                       <p className="text-sm font-semibold font-body text-white mb-0.5">
                         {p.title}
                       </p>
-                      <p className="text-xs font-body text-white/48 leading-relaxed">
+                      <p className="text-xs font-body text-white/65 leading-relaxed">
                         {p.desc}
                       </p>
                     </div>
@@ -190,7 +158,7 @@ export default function Waitlist() {
                     <p className="font-display font-bold text-2xl text-white mb-1">
                       Claim your spot
                     </p>
-                    <p className="font-body text-sm text-white/42 mb-7">
+                    <p className="font-body text-sm text-white/65 mb-7">
                       No credit card. No commitments.
                     </p>
                     <form
@@ -223,7 +191,7 @@ export default function Waitlist() {
                         <div key={f.id}>
                           <label
                             htmlFor={f.id}
-                            className="block text-[11px] font-mono uppercase tracking-[0.08em] text-white/42 mb-1.5"
+                            className="block text-[11px] font-mono uppercase tracking-[0.08em] text-white/65 mb-1.5"
                           >
                             {f.label}
                           </label>
@@ -243,7 +211,7 @@ export default function Waitlist() {
                       <div>
                         <label
                           htmlFor="role"
-                          className="block text-[11px] font-mono uppercase tracking-[0.08em] text-white/42 mb-1.5"
+                          className="block text-[11px] font-mono uppercase tracking-[0.08em] text-white/65 mb-1.5"
                         >
                           I am a...
                         </label>
@@ -276,13 +244,13 @@ export default function Waitlist() {
                       >
                         {status === "loading"
                           ? "Submitting..."
-                          : "Join the yAtI-Verse"}
+                          : "Join the waitlist"}
                         <ArrowRight className="w-4 h-4" />
                       </button>
 
                       {status === "success" && (
                         <p className="text-[12px] text-green-400 text-center font-body">
-                          Thank you — you're officially in the yAtIverse. We will be in touch soon for the next updates.
+                          Thank you. You're on the waitlist. We will email you with launch updates.
                         </p>
                       )}
 
@@ -292,8 +260,9 @@ export default function Waitlist() {
                         </p>
                       )}
 
-                      <p className="text-[11px] font-body text-white/26 text-center">
-                        No spam. Unsubscribe anytime.
+                      <p className="text-xs font-body text-white/65 text-center leading-5">
+                        We will email you about launch timing and availability. Unsubscribe anytime.
+                        See our <Link to="/privacy-policy" className="underline underline-offset-2 hover:text-white">Privacy Policy</Link>.
                       </p>
                     </form>
                   </>
@@ -334,7 +303,7 @@ export default function Waitlist() {
                       {f.q}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-white/40 flex-shrink-0 ml-4 transition-transform duration-200 ${faq === i ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 text-white/65 flex-shrink-0 ml-4 transition-transform duration-200 ${faq === i ? "rotate-180" : ""}`}
                     />
                   </button>
                   {faq === i && (

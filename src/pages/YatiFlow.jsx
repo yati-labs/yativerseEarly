@@ -19,7 +19,7 @@ const MODELS = [
   { id: "Thread One", tag: "Slim card", img: "/flow/thread-one.jpg", w: 225, h: 495, alt: "yAtI Flow Thread One slim card recorder", grams: 54, material: "Aluminum alloy", hl: ["87 × 56 mm, 5.9 mm thin", "54 g", "About 18 h recording"],
     d: "An ultra-slim aluminum card for your meeting table, pocket or bag, with a built-in magnet.", fit: "Choose Thread One if your best conversations happen across a desk or table." },
   { id: "Thread Max", tag: "Wearable capsule", img: "/flow/thread-max.jpg", w: 230, h: 405, alt: "yAtI Flow Thread Max wearable capsule recorder", grams: 23, material: "Aluminum alloy and ABS", hl: ["50.5 × 22 mm", "23 g", "21 h recording"],
-    d: "A compact 23 g wearable capsule with a one-touch record button, for conversations on the move.", fit: "Choose Thread Max if you want capture with you as you move around." },
+    d: "A compact 23 g wearable capsule with a one-touch record button, for conversations on the move.", fit: "Choose Thread Max to capture conversations on the move." },
 ];
 // Hardware specs from the manufacturer listings (LA519 = Thread One, LA367 = Thread Max).
 // TODO: confirm against sample units; Thread One storage is listed as 8–128 GB options.
@@ -82,7 +82,7 @@ const FAQ = [
   ["How is my data handled?", "Details on storage and deletion will be published before orders open. See our Privacy Policy for how we handle data today."],
   ["Can I record anyone?", "Rules on recording conversations vary by place. You are responsible for getting consent where it is required."], // legal review before ads
   ["What phones and computers does it work with?", "iPhone and Mac first. Android is planned after testing."],
-  ["When can I order?", "Orders open in a few weeks, and waitlist members are emailed first. Pricing is announced when orders open."],
+  ["When can I order?", "We will email waitlist members first when orders open. Pricing is announced then."],
   ["Which model should I pick?", "Thread One is a slim card (87 × 56 mm, 54 g) for tables, pockets and bags. Thread Max is a compact wearable capsule (50.5 × 22 mm, 23 g). Both work with yAtI."],
   ["How long does the battery last?", "Thread One records for about 18 hours. Thread Max records for 21 hours continuously."],
 ];
@@ -162,13 +162,13 @@ export default function YatiFlow() {
               <WaitlistForm where="hero" source={SOURCE} cta="Get early access" model={model} {...formEvents} />
             </div>
             <a href="#journey" onClick={() => ev("thread_demo_click")} className="mt-5 inline-block text-sm font-semibold text-brand-gold2 underline-offset-4 hover:underline">Discover what it can do →</a>
-            <p className="mt-4 text-xs leading-relaxed text-white/50">Free to join. No purchase required.</p>
+            <p className="mt-4 text-xs leading-relaxed text-white/65">Free to join. No purchase required. Works with iPhone and Mac. Android is planned.</p>
           </div>
           <HeroVideo className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl bg-brand-bg2" poster="/flow/flow-devices.jpg" mp4="/flow/hero-loop.mp4" webm={null} />
         </section>
 
         <div className="mx-auto grid max-w-6xl gap-3 border-t border-white/10 px-5 py-6 text-sm text-white/65 sm:grid-cols-3">
-          <span className="flex items-center gap-2"><ShieldCheck size={16} className="text-brand-gold" aria-hidden="true" /> You review and approve every send</span>
+          <span className="flex items-center gap-2"><ShieldCheck size={16} className="text-brand-gold" aria-hidden="true" /> You review and approve every email</span>
           <span className="flex items-center gap-2"><Mail size={16} className="text-brand-gold" aria-hidden="true" /> Gmail, Calendar, Slack, HubSpot</span>
           <span className="flex items-center gap-2"><Check size={16} className="text-brand-gold" aria-hidden="true" /> Two models, one yAtI account</span>
         </div>
@@ -182,7 +182,7 @@ export default function YatiFlow() {
             </R>
             <R className="rounded-2xl border border-brand-gold/40 bg-gradient-to-br from-brand-gold/10 to-transparent p-7">
               <h3 className="font-display text-lg font-bold text-brand-gold2">yAtI Flow</h3>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">{COMPARE_FLOW.map(([c, note]) => <li key={c} className="flex gap-3"><Check size={18} className="mt-0.5 shrink-0 text-brand-teal" aria-hidden="true" /><span>{c}{note && <span className="block text-xs text-white/50">{note}</span>}</span></li>)}</ul>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2">{COMPARE_FLOW.map(([c, note]) => <li key={c} className="flex gap-3"><Check size={18} className="mt-0.5 shrink-0 text-brand-teal" aria-hidden="true" /><span>{c}{note && <span className="block text-xs text-white/65">{note}</span>}</span></li>)}</ul>
             </R>
           </div>
         </section>
@@ -202,7 +202,7 @@ export default function YatiFlow() {
         </section>
 
         <section className="mx-auto max-w-6xl px-5 py-20">
-          <R><h2 className={h2}>Your favorite tools, connected.</h2><p className="mt-4 max-w-xl text-white/65">Each connection is labelled with where it stands today.</p></R>
+          <R><h2 className={h2}>Your favorite tools, connected.</h2><p className="mt-4 max-w-xl text-white/65">Each connection is labeled with where it stands today.</p></R>
           <div className="mt-10 grid gap-5 sm:grid-cols-2">
             {INTEG.map(({ n, I, tag, b, d }) => (
               <div key={n} className="rounded-2xl border border-white/10 bg-brand-bg2 p-6">
@@ -290,8 +290,8 @@ export default function YatiFlow() {
       </main>
 
       <footer className="border-t border-white/[0.06] py-8">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 text-sm text-white/50">
-          <span>© {new Date().getFullYear()} yAtIverse · Startup Right</span>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 text-sm text-white/65">
+          <span>© {new Date().getFullYear()} yAtIverse · Start Up Right!</span>
           <nav aria-label="Legal" className="flex gap-5"><Link to="/privacy-policy" className="hover:text-white">Privacy Policy</Link><Link to="/cookie-policy" className="hover:text-white">Cookie Policy</Link><a href="mailto:support@yativerse.ai" className="hover:text-white">support@yativerse.ai</a></nav>
         </div>
       </footer>

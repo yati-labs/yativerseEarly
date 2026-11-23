@@ -9,6 +9,7 @@ const OSPage = lazy(() => import('./pages/os'))
 const YATI = lazy(() => import('./pages/yAtI'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
+const Terms = lazy(() => import('./pages/Terms'))
 const Login = lazy(() => import('./pages/Login'))
 const YatiFlow = lazy(() => import('./pages/YatiFlow'))
 const BrandCampaign = lazy(() => import('./pages/BrandCampaign'))
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="/yAtI" element={<YATI />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
+          <Route path="/terms" element={<Terms />} />
            <Route path="/founder-os" element={<OSPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/start" element={<BrandCampaign />} />

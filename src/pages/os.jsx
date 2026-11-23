@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
+import { ROUTE_SEO } from "../seo/routes";
 
 const U = "https://images.unsplash.com/";
 function uSrc(id, w) { return `${U}${id}?auto=format&fit=crop&w=${w}&q=80`; }
@@ -69,13 +70,7 @@ export default function OSPage() {
 
   return (
     <>
-      <SEO
-        path="/founder-os"
-        title="Founder OS — Your Command Center | yAtIverse"
-        description="Founder OS connects what you capture and what your agents produce into a single daily view. One operating rhythm for goals, priorities, and decisions."
-        canonical="https://yativerse.ai/founder-os"
-        ogImage="https://yativerse.ai/og-image.png"
-      />
+      <SEO path="/founder-os" {...ROUTE_SEO["/founder-os"]} />
       <div className="bg-brand-bg text-white min-h-screen">
         <Navbar />
         <main>
@@ -110,7 +105,7 @@ export default function OSPage() {
                     className={`rounded-2xl p-5 text-left transition-all duration-500 border ${
                       i === activeTimeline ? "bg-white/[0.07] border-white/20" : "bg-white/[0.02] border-white/[0.06] opacity-55"
                     }`}>
-                    <p className="font-mono text-xs text-white/45 mb-1">{card.time}</p>
+                    <p className="font-mono text-xs text-white/65 mb-1">{card.time}</p>
                     <p className="font-display font-semibold text-sm text-white mb-1">{card.title}</p>
                     <p className="font-body text-xs text-white/55 leading-relaxed">{card.text}</p>
                   </button>
@@ -118,12 +113,12 @@ export default function OSPage() {
                 <div className="relative rounded-2xl overflow-hidden mt-2 border border-white/[0.08]" style={{ height: 180 }}>
                   <img src={uSrc(OS_PREVIEW_ID, 800)} srcSet={`${uSrc(OS_PREVIEW_ID, 400)} 400w, ${uSrc(OS_PREVIEW_ID, 800)} 800w`}
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    alt="Founder OS dashboard showing goals, priorities, and daily workflow"
+                    alt=""
                     width={640} height={180} loading="lazy" decoding="async"
                     className="w-full h-full object-cover" />
                   <div aria-hidden="true" className="absolute inset-0"
                     style={{ background:"linear-gradient(135deg, rgba(78,205,196,0.2) 0%, transparent 60%)" }} />
-                  <p className="absolute bottom-3 left-4 text-[10px] font-mono uppercase tracking-widest text-white/40">Founder OS · Preview</p>
+                  <p className="absolute bottom-3 left-4 text-[10px] font-mono uppercase tracking-widest text-white/65">Illustration · not a product screenshot</p>
                 </div>
               </div>
               <Reveal delay={0.1}>
@@ -160,7 +155,7 @@ export default function OSPage() {
                       <div aria-hidden="true" className="h-1.5 w-full" style={{ background: p.accent, opacity: 0.85 }} />
                       <div className="p-6">
                         <h3 className="font-display font-semibold text-base text-white mb-2">{p.title}</h3>
-                        <p className="font-body text-sm text-white/50 leading-relaxed">{p.text}</p>
+                        <p className="font-body text-sm text-white/65 leading-relaxed">{p.text}</p>
                       </div>
                     </div>
                   </Reveal>

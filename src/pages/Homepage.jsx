@@ -43,12 +43,6 @@ const AUDIENCE_SIZES =
   "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
 const OS_SIZES = "(max-width: 1024px) 100vw, 50vw";
 
-const AVATARS = [
-  uSrc("photo-1534528741775-53994a69daeb", 60),
-  uSrc("photo-1506794778202-cad84cf45f1d", 60),
-  uSrc("photo-1494790108377-be9c29b29330", 60),
-  uSrc("photo-1500648767791-00dcc994a43e", 60),
-];
 
 const RING_IMAGES = [
   "/ring1.jpeg",
@@ -96,7 +90,7 @@ const HERO_PILLS = [
 const QUICK_LINKS = [
   { title: "yAtI Flow", text: "Thread One & Thread Max — early access", href: "/yati-flow" },
   { title: "Digital C-Suite", text: "Your invisible AI team", href: "/agents" },
-  { title: "Founder OS", text: "Your daily command center", href: "/" },
+  { title: "Founder OS", text: "Your daily command center", href: "/founder-os" },
   { title: "Community", text: "Founders who live it", href: "/community" },
 ];
 
@@ -144,7 +138,7 @@ const PILLARS = [
     tagline: "Where it all comes together.",
     text: "One operating rhythm for goals, priorities, and decisions. Founder OS connects what you capture and what your agents produce into a single daily view.",
     accent: "#4ECDC4",
-    link: "/",
+    link: "/founder-os",
     linkText: "See how it works",
   },
 ];
@@ -222,7 +216,7 @@ const COST_COMPARISON = [
 const BEFORE_AFTER = [
   {
     before: "10 tools open. None of them talking to each other.",
-    after: "One OS. Every tool connected. One place to decide.",
+    after: "One OS. Gmail, Calendar, Slack and HubSpot connected. One place to decide.",
   },
   {
     before: "Hiring a CMO, CFO, and COO costs $600K+ a year.",
@@ -332,30 +326,7 @@ const AUDIENCE = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    q: "I used to feel like a fraud calling myself CEO. Now I actually feel like one.",
-    name: "Neha P.",
-    role: "Co-founder, Studio Arc",
-  },
-  {
-    q: "It's the first time I've felt like I have a real team behind me. Even though it's just me.",
-    name: "Marcus L.",
-    role: "Indie founder",
-  },
-  {
-    q: "The ring tells me when I'm actually sharp. I plan my big calls around that now.",
-    name: "Ravi M.",
-    role: "Founder, Buildfast",
-  },
-  {
-    q: "I stopped apologising for being a solo founder. My invisible team handles more than most offices do.",
-    name: "Sara P.",
-    role: "Solo founder",
-  },
-];
 
-const TRUST = ["Product Hunt", "Indie Hackers", "foundr", "Notion", "Reforge"];
 
 // ─── END COPY ────────────────────────────────────────────────────────────────
 
@@ -554,39 +525,16 @@ export default function Homepage() {
               </h1>
 
               <p className="font-body text-lg text-white/60 max-w-xl mx-auto leading-relaxed mb-3">
-                You need a smarter life. yAtIverse gives founders an AI
-                lifestyle — yAtI Flow wearables, a Digital C-Suite running your
-                business, and a Founder OS keeping you in control.
+                yAtI Flow captures your conversations. Founder OS organizes your
+                priorities. Your Digital C-Suite supports marketing, revenue,
+                finance, and operations.
               </p>
 
-              <p className="font-mono text-xs text-white/35 mb-8 tracking-wide">
+              <p className="font-mono text-xs text-white/65 mb-8 tracking-wide">
                 Thread · an AI team · an operating system — built to work
                 together
               </p>
 
-              <div className="flex items-center justify-center gap-3 mb-8">
-                <div className="flex" aria-hidden="true">
-                  {AVATARS.map((s, i) => (
-                    <img
-                      key={i}
-                      src={s}
-                      alt=""
-                      width={28}
-                      height={28}
-                      loading="eager"
-                      fetchpriority="low"
-                      decoding="async"
-                      className="w-7 h-7 rounded-full object-cover border-2 border-brand-bg -ml-2 first:ml-0"
-                    />
-                  ))}
-                </div>
-                <p className="text-xs text-white/48 font-body">
-                  <span className="text-white/75 font-semibold">
-                    1,200+ founders
-                  </span>{" "}
-                  already on the waitlist
-                </p>
-              </div>
 
               <ul
                 className="flex flex-wrap gap-2.5 justify-center mb-10 list-none"
@@ -611,13 +559,13 @@ export default function Homepage() {
               </ul>
 
               <div className="flex flex-wrap gap-3 justify-center mb-10">
-                <Link to="/yati-flow" className="btn-primary"> Get Early Access →
+                <Link to="/yati-flow" className="btn-primary"> Get early access to yAtI Flow →
                 </Link>
-                <Link to="/waitlist" className="btn-ghost"> Join the Waitlist
+                <Link to="/waitlist" className="btn-ghost"> Join the general waitlist
                 </Link>
               </div>
-              <p className="text-xs text-white/35 font-body">
-                Free to join · No credit card · Thread One and Thread Max ship first
+              <p className="text-xs text-white/65 font-body">
+                Free to join · No credit card · Orders for Thread One and Thread Max are not open yet
               </p>
             </div>
 
@@ -644,7 +592,7 @@ export default function Homepage() {
                   <p className="font-display font-semibold text-sm text-white mb-1 group-hover:text-brand-purple transition-colors">
                     {item.title}
                   </p>
-                  <p className="text-xs font-body text-white/42">{item.text}</p>
+                  <p className="text-xs font-body text-white/65">{item.text}</p>
                 </Link>
               ))}
             </div>
@@ -746,7 +694,7 @@ export default function Homepage() {
                     Three pillars.{" "}
                     <span className="text-gradient">One lifestyle.</span>
                   </h2>
-                  <p className="font-body text-base text-white/45 leading-relaxed mt-4">
+                  <p className="font-body text-base text-white/65 leading-relaxed mt-4">
                     Each one stands on its own. Together, they compound.
                   </p>
                 </Reveal>
@@ -813,7 +761,7 @@ export default function Homepage() {
                         <span className="font-display font-semibold text-sm text-white">
                           {row.name}
                         </span>
-                        <span className="font-body text-xs text-white/35 hidden sm:inline">
+                        <span className="font-body text-xs text-white/65 hidden sm:inline">
                           · {row.pillar}
                         </span>
                       </div>
@@ -867,7 +815,7 @@ export default function Homepage() {
                           <span className="font-display font-semibold text-sm text-white">
                             {step.label}
                           </span>
-                          <span className="font-mono text-[10px] uppercase tracking-widest text-white/35 mt-0.5">
+                          <span className="font-mono text-[10px] uppercase tracking-widest text-white/65 mt-0.5">
                             {step.sub}
                           </span>
                         </div>
@@ -911,7 +859,7 @@ export default function Homepage() {
                 <p className="font-body text-base text-white/55 leading-relaxed mb-4 max-w-md">
                   Thread One and Thread Max record your conversations, turn them into summaries and action items, and draft the follow-up for you to review and send.
                 </p>
-                <p className="font-body text-sm text-white/38 leading-relaxed mb-8 max-w-md">
+                <p className="font-body text-sm text-white/65 leading-relaxed mb-8 max-w-md">
                   They feed Founder OS and your Digital C-Suite with what was said and what comes next. The Signal Ring follows later, adding sleep, heart rate and recovery.
                 </p>
                 <Link to="/yati-flow" className="btn-ghost"> Explore Thread One & Thread Max →
@@ -931,7 +879,7 @@ export default function Homepage() {
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="glass rounded-xl px-4 py-3 flex items-center justify-between">
                       <div>
-                        <p className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-0.5">
+                        <p className="font-mono text-[10px] uppercase tracking-widest text-white/65 mb-0.5">
                           <span className="normal-case">yAtI</span> Flow · Early access
                         </p>
                         <p className="font-display text-sm font-semibold text-white">
@@ -1025,7 +973,7 @@ export default function Homepage() {
                           {a.tasks.map((t) => (
                             <span
                               key={t}
-                              className="text-[10px] font-body px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/50"
+                              className="text-[10px] font-body px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/65"
                             >
                               {t}
                             </span>
@@ -1058,7 +1006,7 @@ export default function Homepage() {
                         : "bg-white/[0.02] border-white/[0.06] opacity-55"
                     }`}
                   >
-                    <p className="font-mono text-xs text-white/45 mb-1">
+                    <p className="font-mono text-xs text-white/65 mb-1">
                       {card.time}
                     </p>
                     <p className="font-display font-semibold text-sm text-white mb-1">
@@ -1090,7 +1038,7 @@ export default function Homepage() {
                         "linear-gradient(135deg, rgba(96,92,255,0.2) 0%, transparent 60%)",
                     }}
                   />
-                  <p className="absolute bottom-3 left-4 text-[10px] font-mono uppercase tracking-widest text-white/40">
+                  <p className="absolute bottom-3 left-4 text-[10px] font-mono uppercase tracking-widest text-white/65">
                     Founder OS · Preview
                   </p>
                 </div>
@@ -1158,7 +1106,7 @@ export default function Homepage() {
                       <h3 className="font-display font-semibold text-base text-white mb-2">
                         {item.title}
                       </h3>
-                      <p className="font-body text-sm text-white/50 leading-relaxed">
+                      <p className="font-body text-sm text-white/65 leading-relaxed">
                         {item.text}
                       </p>
                     </div>
@@ -1193,9 +1141,10 @@ export default function Homepage() {
                   <p className="font-body text-base text-white/58 leading-relaxed lg:pt-14">
                     Hiring a full-time CMO, CRO, CFO, and COO in a US startup
                     costs over $750,000 in base salaries alone — before
-                    benefits, bonuses, or equity. yAtIverse gives you the same
-                    functional coverage at a fraction of the cost, working 24/7
-                    with no hiring process or notice period.
+                    benefits, bonuses, or equity. yAtIverse gives you AI support
+                    across marketing, revenue, finance, and operations, with
+                    every recommendation and draft coming to you to review.
+                    Illustrative only; not a like-for-like replacement.
                   </p>
                 </Reveal>
               </div>
@@ -1223,7 +1172,7 @@ export default function Homepage() {
                         >
                           {item.cost}
                         </p>
-                        <p className="font-body text-xs text-white/35 leading-relaxed">
+                        <p className="font-body text-xs text-white/65 leading-relaxed">
                           {item.label}
                         </p>
                         <p className="font-mono text-[10px] text-white/25 mt-1">
@@ -1250,12 +1199,12 @@ export default function Homepage() {
                         Full C-Suite hire
                       </p>
                       <p
-                        className="font-display font-bold text-white/40"
+                        className="font-display font-bold text-white/65"
                         style={{ fontSize: "clamp(20px,2vw,24px)" }}
                       >
                         $750,000+ / year
                       </p>
-                      <p className="font-body text-xs text-white/30 mt-1">
+                      <p className="font-body text-xs text-white/65 mt-1">
                         Base salaries only · benefits, bonuses & equity extra
                       </p>
                     </div>
@@ -1277,7 +1226,7 @@ export default function Homepage() {
                       >
                         A fraction of that
                       </p>
-                      <p className="font-body text-xs text-white/30 mt-1">
+                      <p className="font-body text-xs text-white/65 mt-1">
                         24/7 · no hiring · no notice period · no equity dilution
                       </p>
                     </div>
@@ -1326,7 +1275,7 @@ export default function Homepage() {
                         >
                           ✕
                         </span>
-                        <p className="font-body text-sm text-white/42 leading-relaxed">
+                        <p className="font-body text-sm text-white/65 leading-relaxed">
                           {item.before}
                         </p>
                       </div>
@@ -1390,7 +1339,7 @@ export default function Homepage() {
                         <h3 className="font-display font-semibold text-base text-white mb-2">
                           {item.title}
                         </h3>
-                        <p className="font-body text-sm text-white/50 leading-relaxed">
+                        <p className="font-body text-sm text-white/65 leading-relaxed">
                           {item.text}
                         </p>
                       </div>
@@ -1467,85 +1416,6 @@ export default function Homepage() {
                   </Reveal>
                 ))}
               </div>
-            </div>
-          </section>
-
-          {/* ══ TESTIMONIALS ══ */}
-          <section
-            className="py-20 px-6 border-t border-white/[0.06]"
-            id="community"
-            aria-labelledby="testimonials-heading"
-          >
-            <div className="max-w-5xl mx-auto">
-              <Reveal style={{ textAlign: "center", marginBottom: 52 }}>
-                <span className="kicker mb-5 inline-block">
-                  Founders love it
-                </span>
-                <h2
-                  id="testimonials-heading"
-                  className="font-display font-bold tracking-tight text-white"
-                  style={{ fontSize: "clamp(28px,3.5vw,44px)" }}
-                >
-                  The CEO feeling{" "}
-                  <span className="text-gradient">is real now.</span>
-                </h2>
-              </Reveal>
-              <div className="grid sm:grid-cols-2 gap-5 mb-12">
-                {TESTIMONIALS.map((t, i) => (
-                  <Reveal key={t.name} delay={i * 0.08}>
-                    <blockquote className="glass rounded-2xl p-7">
-                      <div
-                        aria-hidden="true"
-                        className="text-brand-purple text-sm mb-3 tracking-widest"
-                      >
-                        ★★★★★
-                      </div>
-                      <p className="font-body text-sm text-white/72 leading-relaxed italic mb-4">
-                        "{t.q}"
-                      </p>
-                      <footer className="flex items-center gap-3">
-                        <div
-                          aria-hidden="true"
-                          className="w-8 h-8 rounded-full bg-brand-purple/20 border border-brand-purple/30 flex items-center justify-center text-xs font-display font-bold text-brand-purple flex-shrink-0"
-                        >
-                          {t.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </div>
-                        <div>
-                          <cite className="not-italic font-display font-semibold text-sm text-white block">
-                            {t.name}
-                          </cite>
-                          <span className="font-body text-xs text-white/42">
-                            {t.role}
-                          </span>
-                        </div>
-                      </footer>
-                    </blockquote>
-                  </Reveal>
-                ))}
-              </div>
-              <Reveal delay={0.2}>
-                <div className="text-center">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-white/28 mb-5">
-                    Trusted by the community
-                  </p>
-                  <div
-                    className="flex flex-wrap gap-8 justify-center"
-                    aria-label="Trusted communities"
-                  >
-                    {TRUST.map((l) => (
-                      <span
-                        key={l}
-                        className="font-display font-semibold text-sm text-white/22"
-                      >
-                        {l}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </Reveal>
             </div>
           </section>
 

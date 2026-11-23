@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
+import { ROUTE_SEO } from "../seo/routes";
 import LegalLayout, { A, H2, PrivacyEmail, UL } from "../legal/LegalLayout";
 
 export default function CookiePolicy() {
   return (
     <>
-      <SEO
-        title="Cookie Policy"
-        description="How yAtIverse uses cookies, local storage, Meta Pixel and Google Analytics, and how to control them."
-        path="/cookie-policy"
-      />
+      <SEO path="/cookie-policy" {...ROUTE_SEO["/cookie-policy"]} />
       <LegalLayout
         title="Cookie Policy"
         intro={

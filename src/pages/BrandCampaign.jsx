@@ -22,7 +22,7 @@ const SYSTEM = [
 
 const FAQ = [
   ["What is yAtIverse?", "An AI ecosystem for founders: wearables, AI agents and a Founder OS that connects them."],
-  ["What am I joining the waitlist for?", "Early access to yAtIverse, starting with yAtI Flow. Orders for yAtI Flow open in a few weeks, and waitlist members are emailed first."],
+  ["What am I joining the waitlist for?", "Early access to yAtIverse, starting with yAtI Flow. We will email waitlist members first when orders for yAtI Flow open."],
   ["Does it cost anything to join?", "No. Joining is free and carries no obligation. Pricing will be shared when orders open."],
   ["Do the AI agents act without me?", "No. Agents draft and suggest. You review and approve before anything is sent."],
   ["Which phones are supported?", "iPhone and Mac first. Tell us your phone when you join and we will let you know about Android."],
@@ -66,7 +66,7 @@ export default function BrandCampaign() {
               yAtIverse brings wearables and AI agents together for founders. First up is yAtI Flow, which captures your conversations and drafts the follow-up. You stay in charge.
             </p>
             <div id="hero-form" className="mt-8"><WaitlistForm where="hero" source="brand-campaign" /></div>
-            <p className="mt-4 text-sm text-white/50">Free to join. Orders open in a few weeks, and waitlist members hear first.</p>
+            <p className="mt-4 text-sm text-white/65">Free to join. We will email waitlist members first when orders open.</p>
           </div>
           <div className="flex justify-center">
             <HeroVideo poster="/video/hero-poster.jpg" />
@@ -130,7 +130,7 @@ export default function BrandCampaign() {
       </main>
 
       <footer className="border-t border-white/[0.06] py-8">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 text-sm text-white/50">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 text-sm text-white/65">
           <span>© {new Date().getFullYear()} yAtIverse</span>
           <nav aria-label="Legal" className="flex gap-5">
             <Link to="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
