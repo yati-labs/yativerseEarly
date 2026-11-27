@@ -12,14 +12,14 @@ export function loadSelection() {
 }
 
 /** What the main button should do for this selection, given the flags. */
-export function ctaMode(bundle) {
+export function ctaMode(hasPlan) {
   if (!FLAGS.ordersOpen) return 'notify'
-  if (bundle && !FLAGS.planCheckout) return 'notify'
+  if (hasPlan && !FLAGS.planCheckout) return 'notify'
   return 'checkout'
 }
 
 export function startCheckout(sel, navigate) {
   saveSelection(sel)
-  track('order_checkout_start', { device: sel.deviceId, purchase: sel.purchase, tier: sel.tierId || '' })
+  track('order_checkout_start', { device: sel.deviceId, commitment: sel.commitment, capture: sel.captureId || '', spark: sel.sparkId || '' })
   navigate('/checkout')
 }
