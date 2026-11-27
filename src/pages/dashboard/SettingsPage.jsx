@@ -4,6 +4,7 @@ import {
 } from 'lucide-react'
 import Sidebar from '../../components/dashboard/Sidebar'
 import ConnectionsSection from '../../components/dashboard/ConnectionsSection'
+import { AiConsentSwitch } from '../../components/dashboard/AiConsent'
 import { useAuth } from '../../lib/auth'
 import { getEntitlements } from '../../lib/api'
 import {
@@ -390,6 +391,8 @@ export default function SettingsPage() {
               CONNECTED ACCOUNTS (Gmail, Google Calendar)
           ================================================================ */}
           <ConnectionsSection demo={demo} showToast={showToast} />
+
+          <AiConsentSwitch demo={demo} showToast={showToast} />
 
           <Divider />
 

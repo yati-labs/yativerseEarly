@@ -138,6 +138,17 @@ export async function getConversation(contactId) {
   return res
 }
 
+/** Consent to third-party AI processing: { required, ask, version, accepted_version, accepted_at, text }. */
+export async function getConsent() {
+  return apiFetch('/api/v1/consent')
+}
+
+export async function setConsent(accepted) {
+  return apiFetch('/api/v1/consent', { method: 'PUT', body: JSON.stringify({ accepted }) })
+}
+
+export const CONSENT_CHANGED_EVENT = 'yati:consent-changed'
+
 export async function getInboxAssistant() {
   return apiFetch('/api/v1/inbox/assistant')
 }

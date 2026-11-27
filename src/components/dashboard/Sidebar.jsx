@@ -17,6 +17,7 @@ import {
 import { useAuth } from "../../lib/auth";
 import { useEntitlements } from "../../lib/useEntitlements";
 import { countUnreadReplies, REPLIES_CHANGED_EVENT } from "../../lib/foundersApi";
+import { AiConsentPrompt } from "./AiConsent";
 
 const LIVE_ITEMS = [
   { icon: LayoutGrid,  label: "Overview",  to: "/dashboard" },
@@ -72,6 +73,7 @@ export default function Sidebar({ onLogout, planLabel, planStatus }) {
   const unreadReplies = useUnreadReplies(!demo && entitlements?.founderOS === true);
 
   return (
+    <>
     <aside className="hidden w-64 shrink-0 flex-col border-r border-white/5 bg-brand-bg2 p-5 lg:flex">
       <Link to="/" className="mb-5 flex items-center gap-2 px-1">
         <img src="/logo.jpeg" alt="yAtIverse" className="h-9 w-9 object-contain" />
@@ -158,5 +160,9 @@ export default function Sidebar({ onLogout, planLabel, planStatus }) {
         Log out
       </button>
     </aside>
+    {/* Every dashboard page has the sidebar, so the consent prompt lives here (outside the
+        aside, which is hidden on small screens). */}
+    <AiConsentPrompt />
+    </>
   );
 }
