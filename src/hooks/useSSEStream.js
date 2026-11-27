@@ -42,7 +42,12 @@ export function useSSEStream() {
 
       if (!res.ok) {
         const text = await res.text()
-        throw new Error(`${res.status}: ${text}`)
+        let message = `${res.status}: ${text}`
+        try {
+          const data = JSON.parse(text)
+          message = data.detail || data.error || message   // e.g. the daily AI limit
+        } catch { /* not JSON: keep the raw text */ }
+        throw new Error(message)
       }
 
       setState('streaming')
