@@ -25,6 +25,10 @@ export const POLICY = {
   basicLimitNote: '',   // fair-use limit on device-only transcription (open item)
 }
 
+// What standard US shipping would cost a customer. Shown struck through beside "Free shipping"; no shipping is ever charged.
+// Keep this equal to what shipping genuinely costs us, and remove the strike-through when the free-shipping offer ends.
+export const SHIPPING_STANDARD = 7.45
+
 export const FOUNDER_OS_VALUE = 60 // estimated $/month benefit value, never a former selling price
 
 export const DEVICES = [

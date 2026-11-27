@@ -10,7 +10,7 @@ import { getStoredEmail } from '../lib/api'
 import { createOrderCheckout } from '../lib/orderApi'
 import { loadSelection } from '../lib/orderFlow'
 import { track } from '../lib/tracking'
-import { FLAGS, computeQuote, usd } from '../lib/catalog'
+import { FLAGS, SHIPPING_STANDARD, computeQuote, usd } from '../lib/catalog'
 
 const GOLD = '#C9A84C'
 const GOLD2 = '#F5D27A'
@@ -146,11 +146,16 @@ export default function Checkout() {
                 {q.hasPlan && <Row label="First month of plans" value={usd(q.firstServices)} />}
                 {q.bundleSavingPlans > 0 && <Row green label="Bundle saving after rounding · plans" value={`−${usd(q.bundleSavingPlans)}`} />}
                 <Row label="Founder OS · included" value="$0" />
+                <div className="flex items-baseline justify-between gap-4 border-b border-white/10 py-2">
+                  <span className="text-white/75">Shipping (US)</span>
+                  <span className="font-semibold"><s className="mr-2 text-white/50"><span className="sr-only">Was </span>{usd(SHIPPING_STANDARD)}</s><span style={{ color: '#86efac' }}>Free shipping</span></span>
+                </div>
+                <Row label="Sales tax" value="At payment" />
                 <div className="mt-3 flex items-baseline justify-between border-t border-white/10 pt-3">
-                  <span className="font-display text-base font-bold">First charge*</span>
+                  <span className="font-display text-base font-bold">First charge before tax*</span>
                   <span className="font-display text-2xl font-bold">{usd(q.firstCharge)}</span>
                 </div>
-                <p className="mt-1 text-xs text-white/60">*Before sales tax. One-time device plus first month of service.</p>
+                <p className="mt-1 text-xs text-white/60">*Sales tax is calculated from your shipping address in the payment form and shown there before you pay. One-time device plus first month of service.</p>
                 {q.hasPlan && q.phases?.length > 0 && (
                   <div className="mt-4 border-t border-white/10 pt-3">
                     <p className="mb-1 font-display text-sm font-semibold">Monthly after that</p>
