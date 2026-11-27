@@ -6,7 +6,7 @@ const field = "w-full rounded-lg border border-white/15 bg-white/[0.06] px-4 py-
 
 // Shared waitlist form. `source` tags each signup by campaign.
 // Optional: askPhone (device select), model + onModelChange (model select), askConsent (marketing checkbox).
-export default function WaitlistForm({ where, source, askPhone = false, model, onModelChange, askConsent = false, stacked = false, cta = "Join the waitlist", onStart, onSuccess }) {
+export default function WaitlistForm({ where, source, askPhone = false, model, onModelChange, askConsent = false, stacked = false, cta = "Join the waitlist", note, successText, onStart, onSuccess }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
@@ -33,7 +33,7 @@ export default function WaitlistForm({ where, source, askPhone = false, model, o
   if (status === "success") {
     return (
       <p role="status" className="rounded-xl border border-brand-teal/30 bg-brand-teal/10 p-4 text-white">
-        You are on the list. We will email you when orders open.
+        {successText || "You are on the list. We will email you when orders open."}
       </p>
     );
   }
@@ -81,7 +81,7 @@ export default function WaitlistForm({ where, source, askPhone = false, model, o
       </div>
       {!askConsent && (
         <p className="mt-3 text-xs leading-5 text-white/65">
-          We will email you about launch timing and availability. Unsubscribe anytime. See our <a href="/privacy-policy" className="underline">Privacy Policy</a>.
+          {note || "We will email you about launch timing and availability."} Unsubscribe anytime. See our <a href="/privacy-policy" className="underline">Privacy Policy</a>.
         </p>
       )}
       {status === "error" && <p role="alert" className="mt-3 text-sm text-brand-rose">We could not save that. Check your email address and try again.</p>}
