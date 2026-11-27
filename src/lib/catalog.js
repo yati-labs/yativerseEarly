@@ -11,6 +11,7 @@ export const FLAGS = {
   ordersEnabled: env.VITE_ORDERS_ENABLED === 'true', // the /order route renders (otherwise it redirects)
   ordersOpen: env.VITE_ORDERS_OPEN === 'true',       // buyers can start checkout (Dec 25)
   planCheckout: env.VITE_PLAN_CHECKOUT === 'true',   // device + plan orders can be bought (needs the subscription backend)
+  policyApproved: env.VITE_POLICY_APPROVED === 'true', // returns and cancellation terms approved: removes the draft banner, allows indexing
 }
 
 export const LAUNCH_LABEL = 'Dec 25'
