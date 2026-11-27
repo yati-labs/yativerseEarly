@@ -484,7 +484,9 @@ export default function MeetingsPage() {
                   {PROCESSING.has(d.status) && (
                     <p className="mt-6 flex items-center gap-2 text-sm text-white/45">
                       <Loader2 size={14} className="animate-spin" />
-                      {STATUS_LABEL[d.status]}… this page updates on its own.
+                      {d.status === "queued" && d.error
+                        ? d.error
+                        : `${STATUS_LABEL[d.status]}… this page updates on its own.`}
                     </p>
                   )}
 
