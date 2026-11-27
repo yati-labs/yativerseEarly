@@ -14,6 +14,9 @@ const Login = lazy(() => import('./pages/Login'))
 const YatiFlow = lazy(() => import('./pages/YatiFlow'))
 const BrandCampaign = lazy(() => import('./pages/BrandCampaign'))
 const Order = lazy(() => import('./pages/Order'))
+const Checkout = lazy(() => import('./pages/Checkout'))
+const OrderConfirmed = lazy(() => import('./pages/OrderConfirmed'))
+const Returns = lazy(() => import('./pages/Returns'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const PlanPage = lazy(() => import('./pages/PlanPage'))
 const AgentsPage = lazy(() => import('./pages/dashboard/AgentsPage'))
@@ -59,9 +62,11 @@ export default function App() {
               To bring back: restore the lazy imports, swap these redirects for the routes, re-add <CartDrawer /> and the nav cart button. */}
           <Route path="/signal-ring"  element={<RedirectKeepQuery to="/yati-flow" />} />
           <Route path="/early-access" element={<RedirectKeepQuery to="/yati-flow" />} />
-          {/* /order stays redirected until VITE_ORDERS_ENABLED=true is set in the host env. Checkout is still parked. */}
+          {/* /order stays redirected until VITE_ORDERS_ENABLED=true is set in the host env. Checkout needs VITE_ORDERS_OPEN as well. */}
           <Route path="/order"        element={FLAGS.ordersEnabled ? <Order /> : <RedirectKeepQuery to="/yati-flow" />} />
-          <Route path="/checkout"     element={<RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/checkout"     element={FLAGS.ordersEnabled ? <Checkout /> : <RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/order/confirmed" element={FLAGS.ordersEnabled ? <OrderConfirmed /> : <RedirectKeepQuery to="/yati-flow" />} />
+          <Route path="/returns" element={<Returns />} />
           <Route path="/yAtI" element={<YATI />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
