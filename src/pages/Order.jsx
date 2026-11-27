@@ -375,6 +375,7 @@ export default function Order() {
               <Faq q="Shipping, tax and prices" a={`We ship within the United States only. Prices are in USD and exclude sales tax and shipping; tax is calculated from your shipping address and shown before you pay.${POLICY.deliveryEstimate ? ' ' + POLICY.deliveryEstimate : ' Delivery estimates are confirmed at checkout.'}`} />
               <Faq q="Recording and consent" a="Laws on recording conversations vary by place. Tell people before you record and get their consent where the law requires it." />
               <Faq q="What happens to my data?" a={<>See how we collect, use and protect information in our <Link to="/privacy-policy" className="underline">Privacy Policy</Link>.</>} />
+              <Faq q="Returns, warranty and cancellation" a={<>Read the <Link to="/returns" className="underline">Returns, Warranty and Cancellation terms</Link> before you buy.</>} />
               {POLICY.returns && <Faq q="Returns" a={POLICY.returns} />}
               {POLICY.warranty && <Faq q="Warranty" a={POLICY.warranty} />}
             </div>

@@ -1,505 +1,179 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import { ArrowRight, Check, Lock, ShoppingBag, ShieldCheck } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, Navigate } from 'react-router-dom'
+import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js'
+import { Lock } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import SEO from '../components/SEO'
-import { fadeUp, fadeLeft, fadeRight } from '../lib/motion'
-import {
-  createOrder,
-  createPaymentIntent,
-  getStoredEmail,
-  getToken,
-} from '../lib/api'
-import { useAuth } from '../lib/auth'
-import FirebaseSignIn from '../components/FirebaseSignIn'
 import { getStripe } from '../lib/stripe'
-import { useCart } from '../lib/cart'
+import { getStoredEmail } from '../lib/api'
+import { createOrderCheckout } from '../lib/orderApi'
+import { loadSelection } from '../lib/orderFlow'
+import { track } from '../lib/tracking'
+import { FLAGS, computeQuote, usd } from '../lib/catalog'
 
-const GOLD  = '#C9A84C'
+const GOLD = '#C9A84C'
 const GOLD2 = '#F5D27A'
-const BLUE  = '#605CFF'
 
-function centsToStr(cents) {
-  return (cents / 100).toFixed(2)
+function phaseLabel(p, i, all) {
+  const next = all[i + 1]
+  if (!next) return p.fromMonth === 1 ? 'Every month' : `Month ${p.fromMonth} onward`
+  return p.fromMonth === next.fromMonth - 1 ? `Month ${p.fromMonth}` : `Months ${p.fromMonth}–${next.fromMonth - 1}`
 }
 
-const STRIPE_APPEARANCE = {
-  theme: 'night',
-  variables: {
-    colorPrimary: GOLD,
-    colorBackground: '#14120a',
-    colorText: '#ffffff',
-    colorTextSecondary: 'rgba(255,255,255,0.55)',
-    colorDanger: '#FF6B8A',
-    fontFamily: '"DM Sans", ui-sans-serif, system-ui, sans-serif',
-    borderRadius: '12px',
-    spacingUnit: '4px',
-  },
-  rules: {
-    '.Input': { border: '1px solid rgba(255,255,255,0.12)', backgroundColor: 'rgba(255,255,255,0.05)' },
-    '.Input:focus': { border: `1px solid ${GOLD}80` },
-    '.Label': { color: 'rgba(255,255,255,0.55)', fontSize: '12px' },
-    '.Tab': { border: '1px solid rgba(255,255,255,0.12)', backgroundColor: 'rgba(255,255,255,0.03)' },
-    '.Tab--selected': { border: `1px solid ${GOLD}60` },
-  },
-}
-
-/** The actual card-entry form, mounted once a clientSecret exists. */
-function PaymentForm({ totalCents, onSuccess }) {
-  const stripe = useStripe()
-  const elements = useElements()
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState('')
-
-  const submit = async (e) => {
-    e.preventDefault()
-    if (!stripe || !elements) return
-    setError('')
-    setSubmitting(true)
-
-    // redirect: 'if_required' keeps the customer on yativerse.ai for the
-    // vast majority of cards — Stripe only navigates away for payment
-    // methods that have no in-page confirmation path at all, which card
-    // payments (the only method this checkout offers) essentially never
-    // hit. 3-D Secure challenges, when a card requires one, show as an
-    // in-page modal via Stripe.js, not a full-page redirect.
-    const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      redirect: 'if_required',
-    })
-
-    if (confirmError) {
-      setError(confirmError.message || 'Payment failed. Please check your card details and try again.')
-      setSubmitting(false)
-      return
-    }
-
-    if (paymentIntent && paymentIntent.status === 'succeeded') {
-      onSuccess()
-      return
-    }
-
-    if (paymentIntent && paymentIntent.status === 'processing') {
-      setError("Your payment is processing — we'll email you the moment it's confirmed. You can safely close this page.")
-      setSubmitting(false)
-      return
-    }
-
-    setError('Payment did not complete. Please try again.')
-    setSubmitting(false)
+/** Normalizes the server quote (or the local preview) into what the summary shows. */
+function view(q) {
+  return {
+    deviceName: q.deviceName || q.device?.name,
+    deviceStandalone: q.deviceStandalone,
+    deviceNow: q.deviceNow,
+    commitSaving: q.commitSaving,
+    bundleSavingDevice: q.bundleSavingDevice ?? q.bundleSavingHardware ?? 0,
+    bundleSavingPlans: q.bundleSavingPlans ?? q.bundleSavingServices ?? 0,
+    firstCharge: q.firstCharge,
+    firstServices: q.firstServices,
+    phases: (q.phases || []).map((p) => ({ fromMonth: p.fromMonth ?? p.from, net: p.net })),
+    termMonths: q.termMonths,
+    termTotal: q.termTotal,
+    committed: q.committed ?? q.commitSaving > 0,
+    hasPlan: q.hasPlan ?? (q.phases || []).some((p) => (p.net ?? 0) > 0),
+    early: q.early,
+    bundle: q.bundle,
   }
-
-  return (
-    <form onSubmit={submit} className="space-y-5">
-      <PaymentElement />
-      {error && (
-        <p className="font-body text-sm text-center" style={{ color: '#FF6B8A' }}>{error}</p>
-      )}
-      <button type="submit" disabled={!stripe || submitting}
-        className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-full font-display font-bold text-sm text-black transition-all duration-300 hover:scale-[1.01] disabled:opacity-50"
-        style={{ background: `linear-gradient(135deg,${GOLD},${GOLD2})`, boxShadow: `0 0 30px rgba(201,168,76,0.3)` }}>
-        {submitting ? 'Processing…' : `Pay $${centsToStr(totalCents)}`} <Lock className="w-4 h-4" />
-      </button>
-      <p className="font-body text-[11px] text-white/30 text-center flex items-center justify-center gap-1.5">
-        <ShieldCheck className="w-3 h-3" /> Payment processed securely by Stripe — your card details never touch yativerse.ai's servers.
-      </p>
-    </form>
-  )
-}
-
-// Orders are already saved by the time the payment step shows, but the cart is
-// cleared. Remember them for this tab only so a refresh (or a flaky network)
-// returns to the payment step instead of an empty cart. Only ids, totals and
-// the email are kept — no address or phone.
-const PENDING_KEY = 'yati_pending_payment'
-function loadPending() {
-  try {
-    const raw = sessionStorage.getItem(PENDING_KEY)
-    const v = raw && JSON.parse(raw)
-    return v && Array.isArray(v.orders) && v.orders.length && v.email ? v : null
-  } catch (_) {
-    return null
-  }
-}
-function savePending(orders, email) {
-  try { sessionStorage.setItem(PENDING_KEY, JSON.stringify({ orders, email })) } catch (_) { /* storage unavailable */ }
-}
-function clearPending() {
-  try { sessionStorage.removeItem(PENDING_KEY) } catch (_) { /* ignore */ }
 }
 
 export default function Checkout() {
-  const { items, subtotalCents, removeItems, clear } = useCart()
-
-  const [pending] = useState(loadPending)
-  const [phase, setPhase] = useState(pending ? 'payment' : 'shipping') // 'shipping' | 'payment' | 'done'
-  const [form, setForm] = useState({
-    name: '', email: pending ? pending.email : '', phone: '',
-    addressLine1: '', addressLine2: '', city: '', state: '', zip: '',
-  })
-  const [submitting, setSubmitting] = useState(false)
+  const selection = useMemo(() => loadSelection(), [])
+  const [email, setEmail] = useState(getStoredEmail() || '')
+  const [consent, setConsent] = useState(false)
+  const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [placedOrders, setPlacedOrders] = useState(pending ? pending.orders : null) // [{ item, orderId, totalCents }]
-  const [clientSecret, setClientSecret] = useState(null)
+  const [session, setSession] = useState(null) // { clientSecret, quote }
+  const stripePromise = useMemo(() => getStripe(), [])
 
-  // Resolved once, client-side: 'loading' | 'ready' | 'unavailable'.
-  // getStripe() returns a promise that resolves to null both when
-  // VITE_STRIPE_PUBLISHABLE_KEY is missing and when the js.stripe.com
-  // script itself fails to load (blocked network, ad/privacy blocker) —
-  // either way, tracking this explicitly means the payment step can show
-  // one clear "payment isn't available" message instead of hanging in a
-  // hidden hang state that <Elements stripe={somePromise}> doesn't surface.
-  const [stripeState, setStripeState] = useState('loading')
-  const [stripeInstance, setStripeInstance] = useState(null)
+  const local = useMemo(() => (selection ? computeQuote(selection, false) : null), [selection])
+  const hasPlan = Boolean(local && local.hasPlan)
+  const allowed = FLAGS.ordersOpen && (!hasPlan || FLAGS.planCheckout)
 
-  useEffect(() => {
-    const promise = getStripe()
-    if (!promise) {
-      setStripeState('unavailable')
-      return
-    }
-    let cancelled = false
-    promise.then((stripe) => {
-      if (cancelled) return
-      if (stripe) {
-        setStripeInstance(stripe)
-        setStripeState('ready')
-      } else {
-        setStripeState('unavailable')
-      }
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  useEffect(() => { if (selection && allowed) track('order_checkout_view') }, [selection, allowed])
 
-  // Post-order optional account creation
-  const { refresh } = useAuth()
-  // True only when the person signed in on THIS screen. A leftover login from
-  // an earlier visit must not count: it used to hide the sign-in options and
-  // show a different person's email (e.g. testing a new order after using
-  // another account in the same browser).
-  const [accountDone, setAccountDone] = useState(false)
-  const [signedInEmail, setSignedInEmail] = useState('')
-  const orderEmail = form.email.trim().toLowerCase()
-  const signedInAsOrderEmail = Boolean(getToken()) && (getStoredEmail() || '').trim().toLowerCase() === orderEmail
-  const showSignedIn = accountDone || signedInAsOrderEmail
+  if (!selection || !local || !allowed) return <Navigate to="/order" replace />
 
-  const change = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+  const q = view(session ? session.quote : local)
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
 
-  const startPaymentIntent = async (orders, email) => {
-    setError('')
-    try {
-      const { clientSecret: secret } = await createPaymentIntent({
-        email,
-        orderIds: orders.map((o) => o.orderId),
-      })
-      setClientSecret(secret)
-    } catch (err) {
-      // Orders already exist at this point (they succeeded below) — no
-      // need to touch the cart again. Just let the payment phase show the
-      // error with a retry button that re-attempts this same call.
-      if (err.code === 'ORDER_EXPIRED') {
-        // The reservation window passed; these orders can't be paid any more.
-        clearPending()
-        setPlacedOrders(null)
-        setClientSecret(null)
-        setPhase('shipping')
-        setError('Your reservation expired before payment. Please add your ring to the cart again and re-order.')
-        return
-      }
-      setError(err.message)
-    }
-  }
-
-  // Returning to the payment step after a refresh: orders were restored from
-  // sessionStorage above, so just ask for a fresh PaymentIntent.
-  useEffect(() => {
-    if (pending) startPaymentIntent(pending.orders, pending.email)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const submitShipping = async (e) => {
+  async function start(e) {
     e.preventDefault()
     setError('')
-    setSubmitting(true)
-
-    const placed = []
-    const succeededIds = []
+    if (!emailOk) { setError('Please enter a valid email address.'); return }
+    if (hasPlan && !consent) { setError('Please confirm the plan terms to continue.'); return }
+    if (!stripePromise) { setError('Payment is not available right now. Please try again later or email support@yativerse.ai.'); return }
+    setBusy(true)
     try {
-      for (const item of items) {
-        try {
-          const result = await createOrder({
-            ...form,
-            ringColor: item.colorName,
-            ringSize: item.size,
-            quantity: item.qty,
-          })
-          placed.push({ item, orderId: result.orderId, totalCents: result.totalCents ?? item.unitPriceCents * item.qty })
-          succeededIds.push(item.id)
-        } catch (err) {
-          if (succeededIds.length) removeItems(succeededIds)
-          throw new Error(
-            placed.length
-              ? `${item.name} (${item.colorName}, size ${item.size}) couldn't be reserved: ${err.message}. The item(s) before it went through — the rest are still in your cart.`
-              : err.message,
-          )
-        }
-      }
-      // Every cart item became an order — clear the cart and move to payment.
-      clear()
-      setPlacedOrders(placed)
-      setPhase('payment')
-      savePending(placed, form.email)
-      await startPaymentIntent(placed, form.email)
+      const res = await createOrderCheckout({ email: email.trim(), selection, consent })
+      track('order_payment_started', { device: selection.deviceId })
+      setSession(res)
     } catch (err) {
       setError(err.message)
     } finally {
-      setSubmitting(false)
+      setBusy(false)
     }
   }
 
-  const grandTotalCents = placedOrders ? placedOrders.reduce((sum, r) => sum + r.totalCents, 0) : subtotalCents
-
   return (
     <>
-      <SEO
-        title="Checkout — yAtIverse"
-        description="Review your Signal Ring order and pay securely with Stripe."
-        path="/checkout"
-      />
-      <div className="bg-brand-bg text-white min-h-screen">
+      <SEO title="Checkout" description="Secure checkout for your Thread device." path="/checkout" noindex />
+      <div className="min-h-screen bg-brand-bg text-white">
         <Navbar />
+        <main className="px-4 pb-20 pt-32">
+          <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[1fr_380px]">
+            <section aria-labelledby="pay-title">
+              <h1 id="pay-title" className="mb-2 font-display text-3xl font-bold">{session ? 'Payment' : 'Checkout'}</h1>
+              <p className="mb-6 font-body text-sm text-white/65">
+                <Link to="/order" className="underline">Change your setup</Link>
+              </p>
 
-        <section className="relative pt-32 pb-24 px-4">
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ background: `radial-gradient(ellipse 60% 40% at 50% 0%, rgba(201,168,76,0.08), transparent 70%)` }} />
-
-          <div className="relative max-w-5xl mx-auto">
-            <motion.div {...fadeUp(0)} className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase mb-5"
-                style={{ border: `1px solid ${GOLD}40`, color: GOLD, background: `${GOLD}0D` }}>
-                Checkout
-              </div>
-              <h1 className="font-display font-bold tracking-tight text-white mb-3" style={{ fontSize: 'clamp(2rem,4.5vw,3.2rem)' }}>
-                {phase === 'done' ? <>Order <span style={{ color: GOLD }}>confirmed.</span></> : <>Review & <span style={{ color: GOLD }}>pay.</span></>}
-              </h1>
-              {phase === 'shipping' && (
-                <p className="font-body text-white/55 max-w-lg mx-auto">
-                  Enter your shipping details, then pay securely on the next step — everything happens right here on yativerse.ai.
-                </p>
-              )}
-            </motion.div>
-
-            {phase === 'done' ? (
-              /* ── CONFIRMATION ── */
-              <motion.div {...fadeUp(0.1)} className="max-w-md mx-auto rounded-3xl p-8 text-center"
-                style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${GOLD}30` }}>
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5"
-                  style={{ background: `${GOLD}18`, border: `1px solid ${GOLD}40` }}>
-                  <Check className="w-6 h-6" style={{ color: GOLD }} />
-                </div>
-                <h2 className="font-display font-bold text-2xl text-white mb-2">Payment successful.</h2>
-                <p className="font-body text-sm text-white/45 mb-4">You're all set — a confirmation email is on its way.</p>
-
-                <div className="text-left space-y-2 mb-4">
-                  {placedOrders.map((r) => (
-                    <div key={r.orderId} className="rounded-xl px-4 py-3 flex items-center justify-between"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                      <div>
-                        <p className="font-body text-xs text-white/70">{r.item.name} — {r.item.colorName}, size {r.item.size} × {r.item.qty}</p>
-                        <p className="font-mono text-[11px] text-white/40">Order ID: {r.orderId}</p>
-                      </div>
-                      <span className="font-display font-semibold text-sm text-white">${centsToStr(r.totalCents)}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <p className="font-body text-sm text-white/55 mb-6">
-                  Total charged: <span className="text-white font-semibold">${centsToStr(grandTotalCents)}</span>
-                </p>
-
-                {showSignedIn ? (
-                  <div className="rounded-2xl px-4 py-3 text-sm font-body" style={{ background: `${BLUE}12`, border: `1px solid ${BLUE}30`, color: '#fff' }}>
-                    You're signed in as {signedInEmail || getStoredEmail() || form.email}. Use the same login in the yAtI app once your ring arrives.
-                    {signedInEmail && signedInEmail !== orderEmail && (
-                      <p className="mt-2 text-xs text-white/60">
-                        Heads up: this order was placed with {orderEmail}, so it will appear under that email. To see it here, sign in with {orderEmail}.
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-left space-y-3">
-                    <p className="font-body text-xs text-white/45 mb-1">
-                      Want to track this order and use the same login in the yAtI app later? Sign in with {orderEmail || 'the email you used for this order'} &mdash; no password needed. Totally optional.
-                    </p>
-                    {getToken() && !signedInAsOrderEmail && (
-                      <p className="text-[11px] font-body text-white/45">
-                        You're currently signed in as {getStoredEmail()}. Signing in below will switch you to the account you choose.
-                      </p>
-                    )}
-                    <FirebaseSignIn
-                      defaultEmail={orderEmail}
-                      onSignedIn={(em) => { setSignedInEmail((em || '').toLowerCase()); setAccountDone(true); refresh() }}
-                    />
-                    <p className="font-body text-[11px] text-white/30 text-center">
-                      Prefer to skip this? You can sign in anytime with {form.email || 'this same email'}.
-                    </p>
-                  </div>
-                )}
-
-                <Link to="/" className="inline-flex items-center gap-1.5 mt-6 text-xs font-body text-white/40 hover:text-white/70">
-                  Back to yativerse.ai <ArrowRight className="w-3 h-3" />
-                </Link>
-              </motion.div>
-            ) : phase === 'payment' ? (
-              /* ── PAYMENT ── */
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                <motion.div {...fadeLeft(0.05)} className="lg:col-span-3 space-y-6">
-                  <div className="rounded-3xl p-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <p className="font-mono text-[10px] tracking-widest uppercase text-white/38 mb-4">Payment</p>
-                    {error ? (
-                      <div className="space-y-4">
-                        <p className="font-body text-sm text-center" style={{ color: '#FF6B8A' }}>{error}</p>
-                        <button type="button" onClick={() => startPaymentIntent(placedOrders, form.email)}
-                          className="w-full py-3 rounded-full font-display font-semibold text-sm text-black transition-all"
-                          style={{ background: `linear-gradient(135deg,${GOLD},${GOLD2})` }}>
-                          Retry payment
-                        </button>
-                        <p className="font-body text-[11px] text-white/30 text-center">
-                          Your order (Order ID{placedOrders.length > 1 ? 's' : ''}: {placedOrders.map((o) => o.orderId).join(', ')}) is already saved — retrying here won't create a duplicate.
-                        </p>
-                      </div>
-                    ) : stripeState === 'unavailable' ? (
-                      <p className="font-body text-sm text-center" style={{ color: '#FF6B8A' }}>
-                        Payment couldn't load (missing Stripe configuration, or a network/browser extension blocked it). Your order is saved — contact support@yativerse.ai to complete payment, or try reloading this page.
-                      </p>
-                    ) : clientSecret && stripeState === 'ready' ? (
-                      <Elements stripe={stripeInstance} options={{ clientSecret, appearance: STRIPE_APPEARANCE }}>
-                        <PaymentForm totalCents={grandTotalCents} onSuccess={() => { clearPending(); setPhase('done') }} />
-                      </Elements>
-                    ) : (
-                      <p className="font-body text-sm text-white/40 text-center py-6">Preparing secure payment…</p>
-                    )}
-                  </div>
-                </motion.div>
-
-                <motion.div {...fadeRight(0.1)} className="lg:col-span-2 space-y-6">
-                  <div className="rounded-3xl p-6 sticky top-24" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <p className="font-mono text-[10px] tracking-widest uppercase text-white/38 mb-4">Order summary</p>
-                    <div className="space-y-3 mb-4">
-                      {placedOrders.map((r) => (
-                        <div key={r.orderId} className="flex gap-3 items-center">
-                          <img src={r.item.image} alt={r.item.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-body text-xs text-white/80 truncate">{r.item.name} — {r.item.colorName}</p>
-                            <p className="font-body text-[11px] text-white/40">Size {r.item.size} × {r.item.qty}</p>
-                          </div>
-                          <span className="font-body text-sm text-white/70 flex-shrink-0">${centsToStr(r.totalCents)}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="h-px my-4" style={{ background: 'rgba(255,255,255,0.08)' }} />
-                    <div className="flex justify-between font-display font-bold text-white text-lg">
-                      <span>Total</span>
-                      <span>${centsToStr(grandTotalCents)}</span>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            ) : items.length === 0 ? (
-              /* ── EMPTY CART ── */
-              <motion.div {...fadeUp(0.1)} className="max-w-md mx-auto rounded-3xl p-10 text-center"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5"
-                  style={{ background: `${GOLD}12`, border: `1px solid ${GOLD}30` }}>
-                  <ShoppingBag className="w-6 h-6" style={{ color: GOLD }} />
-                </div>
-                <h2 className="font-display font-bold text-xl text-white mb-2">Your cart is empty</h2>
-                <p className="font-body text-sm text-white/50 mb-6">Add a Signal Ring to your cart before checking out.</p>
-                <Link to="/order"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-display font-bold text-sm text-black transition-all hover:scale-105"
-                  style={{ background: `linear-gradient(135deg,${GOLD},${GOLD2})` }}>
-                  Browse Signal Ring <ArrowRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
-            ) : (
-              /* ── SHIPPING FORM ── */
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                <motion.form {...fadeLeft(0.05)} onSubmit={submitShipping} className="lg:col-span-3 space-y-6">
-                  <div className="rounded-3xl p-6 space-y-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <p className="font-mono text-[10px] tracking-widest uppercase text-white/38">Shipping details</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <input name="name" required placeholder="Full name" value={form.name} onChange={change}
-                        className="col-span-2 bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                      <input name="email" type="email" required placeholder="Email" value={form.email} onChange={change}
-                        className="col-span-2 bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                      <input name="phone" placeholder="Phone (optional)" value={form.phone} onChange={change}
-                        className="col-span-2 bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                      <input name="addressLine1" required placeholder="Address line 1" value={form.addressLine1} onChange={change}
-                        className="col-span-2 bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                      <input name="addressLine2" placeholder="Address line 2 (optional)" value={form.addressLine2} onChange={change}
-                        className="col-span-2 bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                      <input name="city" required placeholder="City" value={form.city} onChange={change}
-                        className="bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                      <input name="state" required placeholder="State" value={form.state} onChange={change}
-                        className="bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                      <input name="zip" required placeholder="ZIP code" value={form.zip} onChange={change}
-                        className="col-span-2 bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50 font-body" />
-                    </div>
-                    <p className="font-body text-[11px] text-white/30">Shipping to US addresses only for now.</p>
+              {!session && (
+                <form onSubmit={start} className="space-y-5" noValidate>
+                  <div>
+                    <label htmlFor="co-email" className="mb-1 block font-body text-sm text-white/80">Email for your order and account</label>
+                    <input id="co-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                      className="w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 font-body text-white placeholder-white/40 focus:border-brand-gold focus:outline-none"
+                      placeholder="you@company.com" aria-invalid={Boolean(error) && !emailOk} />
+                    <p className="mt-1 font-body text-xs text-white/55">Use the same email when you sign in so your plan and device are linked to your account. Shipping address and card are on the next step.</p>
                   </div>
 
-                  <div className="rounded-2xl px-5 py-4 flex items-start gap-3" style={{ background: `${BLUE}0D`, border: `1px solid ${BLUE}25` }}>
-                    <ShieldCheck className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: BLUE }} />
-                    <p className="font-body text-xs text-white/55 leading-relaxed">
-                      Next step is secure payment, powered by Stripe — right here on yativerse.ai, no redirect. Your card details are never seen by our servers.
-                    </p>
-                  </div>
-
-                  {error && (
-                    <p className="font-body text-sm text-center" style={{ color: '#FF6B8A' }}>{error}</p>
+                  {hasPlan && (
+                    <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 font-body text-sm leading-6 text-white/80">
+                      <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-4 w-4 flex-shrink-0 accent-yellow-500" />
+                      <span>
+                        I agree to pay {usd(q.deviceNow)} today for my {q.deviceName} and {usd(q.firstServices)} for my first month of service.
+                        {q.committed ? ` My Capture commitment is ${q.termMonths} months, billed monthly, and it then continues month to month until I cancel.` : ' My plan is billed monthly until I cancel.'}
+                        {' '}Prices change on the dates shown in the order summary. I can cancel online any time in my dashboard. Cancelling Capture before my commitment ends leaves the remaining committed months payable. I have read the{' '}
+                        <Link to="/returns" className="underline" target="_blank">Returns and Cancellation terms</Link>.
+                      </span>
+                    </label>
+                  )}
+                  {!hasPlan && (
+                    <p className="font-body text-sm text-white/70">Returns are accepted within the window on the <Link to="/returns" className="underline" target="_blank">Returns and Cancellation page</Link>.</p>
                   )}
 
-                  <button type="submit" disabled={submitting}
-                    className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-full font-display font-bold text-sm text-black transition-all duration-300 hover:scale-[1.01] disabled:opacity-50"
-                    style={{ background: `linear-gradient(135deg,${GOLD},${GOLD2})`, boxShadow: `0 0 30px rgba(201,168,76,0.3)` }}>
-                    {submitting ? 'Preparing payment…' : 'Continue to payment'} <ArrowRight className="w-4 h-4" />
+                  {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 font-body text-sm text-red-200">{error}</p>}
+                  <button type="submit" disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-full py-4 font-display text-sm font-bold text-black disabled:opacity-60" style={{ background: `linear-gradient(135deg,${GOLD},${GOLD2})` }}>
+                    <Lock className="h-4 w-4" aria-hidden="true" /> {busy ? 'Preparing secure payment…' : 'Continue to payment'}
                   </button>
-                </motion.form>
+                </form>
+              )}
 
-                <motion.div {...fadeRight(0.1)} className="lg:col-span-2 space-y-6">
-                  <div className="rounded-3xl p-6 sticky top-24" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <p className="font-mono text-[10px] tracking-widest uppercase text-white/38 mb-4">Order summary</p>
-                    <div className="space-y-3 mb-4">
-                      {items.map((item) => (
-                        <div key={item.id} className="flex gap-3 items-center">
-                          <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-body text-xs text-white/80 truncate">{item.name} — {item.colorName}</p>
-                            <p className="font-body text-[11px] text-white/40">Size {item.size} × {item.qty}</p>
-                          </div>
-                          <span className="font-body text-sm text-white/70 flex-shrink-0">${centsToStr(item.unitPriceCents * item.qty)}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="h-px my-4" style={{ background: 'rgba(255,255,255,0.08)' }} />
-                    <div className="flex justify-between font-display font-bold text-white text-lg">
-                      <span>Total</span>
-                      <span>${centsToStr(subtotalCents)}</span>
-                    </div>
+              {session && (
+                <div>
+                  <p className="mb-4 font-body text-sm text-white/70">Ordering as <strong className="text-white">{email.trim()}</strong>. Tax is calculated from your shipping address below.</p>
+                  <div className="overflow-hidden rounded-2xl bg-white">
+                    <EmbeddedCheckoutProvider stripe={stripePromise} options={{ fetchClientSecret: async () => session.clientSecret }}>
+                      <EmbeddedCheckout />
+                    </EmbeddedCheckoutProvider>
                   </div>
-                </motion.div>
-              </div>
-            )}
-          </div>
-        </section>
+                </div>
+              )}
+            </section>
 
+            <aside aria-label="Order summary" className="lg:sticky lg:top-28 lg:self-start">
+              <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 font-body text-sm">
+                <h2 className="mb-3 font-display text-lg font-bold">Order summary</h2>
+                <Row label={`${q.deviceName} · device-only price`} value={usd(q.deviceStandalone)} />
+                {q.commitSaving > 0 && <Row green label="Capture commitment device saving" value={`−${usd(q.commitSaving)}`} />}
+                {q.bundleSavingDevice > 0 && <Row green label="Bundle saving after rounding · device" value={`−${usd(q.bundleSavingDevice)}`} />}
+                {q.hasPlan && <Row label="First month of plans" value={usd(q.firstServices)} />}
+                {q.bundleSavingPlans > 0 && <Row green label="Bundle saving after rounding · plans" value={`−${usd(q.bundleSavingPlans)}`} />}
+                <Row label="Founder OS · included" value="$0" />
+                <div className="mt-3 flex items-baseline justify-between border-t border-white/10 pt-3">
+                  <span className="font-display text-base font-bold">First charge*</span>
+                  <span className="font-display text-2xl font-bold">{usd(q.firstCharge)}</span>
+                </div>
+                <p className="mt-1 text-xs text-white/60">*Before sales tax. One-time device plus first month of service.</p>
+                {q.hasPlan && q.phases?.length > 0 && (
+                  <div className="mt-4 border-t border-white/10 pt-3">
+                    <p className="mb-1 font-display text-sm font-semibold">Monthly after that</p>
+                    {q.phases.map((p, i, all) => <Row key={i} label={phaseLabel(p, i, all)} value={`${usd(p.net)}/mo`} />)}
+                    {q.early && <p className="mt-2 text-xs leading-5 text-white/65">First-100 prices included. Months 4 to 6 use the regular price unless you send honest feedback within 75 days.</p>}
+                  </div>
+                )}
+                <p className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-white/60">Prices in USD. We ship within the United States. Secure payment by Stripe.</p>
+              </div>
+            </aside>
+          </div>
+        </main>
         <Footer />
       </div>
     </>
+  )
+}
+
+function Row({ label, value, green }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b border-white/10 py-2" style={green ? { color: '#86efac' } : undefined}>
+      <span className={green ? '' : 'text-white/75'}>{label}</span>
+      <span className={green ? 'font-semibold' : 'font-semibold text-white'}>{value}</span>
+    </div>
   )
 }
