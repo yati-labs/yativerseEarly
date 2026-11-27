@@ -11,7 +11,7 @@ import { fadeUp } from '../lib/motion'
 import { track } from '../lib/tracking'
 import { getOfferStatus } from '../lib/offers'
 import { ctaMode, startCheckout } from '../lib/orderFlow'
-import { ACCESS_ROWS, CAPTURE, DEVICES, FLAGS, FOUNDER_OS_VALUE, LAUNCH_LABEL, POLICY, SPARK, computeQuote, usd } from '../lib/catalog'
+import { ACCESS_ROWS, CAPTURE, DEVICES, FLAGS, FOUNDER_OS_VALUE, LAUNCH_LABEL, POLICY, SHIPPING_STANDARD, SPARK, computeQuote, usd } from '../lib/catalog'
 
 const GOLD = '#C9A84C'
 const GOLD2 = '#F5D27A'
@@ -300,6 +300,10 @@ export default function Order() {
                   {q.capture && <Row label={`${q.capture.name} · first month`} value={usd(q.free12 ? 0 : q.early ? q.capture.intro : q.capture.price)} />}
                   {q.spark && <Row label={`${q.spark.name} · first month`} value={usd(q.early ? q.spark.intro : q.spark.price)} />}
                   <Row label="Founder OS · included" value="$0" />
+                  <div className="flex items-baseline justify-between gap-4 border-b border-white/10 py-2">
+                    <dt className="text-white/75">Shipping (US)</dt>
+                    <dd className="font-semibold"><s className="mr-2 text-white/50"><span className="sr-only">Was </span>{usd(SHIPPING_STANDARD)}</s><span style={{ color: '#86efac' }}>Free shipping</span></dd>
+                  </div>
                   {q.bundleSavingServices > 0 && <Row green label="Bundle saving after rounding · plans" value={`−${usd(q.bundleSavingServices)}`} />}
                 </dl>
 
@@ -307,7 +311,7 @@ export default function Order() {
                   <span className="font-display text-lg font-bold">First charge*</span>
                   <span className="font-display text-3xl font-bold">{usd(q.firstCharge)}</span>
                 </div>
-                <p className="mt-1 font-body text-xs text-white/60">*One-time device plus first month of service, if charged together. Device payment and monthly plans are separate.</p>
+                <p className="mt-1 font-body text-xs text-white/60">*Before sales tax, which is calculated from your shipping address at payment. One-time device plus first month of service, if charged together. Device payment and monthly plans are separate.</p>
 
                 {q.hasPlan && (
                   <div className="mt-4 border-t border-white/10 pt-4">

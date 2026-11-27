@@ -8,6 +8,7 @@ import { getOrderStatus } from '../lib/orderApi'
 import { track } from '../lib/tracking'
 
 const GOLD = '#C9A84C'
+const money = (cents) => `$${(cents / 100).toFixed(2)}`
 const TRIES = 15 // about 30 seconds: the payment confirmation can arrive a moment after the redirect
 
 export default function OrderConfirmed() {
@@ -15,6 +16,7 @@ export default function OrderConfirmed() {
   const sessionId = params.get('session_id')
   const [state, setState] = useState(sessionId ? 'checking' : 'missing') // checking | paid | pending | error | missing
   const [orderId, setOrderId] = useState('')
+  const [amounts, setAmounts] = useState(null)
   const tracked = useRef(false)
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function OrderConfirmed() {
         const res = await getOrderStatus(sessionId)
         if (cancelled) return
         setOrderId(res.orderId || '')
+        if (res.amounts) setAmounts(res.amounts)
         if (res.paid) {
           setState('paid')
           const key = `yati_purchase_${sessionId}`
@@ -66,6 +69,14 @@ export default function OrderConfirmed() {
                 <CheckCircle2 className="mx-auto mb-4 h-12 w-12" style={{ color: GOLD }} aria-hidden="true" />
                 <h1 className="font-display text-3xl font-bold">Thank you. Your order is confirmed.</h1>
                 {orderId && <p className="mt-3 font-body text-white/70">Order number: <span className="font-mono text-white">{orderId}</span></p>}
+                {amounts && (
+                  <dl className="mx-auto mt-6 max-w-xs rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left font-body text-sm">
+                    <div className="flex justify-between py-1"><dt className="text-white/70">Subtotal</dt><dd>{money(amounts.subtotal)}</dd></div>
+                    <div className="flex justify-between py-1"><dt className="text-white/70">Shipping</dt><dd>Free</dd></div>
+                    <div className="flex justify-between py-1"><dt className="text-white/70">Sales tax</dt><dd>{money(amounts.tax)}</dd></div>
+                    <div className="mt-1 flex justify-between border-t border-white/10 pt-2 font-semibold"><dt>Charged today</dt><dd>{money(amounts.total)}</dd></div>
+                  </dl>
+                )}
                 <ul className="mx-auto mt-8 max-w-md space-y-3 text-left font-body text-sm leading-6 text-white/80">
                   <li><strong className="text-white">Check your email.</strong> We sent your order details, your monthly price schedule and how to cancel.</li>
                   <li><strong className="text-white">Sign in with the same email</strong> to open your dashboard and finish setting up your workspace.</li>
